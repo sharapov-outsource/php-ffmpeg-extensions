@@ -1,0 +1,28 @@
+{
+  "name": "sharapov/php-ffmpeg-extensions",
+  "description": "A PHP extensions for the PHP FFmpeg library (https://github.com/PHP-FFMpeg/PHP-FFMpeg)",
+  "license": "GPL-3.0",
+  "type": "library",
+  "keywords": [
+    "ffmpeg",
+    "php-ffmpeg"
+  ],
+  "homepage": "https://github.com/sharapovweb/php-ffmpeg-extensions",
+  "authors": [
+    {
+      "name": "Alexander Sharapov",
+      "email": "alexander@sharapov.biz",
+      "homepage": "http://sharapov.biz",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.3",
+    "php-ffmpeg/php-ffmpeg": "~0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sharapov\\": "src/"
+    }
+  }
+}
