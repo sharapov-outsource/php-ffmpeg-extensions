@@ -5,7 +5,8 @@
   "type": "library",
   "keywords": [
     "ffmpeg",
-    "php-ffmpeg"
+    "php-ffmpeg",
+    "php-ffmpeg-extensions"
   ],
   "homepage": "https://github.com/sharapovweb/php-ffmpeg-extensions",
   "authors": [
@@ -22,7 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Sharapov\\": "src/"
+      "Sharapov\\FFMpegExtensions\\": "src/php-ffmpeg-extensions/"
     }
   }
 }
