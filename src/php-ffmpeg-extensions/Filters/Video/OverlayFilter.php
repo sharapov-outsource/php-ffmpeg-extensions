@@ -19,41 +19,41 @@ use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text;
 
 class OverlayFilter implements VideoFilterInterface
 {
-    /** @var integer */
-    protected $priority;
+  /** @var integer */
+  protected $priority;
 
-    protected $overlay = array();
+  protected $overlay = array();
 
-    public function __construct($priority = 0)
-    {
-        $this->priority = $priority;
-    }
+  public function __construct($priority = 0)
+  {
+    $this->priority = $priority;
+  }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPriority()
-    {
-        return $this->priority;
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function getPriority()
+  {
+    return $this->priority;
+  }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setOverlay(OverlayInterface $overlay)
-    {
-        $this->overlay[] = $overlay;
-        return $this;
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function setOverlay(OverlayInterface $overlay)
+  {
+    $this->overlay[] = $overlay;
+    return $this;
+  }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function apply(Video $video, VideoInterface $format)
-    {
-        return array(
-            '-vf',
-            implode(",", $this->overlay)
-        );
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function apply(Video $video, VideoInterface $format)
+  {
+    return array(
+        '-vf',
+        implode(",", $this->overlay)
+    );
+  }
 }

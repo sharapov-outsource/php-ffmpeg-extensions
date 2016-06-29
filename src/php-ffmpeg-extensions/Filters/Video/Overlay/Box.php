@@ -38,7 +38,7 @@ class Box implements OverlayInterface
     if ($thickness <= 0 and $thickness != 'max') {
       throw new InvalidArgumentException('Invalid value of thickness. Should be positive integer or "max"');
     }
-    $this->color = $color.'@'.$transparent.":t=".$thickness;
+    $this->color = $color . '@' . $transparent . ":t=" . $thickness;
     return $this;
   }
 
@@ -84,15 +84,15 @@ class Box implements OverlayInterface
   {
     $params = array("drawbox=");
 
-    if($this->timeLine instanceof TimeLine) {
-      $params[] = "enable='between(t,".$this->timeLine->getStartTime().",".$this->timeLine->getEndTime().")'";
+    if ($this->timeLine instanceof TimeLine) {
+      $params[] = "enable='between(t," . $this->timeLine->getStartTime() . "," . $this->timeLine->getEndTime() . ")'";
     }
 
-    $params[] = "width=".$this->getDimensions()->getWidth();
-    $params[] = "height=".$this->getDimensions()->getHeight();
-    $params[] = "color=".$this->getColor();
-    $params[] = "x=".$this->getCoordinates()->getX();
-    $params[] = "y=".$this->getCoordinates()->getY();
+    $params[] = "width=" . $this->getDimensions()->getWidth();
+    $params[] = "height=" . $this->getDimensions()->getHeight();
+    $params[] = "color=" . $this->getColor();
+    $params[] = "x=" . $this->getCoordinates()->getX();
+    $params[] = "y=" . $this->getCoordinates()->getY();
 
     return implode(":", $params);
   }

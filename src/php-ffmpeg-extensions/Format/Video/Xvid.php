@@ -16,65 +16,65 @@ use FFMpeg\Format\Video\DefaultVideo;
  */
 class Xvid extends DefaultVideo
 {
-    /** @var boolean */
-    private $bframesSupport = true;
+  /** @var boolean */
+  private $bframesSupport = true;
 
-    public function __construct($audioCodec = 'libfaac', $videoCodec = 'libxvid')
-    {
-        $this
-            ->setAudioCodec($audioCodec)
-            ->setVideoCodec($videoCodec);
-    }
+  public function __construct($audioCodec = 'libfaac', $videoCodec = 'libxvid')
+  {
+    $this
+        ->setAudioCodec($audioCodec)
+        ->setVideoCodec($videoCodec);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function supportBFrames()
-    {
-        return $this->bframesSupport;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public function supportBFrames()
+  {
+    return $this->bframesSupport;
+  }
 
-    /**
-     * @param $support
-     *
-     * @return Xvid
-     */
-    public function setBFramesSupport($support)
-    {
-        $this->bframesSupport = $support;
+  /**
+   * @param $support
+   *
+   * @return Xvid
+   */
+  public function setBFramesSupport($support)
+  {
+    $this->bframesSupport = $support;
 
-        return $this;
-    }
+    return $this;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getAvailableAudioCodecs()
-    {
-        return array('libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac');
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public function getAvailableAudioCodecs()
+  {
+    return array('libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac');
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getAvailableVideoCodecs()
-    {
-        return array('libxvid');
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public function getAvailableVideoCodecs()
+  {
+    return array('libxvid');
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getPasses()
-    {
-        return 2;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public function getPasses()
+  {
+    return 2;
+  }
 
-    /**
-     * @return int
-     */
-    public function getModulus()
-    {
-        return 2;
-    }
+  /**
+   * @return int
+   */
+  public function getModulus()
+  {
+    return 2;
+  }
 }

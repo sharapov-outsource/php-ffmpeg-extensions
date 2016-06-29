@@ -9,7 +9,7 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
-use FFMpeg\Coordinate\Point;
+use Sharapov\FFMpegExtensions\Coordinate\Point;
 use FFMpeg\Exception\InvalidArgumentException;
 use Sharapov\FFMpegExtensions\Coordinate\Dimension;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
@@ -32,7 +32,7 @@ class Text implements OverlayInterface
 
   public function setFontFile($file)
   {
-    if( ! file_exists($file)) {
+    if (!file_exists($file)) {
       throw new InvalidArgumentException('Incorrect font path.');
     }
     $this->fontFile = $file;
@@ -72,7 +72,7 @@ class Text implements OverlayInterface
       throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
     }
 
-    $this->fontColor = $color.'@'.$transparent;
+    $this->fontColor = $color . '@' . $transparent;
     return $this;
   }
 
@@ -113,19 +113,19 @@ class Text implements OverlayInterface
   {
     $params = array("drawtext=");
 
-    if($this->timeLine instanceof TimeLine) {
-      $params[] = "enable='between(t,".$this->getTimeLine()->getStartTime().",".$this->getTimeLine()->getEndTime().")'";
+    if ($this->timeLine instanceof TimeLine) {
+      $params[] = "enable='between(t," . $this->getTimeLine()->getStartTime() . "," . $this->getTimeLine()->getEndTime() . ")'";
     }
 
-    $params[] = "fontfile=".$this->getFontFile();
-    $params[] = "text='".$this->getOverlayText()."'";
-    $params[] = "fontcolor='".$this->getFontColor()."'";
-    $params[] = "fontsize=".$this->getFontSize();
-    $params[] = "x=".$this->getCoordinates()->getX();
-    $params[] = "y=".$this->getCoordinates()->getY();
+    $params[] = "fontfile=" . $this->getFontFile();
+    $params[] = "text='" . $this->getOverlayText() . "'";
+    $params[] = "fontcolor='" . $this->getFontColor() . "'";
+    $params[] = "fontsize=" . $this->getFontSize();
+    $params[] = "x=" . $this->getCoordinates()->getX();
+    $params[] = "y=" . $this->getCoordinates()->getY();
 
     // Bounding box
-    if($this->boundingBox instanceof Box) {
+    if ($this->boundingBox instanceof Box) {
       $this
           ->boundingBox
           ->setTimeLine($this->getTimeLine());
@@ -154,7 +154,7 @@ class Text implements OverlayInterface
                   $this->getOverlayText()
               )
           );
-      return $this->boundingBox->getStringParameters().','.implode(":", $params);
+      return $this->boundingBox->getStringParameters() . ',' . implode(":", $params);
     }
 
     /*
