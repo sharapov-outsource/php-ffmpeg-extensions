@@ -1,12 +1,13 @@
 {
   "name": "sharapov/php-ffmpeg-extensions",
-  "description": "A PHP extensions for the PHP FFmpeg library (https://github.com/PHP-FFMpeg/PHP-FFMpeg)",
+  "description": "An extensions library for the PHP FFMpeg (https://github.com/PHP-FFMpeg/PHP-FFMpeg)",
   "license": "GPL-3.0",
   "type": "library",
   "keywords": [
     "ffmpeg",
     "php-ffmpeg",
-    "php-ffmpeg-extensions"
+    "php-ffmpeg-extensions",
+    "ffmpeg overlay"
   ],
   "homepage": "https://github.com/sharapovweb/php-ffmpeg-extensions",
   "authors": [
