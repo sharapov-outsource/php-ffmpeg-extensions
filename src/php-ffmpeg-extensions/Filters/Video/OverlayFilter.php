@@ -49,6 +49,26 @@ class OverlayFilter implements VideoFilterInterface
   /**
    * {@inheritdoc}
    */
+  public function setOverlays($overlays)
+  {
+    foreach ($overlays as $overlay) {
+      $this->setOverlay($overlay);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOverlays()
+  {
+    return $this->overlay;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
   public function apply(Video $video, VideoInterface $format)
   {
     return array(

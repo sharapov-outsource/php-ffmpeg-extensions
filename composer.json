@@ -6,8 +6,14 @@
   "keywords": [
     "ffmpeg",
     "php-ffmpeg",
-    "php-ffmpeg-extensions",
-    "ffmpeg overlay"
+    "ffmpeg overlay",
+    "video processing",
+    "video",
+    "audio processing",
+    "audio",
+    "avconv",
+    "avprobe",
+    "ffprobe"
   ],
   "homepage": "https://github.com/sharapovweb/php-ffmpeg-extensions",
   "authors": [
@@ -21,6 +27,9 @@
   "require": {
     "php": ">=5.3",
     "php-ffmpeg/php-ffmpeg": "~0.5"
+  },
+  "suggest": {
+    "php-ffmpeg/extras": "A compilation of common audio & video drivers for PHP-FFMpeg"
   },
   "autoload": {
     "psr-4": {
