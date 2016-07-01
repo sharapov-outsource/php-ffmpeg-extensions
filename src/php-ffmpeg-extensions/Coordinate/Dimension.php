@@ -38,30 +38,6 @@ class Dimension
     $this->height = $height;
   }
 
-  /*
-  public static function calculateBoxHeightByFontSize($size, $padding = 5)
-  {
-      return $size + ($padding * 2);
-  }
-
-  public static function calculateBoxYByHeight($height, $y)
-  {
-      return $y - ($height / 5);
-  }*/
-
-  public static function calculateBoundingBoxDimensions($fontSize, $fontFile, $text)
-  {
-    if (!file_exists($fontFile)) {
-      throw new InvalidArgumentException('Incorrect font path.');
-    }
-
-    if (!$dimensions = imagettfbbox($fontSize, 0, $fontFile, $text)) {
-      throw new InvalidArgumentException('Could not calculate box dimensions');
-    }
-
-    return new Dimension((abs($dimensions[2]) - 82), (abs($dimensions[5]) + 5));
-  }
-
   /**
    * Returns width.
    *
