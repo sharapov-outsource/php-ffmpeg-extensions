@@ -30,6 +30,10 @@ class Text implements OverlayInterface
 
   protected $boundingBox;
 
+  protected $textShadow;
+
+  protected $textBorder;
+
   public function setFontFile($file)
   {
     if (!file_exists($file)) {
@@ -103,10 +107,71 @@ class Text implements OverlayInterface
     return $this->timeLine;
   }
 
-  public function setBoundingBox(Box $box)
+  public function setTextShadow($color, $x = 2, $y = 2, $transparent = 1)
   {
-    $this->boundingBox = $box;
-    return $box;
+    if ($transparent > 1 || $transparent < 0) {
+      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    }
+
+    if ( ! is_numeric($x) or ! is_numeric($y)) {
+      throw new InvalidArgumentException('Shadow X and Y should be either positive or negative values');
+    }
+
+    $this->textShadow = array(
+        "shadowcolor='" . $color . "'@" . $transparent,
+        "shadowx=" . $x,
+        "shadowy=" . $y
+    );
+    return $this;
+  }
+
+  public function getTextShadow()
+  {
+    return $this->textShadow;
+  }
+
+  public function setTextBorder($color, $border = 2, $transparent = 1)
+  {
+    if ($transparent > 1 || $transparent < 0) {
+      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    }
+
+    if ( ! is_integer($border)) {
+      throw new InvalidArgumentException('Border width should be positive integer');
+    }
+
+    $this->textBorder = array(
+        "bordercolor='" . $color . "'@" . $transparent,
+        "borderw=" . $border
+    );
+    return $this;
+  }
+
+  public function getTextBorder()
+  {
+    return $this->textBorder;
+  }
+
+  public function setBoundingBox($color, $border = 10, $transparent = 1)
+  {
+    if ($transparent > 1 || $transparent < 0) {
+      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    }
+
+    if ( ! is_integer($border)) {
+      throw new InvalidArgumentException('Border width should be positive integer');
+    }
+
+    $this->boundingBox = array(
+        "boxcolor='" . $color . "'@" . $transparent,
+        "boxborderw=" . $border
+    );
+    return $this;
+  }
+
+  public function getBoundingBox()
+  {
+    return $this->boundingBox;
   }
 
   public function getStringParameters()
@@ -125,51 +190,19 @@ class Text implements OverlayInterface
     $params[] = "y=" . $this->getCoordinates()->getY();
 
     // Bounding box
-    if ($this->boundingBox instanceof Box) {
-      $this
-          ->boundingBox
-          ->setTimeLine($this->getTimeLine());
-
-      // Set bounding box coordinates
-      // Make sure we have 5px padding around the text
-      $this
-          ->boundingBox
-          ->setCoordinates(
-              new \FFMpeg\Coordinate\Point(
-                  $this
-                      ->getCoordinates()
-                      ->getX() - 5,
-                  $this
-                      ->getCoordinates()
-                      ->getY() - 5
-              )
-          );
-      // Set bounding box dimensions
-      $this
-          ->boundingBox
-          ->setDimensions(
-              Dimension::calculateBoundingBoxDimensions(
-                  $this->getFontSize(),
-                  $this->getFontFile(),
-                  $this->getOverlayText()
-              )
-          );
-      return $this->boundingBox->getStringParameters() . ',' . implode(":", $params);
+    if ($this->boundingBox != null) {
+      $params[] = "box=1:".implode(":", $this->boundingBox);
     }
 
-    /*
-     * if($this->box instanceof Box) {
-      $this->box->setTimeLine($this->getTimeLine());
-
-      $height = Dimension::calculateBoxHeightByFontSize($this->getFontSize());
-      $y = Dimension::calculateBoxYByHeight($height, $this->getCoordinates()->getY());
-
-      $this->box->setCoordinates(new \FFMpeg\Coordinate\Point(0, $y));
-      // Set box dimensions, full width and auto height depending on font size
-      $this->box->setDimensions(new Dimension(Dimension::WIDTH_MAX, $height));
-      return $this->box->getStringParameters().','.implode(":", $params);
+    // Text shadow
+    if ($this->textShadow != null) {
+      $params[] = implode(":", $this->textShadow);
     }
-     */
+
+    // Text border
+    if ($this->textBorder != null) {
+      $params[] = implode(":", $this->textBorder);
+    }
 
     return implode(":", $params);
   }

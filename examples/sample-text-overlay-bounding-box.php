@@ -31,7 +31,7 @@ $overlayText
     ->setOverlayText('This is the default text with bounding box') // Set overlay text
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(400, 550)) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 15)) // Set timings (start, stop) in seconds
-    ->setBoundingBox(new \Sharapov\FFMpegExtensions\Filters\Video\Overlay\Box()); // Apply bounding box
+    ->setBoundingBox('#000000', 10, '0.4'); // Apply bounding box
 
 // Pass text overlay to filter
 $drawText
