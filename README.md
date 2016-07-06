@@ -39,7 +39,7 @@ $ffmpeg = \FFMpeg\FFMpeg::create(array(
 $video = $ffmpeg->open(dirname(__FILE__).'/source/demo_video_720p_HD.mp4');
 
 // Create draw overlay filter
-$drawText = new Sharapov\FFMpegExtensions\Filters\Video\OverlayFilter();
+$drawText = new Sharapov\FFMpegExtensions\Filters\Video\FilterSimpleOverlay();
 
 // Create text overlay 1
 $overlayText = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
