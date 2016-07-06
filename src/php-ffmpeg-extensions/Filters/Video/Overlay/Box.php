@@ -80,7 +80,7 @@ class Box implements OverlayInterface
     return $this->timeLine;
   }
 
-  public function getStringParameters()
+  public function getCommand()
   {
     $params = array("drawbox=");
 
@@ -99,6 +99,16 @@ class Box implements OverlayInterface
 
   public function __toString()
   {
-    return $this->getStringParameters();
+    return $this->getCommand();
+  }
+
+  public function getImageFile()
+  {
+    throw new InvalidArgumentException('Method getImageFile() is not implemented for this class');
+  }
+
+  public function setImageFile($file)
+  {
+    throw new InvalidArgumentException('Method setImageFile($file) is not implemented for this class');
   }
 }

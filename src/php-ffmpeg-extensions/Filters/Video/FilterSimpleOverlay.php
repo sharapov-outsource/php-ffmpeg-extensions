@@ -14,10 +14,11 @@ use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Filters\Video\VideoFilterInterface;
 use FFMpeg\Media\Video;
 use FFMpeg\Format\VideoInterface;
+use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Image;
 use Sharapov\FFMpegExtensions\Filters\Video\Overlay\OverlayInterface;
 use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text;
 
-class OverlayFilter implements VideoFilterInterface
+class FilterSimpleOverlay implements VideoFilterInterface
 {
   /** @var integer */
   protected $priority;

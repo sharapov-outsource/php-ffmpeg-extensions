@@ -10,17 +10,21 @@
 date_default_timezone_set('UTC');
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
+// Init logger object
+$logger = new \Monolog\Logger('ffmpeg');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler('info.log', \Monolog\Logger::INFO));
+
 // Init FFMpeg library
 $ffmpeg = \FFMpeg\FFMpeg::create(array(
-    'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg', // Path to FFMpeg
-    'ffprobe.binaries' => '/usr/local/bin/ffprobe', // Path to FFProbe
+    'ffmpeg.binaries' => dirname(__FILE__).'/ffmpeg-static/ffmpeg', // Path to FFMpeg
+    'ffprobe.binaries' => dirname(__FILE__).'/ffmpeg-static/ffprobe', // Path to FFProbe
     'timeout'          => 3600, // The timeout for the underlying process
     'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
-));
+), $logger);
 $video = $ffmpeg->open(dirname(__FILE__).'/source/demo_video_720p_HD.mp4');
 
 // Create draw overlay filter
-$drawText = new Sharapov\FFMpegExtensions\Filters\Video\OverlayFilter();
+$drawText = new Sharapov\FFMpegExtensions\Filters\Video\FilterSimpleOverlay();
 
 // Create text overlay 1
 $overlayText = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
@@ -69,9 +73,9 @@ $video
     ->addFilter($drawText);
 
 // Choose output format
-$format = new \FFMpeg\Format\Video\X264();
+$format = new \FFMpeg\Format\Video\X264('libmp3lame');
 $format->on('progress', function ($video, $format, $percentage) {
-  echo "$percentage %<br />";
+  echo "$percentage % \n<br />";
 });
 
 // And render it

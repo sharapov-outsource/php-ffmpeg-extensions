@@ -11,7 +11,6 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
 use Sharapov\FFMpegExtensions\Coordinate\Point;
 use FFMpeg\Exception\InvalidArgumentException;
-use Sharapov\FFMpegExtensions\Coordinate\Dimension;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 
 class Text implements OverlayInterface
@@ -174,20 +173,20 @@ class Text implements OverlayInterface
     return $this->boundingBox;
   }
 
-  public function getStringParameters()
+  public function getCommand()
   {
-    $params = array("drawtext=");
+    $params = array(
+        "fontfile=" . $this->getFontFile(),
+        "text='" . $this->getOverlayText() . "'",
+        "fontcolor='" . $this->getFontColor() . "'",
+        "fontsize=" . $this->getFontSize(),
+        "x=" . $this->getCoordinates()->getX(),
+        "y=" . $this->getCoordinates()->getY()
+    );
 
     if ($this->timeLine instanceof TimeLine) {
       $params[] = "enable='between(t," . $this->getTimeLine()->getStartTime() . "," . $this->getTimeLine()->getEndTime() . ")'";
     }
-
-    $params[] = "fontfile=" . $this->getFontFile();
-    $params[] = "text='" . $this->getOverlayText() . "'";
-    $params[] = "fontcolor='" . $this->getFontColor() . "'";
-    $params[] = "fontsize=" . $this->getFontSize();
-    $params[] = "x=" . $this->getCoordinates()->getX();
-    $params[] = "y=" . $this->getCoordinates()->getY();
 
     // Bounding box
     if ($this->boundingBox != null) {
@@ -204,11 +203,21 @@ class Text implements OverlayInterface
       $params[] = implode(":", $this->textBorder);
     }
 
-    return implode(":", $params);
+    return "drawtext=".implode(":", $params);
   }
 
   public function __toString()
   {
-    return $this->getStringParameters();
+    return $this->getCommand();
+  }
+
+  public function getImageFile()
+  {
+    throw new InvalidArgumentException('Method getImageFile() is not implemented for this class');
+  }
+
+  public function setImageFile($file)
+  {
+    throw new InvalidArgumentException('Method setImageFile($file) is not implemented for this class');
   }
 }

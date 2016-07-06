@@ -57,4 +57,12 @@ class Dimension
   {
     return $this->height;
   }
+
+  /**
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->getWidth() . ":" . $this->getHeight();
+  }
 }

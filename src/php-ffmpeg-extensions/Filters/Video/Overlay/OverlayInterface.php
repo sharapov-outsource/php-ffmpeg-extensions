@@ -11,5 +11,8 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
 interface OverlayInterface
 {
-  public function getStringParameters();
+  public function getCommand();
+  public function getImageFile();
+  public function setImageFile($file);
+  public function __toString();
 }

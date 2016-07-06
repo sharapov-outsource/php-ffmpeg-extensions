@@ -45,4 +45,12 @@ class Point
   {
     return $this->y;
   }
+
+  /**
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->getX() . ":" . $this->getY();
+  }
 }

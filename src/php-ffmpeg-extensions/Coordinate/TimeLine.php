@@ -47,4 +47,12 @@ class TimeLine
   {
     return $this->end;
   }
+
+  /**
+   * @return string
+   */
+  public function __toString()
+  {
+    return $this->getStartTime() . "," . $this->getEndTime();
+  }
 }
