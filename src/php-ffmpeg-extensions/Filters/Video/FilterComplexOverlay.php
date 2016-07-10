@@ -96,13 +96,13 @@ class FilterComplexOverlay implements VideoFilterInterface
    */
   public function apply(Video $video, VideoInterface $format)
   {
-    $commandString = array();
+    $filterOptions = array();
     // Compile color key command
     if($this->colorKeyFilter instanceof ColorKey) {
-      $commandString[] = sprintf('[0:v]colorkey=%s[sck]', $this->colorKeyFilter->getColor());
+      $filterOptions[] = sprintf('[0:v]colorkey=%s[sck]', $this->colorKeyFilter->getColor());
       // Color key background input is always the first stream
-      $commandString[] = sprintf('[1:v]scale=%s[out1]', $this->colorKeyFilter->getDimensions());
-      $commandString[] = sprintf('[out1][sck]overlay%s', ((count($this->imageOverlay) > 0 or count($this->textOverlay) > 0)?'[out2]':''));
+      $filterOptions[] = sprintf('[1:v]scale=%s[out1]', $this->colorKeyFilter->getDimensions());
+      $filterOptions[] = sprintf('[out1][sck]overlay%s', ((count($this->imageOverlay) > 0 or count($this->textOverlay) > 0)?'[out2]':''));
 
       $filterNumStart = 2;
     } else {
@@ -111,7 +111,7 @@ class FilterComplexOverlay implements VideoFilterInterface
 
     // Compile other filters commands
     foreach ($this->imageOverlay as $k => $filter) {
-        $commandString[] = sprintf('[%s:v]scale=%s[s%s]', $filterNumStart, $filter->getDimensions(), $filterNumStart);
+        $filterOptions[] = sprintf('[%s:v]scale=%s[s%s]', $filterNumStart, $filter->getDimensions(), $filterNumStart);
         if($filterNumStart == 1) {
           $cmd = '[0:v]';
         } else {
@@ -134,7 +134,7 @@ class FilterComplexOverlay implements VideoFilterInterface
         if (isset($this->imageOverlay[($k + 1)]) or count($this->textOverlay) > 0) {
           $cmd.= sprintf("[out%s]", ($filterNumStart + 1));
         }
-        $commandString[] = $cmd;
+        $filterOptions[] = $cmd;
 
       $filterNumStart++;
     }
@@ -145,13 +145,13 @@ class FilterComplexOverlay implements VideoFilterInterface
       if (count($this->boxOverlay) > 0) {
         $cmd.= sprintf("[out%s]", ($filterNumStart + 1));
       }
-      $commandString[] = $cmd;
+      $filterOptions[] = $cmd;
       $filterNumStart++;
     }
 
     // Compile drawbox filters
     if(count($this->boxOverlay) > 0) {
-      $commandString[] = sprintf("[out%s]%s", $filterNumStart, implode(",",$this->boxOverlay));
+      $filterOptions[] = sprintf("[out%s]%s", $filterNumStart, implode(",",$this->boxOverlay));
     }
 
     $commands = array();
@@ -162,7 +162,7 @@ class FilterComplexOverlay implements VideoFilterInterface
     }
 
     $commands[] = '-filter_complex';
-    $commands[] = implode(",", $commandString);
+    $commands[] = implode(",", $filterOptions);
     return $commands;
   }
 }

@@ -82,19 +82,19 @@ class Box implements OverlayInterface
 
   public function getCommand()
   {
-    $params = array("drawbox=");
+    $filterOptions = array("drawbox=");
 
     if ($this->timeLine instanceof TimeLine) {
-      $params[] = "enable='between(t," . $this->timeLine->getStartTime() . "," . $this->timeLine->getEndTime() . ")'";
+      $filterOptions[] = "enable='between(t," . $this->timeLine->getStartTime() . "," . $this->timeLine->getEndTime() . ")'";
     }
 
-    $params[] = "width=" . $this->getDimensions()->getWidth();
-    $params[] = "height=" . $this->getDimensions()->getHeight();
-    $params[] = "color=" . $this->getColor();
-    $params[] = "x=" . $this->getCoordinates()->getX();
-    $params[] = "y=" . $this->getCoordinates()->getY();
+    $filterOptions[] = "width=" . $this->getDimensions()->getWidth();
+    $filterOptions[] = "height=" . $this->getDimensions()->getHeight();
+    $filterOptions[] = "color=" . $this->getColor();
+    $filterOptions[] = "x=" . $this->getCoordinates()->getX();
+    $filterOptions[] = "y=" . $this->getCoordinates()->getY();
 
-    return implode(":", $params);
+    return implode(":", $filterOptions);
   }
 
   public function __toString()

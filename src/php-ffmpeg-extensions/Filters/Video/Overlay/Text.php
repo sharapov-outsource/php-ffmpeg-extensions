@@ -175,7 +175,7 @@ class Text implements OverlayInterface
 
   public function getCommand()
   {
-    $params = array(
+    $filterOptions = array(
         "fontfile=" . $this->getFontFile(),
         "text='" . $this->getOverlayText() . "'",
         "fontcolor='" . $this->getFontColor() . "'",
@@ -185,25 +185,25 @@ class Text implements OverlayInterface
     );
 
     if ($this->timeLine instanceof TimeLine) {
-      $params[] = "enable='between(t," . $this->getTimeLine()->getStartTime() . "," . $this->getTimeLine()->getEndTime() . ")'";
+      $filterOptions[] = "enable='between(t," . $this->getTimeLine()->getStartTime() . "," . $this->getTimeLine()->getEndTime() . ")'";
     }
 
     // Bounding box
     if ($this->boundingBox != null) {
-      $params[] = "box=1:".implode(":", $this->boundingBox);
+      $filterOptions[] = "box=1:".implode(":", $this->boundingBox);
     }
 
     // Text shadow
     if ($this->textShadow != null) {
-      $params[] = implode(":", $this->textShadow);
+      $filterOptions[] = implode(":", $this->textShadow);
     }
 
     // Text border
     if ($this->textBorder != null) {
-      $params[] = implode(":", $this->textBorder);
+      $filterOptions[] = implode(":", $this->textBorder);
     }
 
-    return "drawtext=".implode(":", $params);
+    return "drawtext=".implode(":", $filterOptions);
   }
 
   public function __toString()
