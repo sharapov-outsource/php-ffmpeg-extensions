@@ -26,10 +26,10 @@ class Point
    */
   public function __construct($x = self::AUTO_HORIZONTAL, $y = self::AUTO_VERTICAL)
   {
-    if($this->x != self::AUTO_HORIZONTAL or ! is_integer($x)) {
+    if($this->x != self::AUTO_HORIZONTAL and ! is_integer($x)) {
       throw new InvalidArgumentException('X should be positive integer or "'.self::AUTO_HORIZONTAL.'"');
     }
-    if($this->y != self::AUTO_VERTICAL or ! is_integer($y)) {
+    if($this->y != self::AUTO_VERTICAL and ! is_integer($y)) {
       throw new InvalidArgumentException('Y should be positive integer or "'.self::AUTO_VERTICAL.'"');
     }
 
