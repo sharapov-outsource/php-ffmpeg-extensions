@@ -13,19 +13,26 @@ use FFMpeg\Exception\InvalidArgumentException;
 
 class Point
 {
+  const AUTO_VERTICAL = '(h-th)/2';
+  const AUTO_HORIZONTAL = '(w-tw)/2';
+
   protected $x;
   protected $y;
 
   /**
    * Point constructor.
-   * @param integer $x
-   * @param integer $y
+   * @param mixed $x
+   * @param mixed $y
    */
-  public function __construct($x, $y)
+  public function __construct($x = self::AUTO_HORIZONTAL, $y = self::AUTO_VERTICAL)
   {
-    if ( ! is_integer($x) || ! is_integer($y)) {
-      throw new InvalidArgumentException('X and Y should be positive integer');
+    if($this->x != self::AUTO_HORIZONTAL or ! is_integer($x)) {
+      throw new InvalidArgumentException('X should be positive integer or "'.self::AUTO_HORIZONTAL.'"');
     }
+    if($this->y != self::AUTO_VERTICAL or ! is_integer($y)) {
+      throw new InvalidArgumentException('Y should be positive integer or "'.self::AUTO_VERTICAL.'"');
+    }
+
     $this->x = $x;
     $this->y = $y;
   }

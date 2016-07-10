@@ -19,8 +19,8 @@ class Dimension
   const WIDTH_MAX = 'iw';
   const HEIGHT_MAX = 'ih';
 
-  private $width;
-  private $height;
+  protected $width;
+  protected $height;
 
   /**
    * @param integer $width

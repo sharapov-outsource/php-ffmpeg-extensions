@@ -13,8 +13,8 @@ use FFMpeg\Exception\InvalidArgumentException;
 
 class TimeLine
 {
-  private $start;
-  private $end;
+  protected $start;
+  protected $end;
 
   /**
    * @param integer $start

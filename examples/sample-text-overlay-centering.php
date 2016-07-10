@@ -33,7 +33,7 @@ $overlayText
     ->setFontColor('#ffffff') // Set font color
     ->setFontSize(33) // Set font size
     ->setOverlayText('Central alignment') // Set overlay text
-    ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Center()) // Set coordinates
+    ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point()) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 6)); // Set timings (start, stop) in seconds
 
 // Pass text overlay to filter
@@ -48,7 +48,7 @@ $overlayText
     ->setFontSize(28) // Set font size
     ->setOverlayText('Vertical alignment with 50px left margin') // Set overlay text
     ->setCoordinates(
-        new \Sharapov\FFMpegExtensions\Coordinate\Center(50, \Sharapov\FFMpegExtensions\Coordinate\Center::AUTO_VERTICAL)
+        new \Sharapov\FFMpegExtensions\Coordinate\Point(50, \Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_VERTICAL)
     ) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(8, 14)); // Set timings (start, stop) in seconds
 
@@ -64,7 +64,7 @@ $overlayText
     ->setFontSize(38) // Set font size
     ->setOverlayText('Horizontal alignment with 200px top margin') // Set overlay text
     ->setCoordinates(
-        new \Sharapov\FFMpegExtensions\Coordinate\Center(\Sharapov\FFMpegExtensions\Coordinate\Center::AUTO_HORIZONTAL, 200)
+        new \Sharapov\FFMpegExtensions\Coordinate\Point(\Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_HORIZONTAL, 200)
     ) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(16, 20)); // Set timings (start, stop) in seconds
 
