@@ -141,7 +141,13 @@ class FilterComplexOverlay implements VideoFilterInterface
 
     // Compile drawtext filters
     if(count($this->textOverlay) > 0) {
-      $cmd = sprintf("[out%s]%s", $filterNumStart, implode(",",$this->textOverlay));
+      if($filterNumStart == 1) {
+        $cmd = '[0:v]';
+      } else {
+        $cmd = sprintf('[out%s]', $filterNumStart);
+      }
+      $cmd.= implode(",",$this->textOverlay);
+
       if (count($this->boxOverlay) > 0) {
         $cmd.= sprintf("[out%s]", ($filterNumStart + 1));
       }
