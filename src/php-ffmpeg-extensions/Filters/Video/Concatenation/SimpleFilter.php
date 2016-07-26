@@ -7,14 +7,14 @@
  *
  */
 
-namespace Sharapov\FFMpegExtensions\Filters\Video;
+namespace Sharapov\FFMpegExtensions\Filters\Video\Concatenation;
 
 use FFMpeg\Filters\Video\VideoFilterInterface;
 use FFMpeg\Media\Video;
 use FFMpeg\Format\VideoInterface;
 use FFMpeg\Exception\InvalidArgumentException;
 
-class FilterConcat implements VideoFilterInterface
+class SimpleFilter implements VideoFilterInterface
 {
   /** @var integer */
   protected $priority;
