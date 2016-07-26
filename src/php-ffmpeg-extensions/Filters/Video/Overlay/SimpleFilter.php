@@ -7,7 +7,7 @@
  *
  */
 
-namespace Sharapov\FFMpegExtensions\Filters\Video;
+namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Exception\InvalidArgumentException;
@@ -18,28 +18,18 @@ use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Image;
 use Sharapov\FFMpegExtensions\Filters\Video\Overlay\OverlayInterface;
 use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text;
 
-class FilterSimpleOverlay implements VideoFilterInterface
+class SimpleFilter extends AbstractFilter implements VideoFilterInterface
 {
-  /** @var integer */
-  protected $priority;
-
+  /**
+   * Overlay objects array
+   * @var array
+   */
   protected $overlay = array();
 
-  public function __construct($priority = 0)
-  {
-    $this->priority = $priority;
-  }
-
   /**
-   * {@inheritdoc}
-   */
-  public function getPriority()
-  {
-    return $this->priority;
-  }
-
-  /**
-   * {@inheritdoc}
+   * Set overlay object.
+   * @param \Sharapov\FFMpegExtensions\Filters\Video\Overlay\OverlayInterface $overlay
+   * @return $this
    */
   public function setOverlay(OverlayInterface $overlay)
   {
@@ -48,9 +38,11 @@ class FilterSimpleOverlay implements VideoFilterInterface
   }
 
   /**
-   * {@inheritdoc}
+   * Set array of overlay objects.
+   * @param array $overlays
+   * @return $this
    */
-  public function setOverlays($overlays)
+  public function setOverlays(array $overlays)
   {
     foreach ($overlays as $overlay) {
       $this->setOverlay($overlay);
@@ -59,19 +51,27 @@ class FilterSimpleOverlay implements VideoFilterInterface
   }
 
   /**
-   * {@inheritdoc}
+   * Get the array of overlays.
+   * @return array
    */
   public function getOverlays()
   {
     return $this->overlay;
   }
 
-
   /**
-   * {@inheritdoc}
+   * Applies the filter on the the Video media given an format.
+   *
+   * @param Video $video
+   * @param VideoInterface $format
+   *
+   * @return array An array of arguments
    */
   public function apply(Video $video, VideoInterface $format)
   {
+    if (empty($this->overlay)) {
+      throw new InvalidArgumentException('No overlay objects found');
+    }
     return array(
         '-vf',
         implode(",", $this->overlay)

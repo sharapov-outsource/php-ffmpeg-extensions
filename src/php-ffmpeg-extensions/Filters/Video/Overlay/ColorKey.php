@@ -47,7 +47,7 @@ class ColorKey implements OverlayInterface
     }
 
     if ($blend > 1 || $blend < 0) {
-      throw new InvalidArgumentException('Invalid value of similarity. Should be integer or float value from 0 to 1');
+      throw new InvalidArgumentException('Invalid value of blend. Should be integer or float value from 0 to 1');
     }
 
     $this->colorKey = '0x' . $color . ':' . $similarity . ':' . $blend;
@@ -55,7 +55,7 @@ class ColorKey implements OverlayInterface
   }
 
   /**
-   * Get RGB colorspace
+   * Get RGB colorspace.
    * @return string
    */
   public function getColor()
@@ -64,7 +64,7 @@ class ColorKey implements OverlayInterface
   }
 
   /**
-   * Set background image file
+   * Set background image file.
    * @param $file
    * @return $this
    */
@@ -78,7 +78,7 @@ class ColorKey implements OverlayInterface
   }
 
   /**
-   * Get background image file
+   * Get background image file.
    * @return string
    */
   public function getImageFile()
@@ -87,19 +87,19 @@ class ColorKey implements OverlayInterface
   }
 
   /**
-   * Set background dimensions
-   * @param Dimension $dimension
+   * Set background dimensions.
+   * @param \Sharapov\FFMpegExtensions\Coordinate\Dimension $dimension
    * @return $this
    */
-  public function setDimensions(Dimension $dimension)
+  public function setDimensions(\Sharapov\FFMpegExtensions\Coordinate\Dimension $dimension)
   {
     $this->dimensions = $dimension;
     return $this;
   }
 
   /**
-   * Get background dimensions
-   * @return Dimension
+   * Get background dimensions.
+   * @return \Sharapov\FFMpegExtensions\Coordinate\Dimension
    */
   public function getDimensions()
   {
@@ -107,7 +107,7 @@ class ColorKey implements OverlayInterface
   }
 
   /**
-   * Get string command
+   * Return command string.
    * @return string
    */
   public function getCommand()
@@ -116,6 +116,7 @@ class ColorKey implements OverlayInterface
   }
 
   /**
+   * Return command string.
    * @return string
    */
   public function __toString()

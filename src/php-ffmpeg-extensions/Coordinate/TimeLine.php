@@ -48,6 +48,15 @@ class TimeLine
     return $this->end;
   }
 
+  public function getCommand()
+  {
+    return "enable='between(" . implode(",", [
+        't',
+        $this->getStartTime(),
+        $this->getEndTime()
+    ]) . ")'";
+  }
+
   /**
    * @return string
    */

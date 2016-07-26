@@ -9,8 +9,6 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
-use Sharapov\FFMpegExtensions\Coordinate\Dimension;
-use FFMpeg\Coordinate\Point;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 use FFMpeg\Exception\InvalidArgumentException;
 
@@ -24,11 +22,24 @@ class Box implements OverlayInterface
 
   protected $timeLine;
 
+  /**
+   * Constructor. Set box color.
+   * @param $color
+   * @param float $transparent
+   * @param string $thickness
+   */
   public function __construct($color = 'black', $transparent = 0.4, $thickness = 'max')
   {
-    return $this->setColor($color, $transparent, $thickness);
+    $this->setColor($color, $transparent, $thickness);
   }
 
+  /**
+   * Set box color.
+   * @param $color
+   * @param float $transparent
+   * @param string $thickness
+   * @return $this
+   */
   public function setColor($color, $transparent = 0.4, $thickness = 'max')
   {
     if ($transparent > 1 || $transparent < 0) {
@@ -42,23 +53,36 @@ class Box implements OverlayInterface
     return $this;
   }
 
+  /**
+   * Get box color.
+   * @return string
+   */
   public function getColor()
   {
     return $this->color;
   }
 
-  public function setCoordinates(Point $point)
+  /**
+   * Set coordinates object.
+   * @param \Sharapov\FFMpegExtensions\Coordinate\Point $point
+   * @return $this
+   */
+  public function setCoordinates(\Sharapov\FFMpegExtensions\Coordinate\Point $point)
   {
     $this->coordinates = $point;
     return $this;
   }
 
+  /**
+   * Return coordinates object.
+   * @return mixed
+   */
   public function getCoordinates()
   {
     return $this->coordinates;
   }
 
-  public function setDimensions(Dimension $dimension)
+  public function setDimensions(\Sharapov\FFMpegExtensions\Coordinate\Dimension $dimension)
   {
     $this->dimensions = $dimension;
     return $this;
@@ -69,7 +93,7 @@ class Box implements OverlayInterface
     return $this->dimensions;
   }
 
-  public function setTimeLine(TimeLine $timeLine)
+  public function setTimeLine(\Sharapov\FFMpegExtensions\Coordinate\TimeLine $timeLine)
   {
     $this->timeLine = $timeLine;
     return $this;
@@ -80,33 +104,48 @@ class Box implements OverlayInterface
     return $this->timeLine;
   }
 
+  /**
+   * Return command string.
+   * @return string
+   */
   public function getCommand()
   {
-    $filterOptions = array("drawbox=");
+    $filterOptions = array(
+        "width=" => $this->getDimensions()->getWidth(),
+        "height=" => $this->getDimensions()->getHeight(),
+        "color=" => $this->getColor(),
+        "x=" => $this->getCoordinates()->getX(),
+        "y=" => $this->getCoordinates()->getY()
+    );
 
     if ($this->timeLine instanceof TimeLine) {
-      $filterOptions[] = "enable='between(t," . $this->timeLine->getStartTime() . "," . $this->timeLine->getEndTime() . ")'";
+      $filterOptions[] = $this->timeLine->getCommand();
     }
-
-    $filterOptions[] = "width=" . $this->getDimensions()->getWidth();
-    $filterOptions[] = "height=" . $this->getDimensions()->getHeight();
-    $filterOptions[] = "color=" . $this->getColor();
-    $filterOptions[] = "x=" . $this->getCoordinates()->getX();
-    $filterOptions[] = "y=" . $this->getCoordinates()->getY();
-
-    return implode(":", $filterOptions);
+    return "drawbox=" . implode(":", $filterOptions);
   }
 
+  /**
+   * Return command string.
+   * @return string
+   */
   public function __toString()
   {
     return $this->getCommand();
   }
 
+  /**
+   * Not implemented for this class.
+   * @throws InvalidArgumentException
+   */
   public function getImageFile()
   {
     throw new InvalidArgumentException('Method getImageFile() is not implemented for this class');
   }
 
+  /**
+   * Not implemented for this class.
+   * @throws InvalidArgumentException
+   */
   public function setImageFile($file)
   {
     throw new InvalidArgumentException('Method setImageFile($file) is not implemented for this class');

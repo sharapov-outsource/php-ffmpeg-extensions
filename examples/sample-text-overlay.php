@@ -23,12 +23,12 @@ $ffmpeg = \FFMpeg\FFMpeg::create(array(
 ), $logger);
 $video = $ffmpeg->open(dirname(__FILE__).'/source/demo_video_720p_HD.mp4');
 
-// Create draw overlay filter
-$drawText = new Sharapov\FFMpegExtensions\Filters\Video\FilterSimpleOverlay();
+// Create simple overlay filter
+$simpleFilter = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\SimpleFilter();
 
 // Create text overlay 1
-$overlayText = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
-$overlayText
+$overlayText1 = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
+$overlayText1
     ->setFontFile(dirname(__FILE__).'/source/arial.ttf') // Set path to font file
     ->setFontColor('#ffffff') // Set font color
     ->setFontSize(33) // Set font size
@@ -36,13 +36,9 @@ $overlayText
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(230, 150)) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 6)); // Set timings (start, stop) in seconds
 
-// Pass text overlay to filter
-$drawText
-    ->setOverlay($overlayText);
-
 // Create text overlay 2
-$overlayText = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
-$overlayText
+$overlayText2 = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
+$overlayText2
     ->setFontFile(dirname(__FILE__).'/source/arial.ttf') // Set path to font file
     ->setFontColor('#ffffff') // Set font color
     ->setFontSize(28) // Set font size
@@ -50,13 +46,9 @@ $overlayText
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(230, 250)) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(8, 14)); // Set timings (start, stop) in seconds
 
-// Pass text overlay to filter
-$drawText
-    ->setOverlay($overlayText);
-
 // Create text overlay 3
-$overlayText = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
-$overlayText
+$overlayText3 = new Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text();
+$overlayText3
     ->setFontFile(dirname(__FILE__).'/source/arial.ttf') // Set path to font file
     ->setFontColor('#ffffff') // Set font color
     ->setFontSize(38) // Set font size
@@ -64,13 +56,17 @@ $overlayText
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(750, 550)) // Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(16, 20)); // Set timings (start, stop) in seconds
 
-// Pass text overlay to filter
-$drawText
-    ->setOverlay($overlayText);
+// Pass overlays to filter
+$simpleFilter
+    ->setOverlays([
+        $overlayText1,
+        $overlayText2,
+        $overlayText3
+    ]);
 
-// Apply overlay filter to video
+// Apply filter on video
 $video
-    ->addFilter($drawText);
+    ->addFilter($simpleFilter);
 
 // Choose output format
 $format = new \FFMpeg\Format\Video\X264('libmp3lame');

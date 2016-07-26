@@ -12,15 +12,7 @@ namespace Sharapov\FFMpegExtensions\Filters\Video;
 use FFMpeg\Filters\Video\VideoFilterInterface;
 use FFMpeg\Media\Video;
 use FFMpeg\Format\VideoInterface;
-use Sharapov\FFMpegExtensions\Coordinate\Point;
-use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\ColorKey;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Image;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\OverlayInterface;
-use Sharapov\FFMpegExtensions\Coordinate\Dimension;
 use FFMpeg\Exception\InvalidArgumentException;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Box;
 
 class FilterConcat implements VideoFilterInterface
 {
@@ -48,7 +40,7 @@ class FilterConcat implements VideoFilterInterface
   public function attachFile($file)
   {
     if (!file_exists($file)) {
-      throw new InvalidArgumentException('Incorrect video file path.');
+      throw new InvalidArgumentException('Path '.$file.' is incorrect');
     }
     $this->inputs[] = $file;
     return $this;

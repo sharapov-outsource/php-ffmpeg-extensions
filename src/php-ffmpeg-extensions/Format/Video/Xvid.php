@@ -16,6 +16,8 @@ use FFMpeg\Format\Video\DefaultVideo;
  */
 class Xvid extends DefaultVideo
 {
+  public $passes = 2;
+
   /** @var boolean */
   private $bframesSupport = true;
 
@@ -65,9 +67,18 @@ class Xvid extends DefaultVideo
   /**
    * {@inheritDoc}
    */
+  public function setPasses($passes)
+  {
+    $this->passes = $passes;
+    return $this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function getPasses()
   {
-    return 2;
+    return $this->passes;
   }
 
   /**
