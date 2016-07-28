@@ -28,7 +28,7 @@ class Video extends \FFMpeg\Media\Video
   /**
    * Concat protocol.
    * Use with formats that support file level concatenation (MPEG-1, MPEG-2 PS, DV).
-   * @return null|\Sharapov\FFMpegExtensions\Filters\Video\Concatenation\ProtocolFilter
+   * @return null|ProtocolFilter
    */
   public function concatProtocol()
   {
