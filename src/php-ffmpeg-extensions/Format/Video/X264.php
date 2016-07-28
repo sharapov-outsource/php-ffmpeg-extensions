@@ -21,6 +21,14 @@ class X264 extends \FFMpeg\Format\Video\X264
   /**
    * {@inheritDoc}
    */
+  public function getPasses()
+  {
+    return $this->passes;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function setPasses($passes)
   {
     if( ! is_integer($passes)) {
@@ -28,13 +36,5 @@ class X264 extends \FFMpeg\Format\Video\X264
     }
     $this->passes = (int)$passes;
     return $this;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getPasses()
-  {
-    return $this->passes;
   }
 }

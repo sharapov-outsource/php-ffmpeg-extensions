@@ -80,8 +80,8 @@ class Video extends \FFMpeg\Media\Video
           '-y',
           '-i',
           sprintf('concat:%s', implode("|", $inputs)),
-          '-c',
-          'copy',
+          //'-c',
+          //'copy',
           '-bsf:a',
           'aac_adtstoasc',
           $outputPathfile

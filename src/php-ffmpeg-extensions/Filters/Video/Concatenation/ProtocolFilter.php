@@ -13,22 +13,12 @@ use FFMpeg\Exception\InvalidArgumentException;
 
 class ProtocolFilter
 {
-  private $_inputs = [];
   private static $_instance = null;
+  private $_inputs = [];
 
   private function __construct()
   {
     // Protected constructor to prevent creating a new instance of the *Singleton* via the `new` operator from outside of this class.
-  }
-
-  protected function __clone()
-  {
-    // Private clone method to prevent cloning of the instance of the *Singleton* instance.
-  }
-
-  private function __wakeup()
-  {
-    // Private unserialize method to prevent unserializing of the *Singleton* instance.
   }
 
   static public function init()
@@ -55,35 +45,13 @@ class ProtocolFilter
     return $this->_inputs;
   }
 
-  /*
-  protected $priority;
-
-  protected $inputs = [];
-
-  public function __construct($priority = 0)
+  protected function __clone()
   {
-    $this->priority = $priority;
+    // Private clone method to prevent cloning of the instance of the *Singleton* instance.
   }
 
-  public function getPriority()
+  private function __wakeup()
   {
-    return $this->priority;
+    // Private unserialize method to prevent unserializing of the *Singleton* instance.
   }
-
-
-  public function attachFile($file)
-  {
-    if (!file_exists($file)) {
-      throw new InvalidArgumentException('Path ' . $file . ' is incorrect');
-    }
-    $this->inputs[] = $file;
-
-    return $this;
-  }
-
-
-  public function apply(Video $video, VideoInterface $format)
-  {
-
-  }*/
 }

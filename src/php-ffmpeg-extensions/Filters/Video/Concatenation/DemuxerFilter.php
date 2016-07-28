@@ -13,22 +13,12 @@ use FFMpeg\Exception\InvalidArgumentException;
 
 class DemuxerFilter
 {
-  private $_inputs = [];
   private static $_instance = null;
+  private $_inputs = [];
 
   private function __construct()
   {
     // Protected constructor to prevent creating a new instance of the *Singleton* via the `new` operator from outside of this class.
-  }
-
-  protected function __clone()
-  {
-    // Private clone method to prevent cloning of the instance of the *Singleton* instance.
-  }
-
-  private function __wakeup()
-  {
-    // Private unserialize method to prevent unserializing of the *Singleton* instance.
   }
 
   static public function init()
@@ -53,5 +43,15 @@ class DemuxerFilter
   public function getFiles()
   {
     return $this->_inputs;
+  }
+
+  protected function __clone()
+  {
+    // Private clone method to prevent cloning of the instance of the *Singleton* instance.
+  }
+
+  private function __wakeup()
+  {
+    // Private unserialize method to prevent unserializing of the *Singleton* instance.
   }
 }

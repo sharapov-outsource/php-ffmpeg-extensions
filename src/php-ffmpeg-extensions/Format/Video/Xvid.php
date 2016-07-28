@@ -67,18 +67,18 @@ class Xvid extends DefaultVideo
   /**
    * {@inheritDoc}
    */
-  public function setPasses($passes)
+  public function getPasses()
   {
-    $this->passes = $passes;
-    return $this;
+    return $this->passes;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getPasses()
+  public function setPasses($passes)
   {
-    return $this->passes;
+    $this->passes = $passes;
+    return $this;
   }
 
   /**
