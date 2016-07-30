@@ -19,27 +19,29 @@ use FFMpeg\Exception\InvalidArgumentException;
 
 class ComplexFilter extends AbstractFilter implements VideoFilterInterface
 {
-  protected $imageOverlay = array();
+  protected $imageOverlay = [];
 
-  protected $textOverlay = array();
+  protected $textOverlay = [];
 
-  protected $boxOverlay = array();
+  protected $boxOverlay = [];
 
   protected $colorKeyFilter;
 
-  protected $inputs = array();
+  protected $inputs = [];
 
   /**
    * Set overlay object.
+   *
    * @param \Sharapov\FFMpegExtensions\Filters\Video\Overlay\OverlayInterface $overlay
+   *
    * @return $this
    */
   public function setOverlay(OverlayInterface $overlay)
   {
     if ($overlay instanceof ColorKey) {
 
-      if ($overlay->getImageFile() == null) {
-        throw new InvalidArgumentException('Filter "ColorKey" error: incorrect path');
+      if ($overlay->getImageFile() == null and $overlay->getVideoFile() == null) {
+        throw new InvalidArgumentException('Filter "ColorKey" error: incorrect file path');
       }
 
       if (!$overlay->getDimensions() instanceof Dimension) {
@@ -47,7 +49,12 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       }
 
       $this->colorKeyFilter = $overlay;
-      $this->inputs[] = $overlay->getImageFile();
+      if ($overlay->getImageFile() != null) {
+        $this->inputs[] = $overlay->getImageFile();
+      }
+      if ($overlay->getVideoFile() != null) {
+        $this->inputs[] = $overlay->getVideoFile();
+      }
 
     } elseif ($overlay instanceof Image) {
 
@@ -68,6 +75,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
     } else {
       throw new InvalidArgumentException('Unsupported overlay requested. Only ColorKey, Image, Text, Box are supported.');
     }
+
     return $this;
   }
 
@@ -77,7 +85,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
    */
   public function apply(Video $video, VideoInterface $format)
   {
-    $filterOptions = array();
+    $filterOptions = [];
     // Compile color key command
     if ($this->colorKeyFilter instanceof ColorKey) {
       $filterOptions[] = sprintf('[0:v]colorkey=%s[sck]', $this->colorKeyFilter->getColor());
@@ -141,7 +149,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       $filterOptions[] = sprintf("[out%s]%s", $filterNumStart, implode(",", $this->boxOverlay));
     }
 
-    $commands = array();
+    $commands = [];
 
     foreach ($this->inputs as $input) {
       $commands[] = '-i';
@@ -150,6 +158,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
 
     $commands[] = '-filter_complex';
     $commands[] = implode(",", $filterOptions);
+
     return $commands;
   }
 }
