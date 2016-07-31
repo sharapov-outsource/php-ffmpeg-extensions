@@ -53,7 +53,7 @@ class Xvid extends DefaultVideo
    */
   public function getAvailableAudioCodecs()
   {
-    return array('libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac');
+    return ['libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac'];
   }
 
   /**
@@ -61,7 +61,7 @@ class Xvid extends DefaultVideo
    */
   public function getAvailableVideoCodecs()
   {
-    return array('libxvid');
+    return ['libxvid'];
   }
 
   /**
@@ -78,6 +78,7 @@ class Xvid extends DefaultVideo
   public function setPasses($passes)
   {
     $this->passes = $passes;
+
     return $this;
   }
 

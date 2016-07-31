@@ -9,20 +9,21 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
-use Sharapov\FFMpegExtensions\Coordinate\Point;
 use FFMpeg\Exception\InvalidArgumentException;
-use Sharapov\FFMpegExtensions\Coordinate\Dimension;
-use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 
+/**
+ * Class ColorKey
+ * @package Sharapov\FFMpegExtensions\Filters\Video\Overlay
+ */
 class ColorKey implements OverlayInterface
 {
-  protected $imageFile;
+  protected $_imageFile;
 
-  protected $videoFile;
+  protected $_videoFile;
 
-  protected $colorKey = '0x3BBD1E:0.6:0.3';
+  protected $_colorKey = '0x3BBD1E:0.6:0.3';
 
-  protected $dimensions;
+  protected $_dimensions;
 
   /**
    * RGB colorspace color keying.
@@ -59,7 +60,7 @@ class ColorKey implements OverlayInterface
       throw new InvalidArgumentException('Invalid value of color. Should be hex color string.');
     }
 
-    $this->colorKey = '0x' . $color . ':' . $similarity . ':' . $blend;
+    $this->_colorKey = '0x' . $color . ':' . $similarity . ':' . $blend;
 
     return $this;
   }
@@ -70,22 +71,19 @@ class ColorKey implements OverlayInterface
    */
   public function getColor()
   {
-    return $this->colorKey;
+    return $this->_colorKey;
   }
 
   /**
    * Set background image file.
    *
-   * @param $file
+   * @param \Sharapov\FFMpegExtensions\Stream\FileInterface $file
    *
    * @return $this
    */
-  public function setImageFile($file)
+  public function setImageFile(\Sharapov\FFMpegExtensions\Stream\FileInterface $file)
   {
-    if (!file_exists($file)) {
-      throw new InvalidArgumentException('Incorrect image path.');
-    }
-    $this->imageFile = $file;
+    $this->_imageFile = $file;
 
     return $this;
   }
@@ -93,16 +91,13 @@ class ColorKey implements OverlayInterface
   /**
    * Set background video file.
    *
-   * @param $file
+   * @param \Sharapov\FFMpegExtensions\Stream\VideoFile $file
    *
    * @return $this
    */
-  public function setVideoFile($file)
+  public function setVideoFile(\Sharapov\FFMpegExtensions\Stream\VideoFile $file)
   {
-    if (!file_exists($file)) {
-      throw new InvalidArgumentException('Incorrect video path.');
-    }
-    $this->videoFile = $file;
+    $this->_videoFile = $file;
 
     return $this;
   }
@@ -113,7 +108,7 @@ class ColorKey implements OverlayInterface
    */
   public function getImageFile()
   {
-    return $this->imageFile;
+    return $this->_imageFile;
   }
 
   /**
@@ -122,11 +117,11 @@ class ColorKey implements OverlayInterface
    */
   public function getVideoFile()
   {
-    return $this->videoFile;
+    return $this->_videoFile;
   }
 
   /**
-   * Set background dimensions.
+   * Set background _dimensions.
    *
    * @param \Sharapov\FFMpegExtensions\Coordinate\Dimension $dimension
    *
@@ -134,18 +129,18 @@ class ColorKey implements OverlayInterface
    */
   public function setDimensions(\Sharapov\FFMpegExtensions\Coordinate\Dimension $dimension)
   {
-    $this->dimensions = $dimension;
+    $this->_dimensions = $dimension;
 
     return $this;
   }
 
   /**
-   * Get background dimensions.
+   * Get background _dimensions.
    * @return \Sharapov\FFMpegExtensions\Coordinate\Dimension
    */
   public function getDimensions()
   {
-    return $this->dimensions;
+    return $this->_dimensions;
   }
 
   /**

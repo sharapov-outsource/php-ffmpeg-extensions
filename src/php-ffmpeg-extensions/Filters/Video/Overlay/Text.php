@@ -11,37 +11,41 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
 use FFMpeg\Exception\InvalidArgumentException;
 
+/**
+ * Class Text
+ * @package Sharapov\FFMpegExtensions\Filters\Video\Overlay
+ */
 class Text implements OverlayInterface
 {
-  protected $fontFile;
+  protected $_fontFile;
 
-  protected $fontSize = 20;
+  protected $_fontSize = 20;
 
-  protected $fontColor = '#000000';
+  protected $_fontColor = '#000000';
 
-  protected $overlayText = 'Default text';
+  protected $_overlayText = 'Default text';
 
-  protected $coordinates;
+  protected $_coordinates;
 
-  protected $timeLine;
+  protected $_timeLine;
 
-  protected $boundingBox;
+  protected $_boundingBox;
 
-  protected $textShadow;
+  protected $_textShadow;
 
-  protected $textBorder;
+  protected $_textBorder;
 
   /**
    * Set path to font file.
+   *
    * @param $file
+   *
    * @return $this
    */
-  public function setFontFile($file)
+  public function setFontFile(\Sharapov\FFMpegExtensions\Stream\File $file)
   {
-    if (!file_exists($file)) {
-      throw new InvalidArgumentException('Incorrect font path.');
-    }
-    $this->fontFile = $file;
+    $this->_fontFile = $file;
+
     return $this;
   }
 
@@ -51,17 +55,20 @@ class Text implements OverlayInterface
    */
   public function getFontFile()
   {
-    return $this->fontFile;
+    return $this->_fontFile;
   }
 
   /**
    * Set font size.
+   *
    * @param $size
+   *
    * @return $this
    */
   public function setFontSize($size)
   {
-    $this->fontSize = (int)$size;
+    $this->_fontSize = (int)$size;
+
     return $this;
   }
 
@@ -71,17 +78,20 @@ class Text implements OverlayInterface
    */
   public function getFontSize()
   {
-    return $this->fontSize;
+    return $this->_fontSize;
   }
 
   /**
    * Set text to be overlapped.
+   *
    * @param $text
+   *
    * @return $this
    */
   public function setOverlayText($text)
   {
-    $this->overlayText = $text;
+    $this->_overlayText = $text;
+
     return $this;
   }
 
@@ -91,13 +101,15 @@ class Text implements OverlayInterface
    */
   public function getOverlayText()
   {
-    return $this->overlayText;
+    return $this->_overlayText;
   }
 
   /**
    * Set font color.
-   * @param $color
+   *
+   * @param     $color
    * @param int $transparent
+   *
    * @return $this
    */
   public function setFontColor($color, $transparent = 1)
@@ -106,7 +118,8 @@ class Text implements OverlayInterface
       throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
     }
 
-    $this->fontColor = $color . '@' . $transparent;
+    $this->_fontColor = $color . '@' . $transparent;
+
     return $this;
   }
 
@@ -116,37 +129,43 @@ class Text implements OverlayInterface
    */
   public function getFontColor()
   {
-    return $this->fontColor;
+    return $this->_fontColor;
   }
 
   /**
-   * Set coordinates object.
+   * Set _coordinates object.
+   *
    * @param \Sharapov\FFMpegExtensions\Coordinate\Point $point
+   *
    * @return $this
    */
   public function setCoordinates(\Sharapov\FFMpegExtensions\Coordinate\Point $point)
   {
-    $this->coordinates = $point;
+    $this->_coordinates = $point;
+
     return $this;
   }
 
   /**
-   * Return coordinates object.
+   * Return _coordinates object.
    * @return mixed
    */
   public function getCoordinates()
   {
-    return $this->coordinates;
+    return $this->_coordinates;
   }
 
   /**
    * Set timeline object.
+   *
    * @param \Sharapov\FFMpegExtensions\Coordinate\TimeLine $timeLine
+   *
    * @return $this
    */
   public function setTimeLine(\Sharapov\FFMpegExtensions\Coordinate\TimeLine $timeLine)
   {
-    $this->timeLine = $timeLine;
+    $this->_timeLine = $timeLine;
+
     return $this;
   }
 
@@ -156,16 +175,19 @@ class Text implements OverlayInterface
    */
   public function getTimeLine()
   {
-    return $this->timeLine;
+    return $this->_timeLine;
   }
 
   /**
    * The color to be used for drawing a shadow behind the drawn text.
-   * The x and y offsets for the text shadow position with respect to the position of the text. They can be either positive or negative values.
-   * @param $color
+   * The x and y offsets for the text shadow position with respect to the position of the text. They can be either
+   * positive or negative values.
+   *
+   * @param     $color
    * @param int $x
    * @param int $y
    * @param int $transparent
+   *
    * @return $this
    */
   public function setTextShadow($color, $x = 0, $y = 0, $transparent = 1)
@@ -178,11 +200,12 @@ class Text implements OverlayInterface
       throw new InvalidArgumentException('Shadow X and Y should be either positive or negative values');
     }
 
-    $this->textShadow = array(
+    $this->_textShadow = [
         "shadowcolor='" . $color . "'@" . $transparent,
         "shadowx=" . $x,
         "shadowy=" . $y
-    );
+    ];
+
     return $this;
   }
 
@@ -192,14 +215,16 @@ class Text implements OverlayInterface
    */
   public function getTextShadow()
   {
-    return $this->textShadow;
+    return $this->_textShadow;
   }
 
   /**
    * Set the color to be used for drawing border around text.
-   * @param $color
+   *
+   * @param     $color
    * @param int $border
    * @param int $transparent
+   *
    * @return $this
    */
   public function setTextBorder($color, $border = 2, $transparent = 1)
@@ -212,10 +237,11 @@ class Text implements OverlayInterface
       throw new InvalidArgumentException('Border width should be positive integer');
     }
 
-    $this->textBorder = array(
+    $this->_textBorder = [
         "bordercolor='" . $color . "'@" . $transparent,
         "borderw=" . $border
-    );
+    ];
+
     return $this;
   }
 
@@ -225,14 +251,16 @@ class Text implements OverlayInterface
    */
   public function getTextBorder()
   {
-    return $this->textBorder;
+    return $this->_textBorder;
   }
 
   /**
    * The color to be used for drawing box around text.
-   * @param $color
+   *
+   * @param     $color
    * @param int $border
    * @param int $transparent
+   *
    * @return $this
    */
   public function setBoundingBox($color, $border = 10, $transparent = 1)
@@ -245,10 +273,11 @@ class Text implements OverlayInterface
       throw new InvalidArgumentException('Border width should be positive integer');
     }
 
-    $this->boundingBox = array(
+    $this->_boundingBox = [
         "boxcolor='" . $color . "'@" . $transparent,
         "boxborderw=" . $border
-    );
+    ];
+
     return $this;
   }
 
@@ -258,7 +287,7 @@ class Text implements OverlayInterface
    */
   public function getBoundingBox()
   {
-    return $this->boundingBox;
+    return $this->_boundingBox;
   }
 
   /**
@@ -267,32 +296,32 @@ class Text implements OverlayInterface
    */
   public function getCommand()
   {
-    $filterOptions = array(
-        "fontfile=" . $this->getFontFile(),
+    $filterOptions = [
+        "fontfile=" . $this->getFontFile()->getFile(),
         "text='" . $this->getOverlayText() . "'",
         "fontcolor='" . $this->getFontColor() . "'",
         "fontsize=" . $this->getFontSize(),
         "x=" . $this->getCoordinates()->getX(),
         "y=" . $this->getCoordinates()->getY()
-    );
+    ];
 
-    if ($this->timeLine instanceof \Sharapov\FFMpegExtensions\Coordinate\TimeLine) {
-      $filterOptions[] = $this->timeLine->getCommand();
+    if ($this->_timeLine instanceof \Sharapov\FFMpegExtensions\Coordinate\TimeLine) {
+      $filterOptions[] = $this->_timeLine->getCommand();
     }
 
     // Bounding box
-    if ($this->boundingBox != null) {
-      $filterOptions[] = "box=1:" . implode(":", $this->boundingBox);
+    if ($this->_boundingBox != null) {
+      $filterOptions[] = "box=1:" . implode(":", $this->_boundingBox);
     }
 
     // Text shadow
-    if ($this->textShadow != null) {
-      $filterOptions[] = implode(":", $this->textShadow);
+    if ($this->_textShadow != null) {
+      $filterOptions[] = implode(":", $this->_textShadow);
     }
 
     // Text border
-    if ($this->textBorder != null) {
-      $filterOptions[] = implode(":", $this->textBorder);
+    if ($this->_textBorder != null) {
+      $filterOptions[] = implode(":", $this->_textBorder);
     }
 
     return "drawtext=" . implode(":", $filterOptions);
@@ -320,8 +349,8 @@ class Text implements OverlayInterface
    * Not implemented for this class.
    * @throws InvalidArgumentException
    */
-  public function setImageFile($file)
+  public function setImageFile(\Sharapov\FFMpegExtensions\Stream\FileInterface $file)
   {
-    throw new InvalidArgumentException('Method setImageFile($file) is not implemented for this class');
+    throw new InvalidArgumentException('Method setImageFile(FileInterface $file) is not implemented for this class');
   }
 }

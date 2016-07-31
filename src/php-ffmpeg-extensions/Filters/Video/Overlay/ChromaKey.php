@@ -9,7 +9,11 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
+/**
+ * Class ChromaKey
+ * @package Sharapov\FFMpegExtensions\Filters\Video\Overlay
+ */
 class ChromaKey extends ColorKey
 {
-  protected $colorKey = '0x3BBD1E:0.6:0.3';
+  protected $_colorKey = '0x3BBD1E:0.6:0.3';
 }

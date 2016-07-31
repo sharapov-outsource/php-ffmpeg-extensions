@@ -31,10 +31,11 @@ class X264 extends \FFMpeg\Format\Video\X264
    */
   public function setPasses($passes)
   {
-    if( ! is_integer($passes)) {
+    if (!is_integer($passes)) {
       throw new InvalidArgumentException('The number of passes should be positive integer');
     }
     $this->passes = (int)$passes;
+
     return $this;
   }
 }

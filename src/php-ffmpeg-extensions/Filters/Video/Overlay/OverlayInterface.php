@@ -9,10 +9,17 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
+/**
+ * Interface OverlayInterface
+ * @package Sharapov\FFMpegExtensions\Filters\Video\Overlay
+ */
 interface OverlayInterface
 {
   public function getCommand();
+
   public function getImageFile();
-  public function setImageFile($file);
+
+  public function setImageFile(\Sharapov\FFMpegExtensions\Stream\FileInterface $file);
+
   public function __toString();
 }

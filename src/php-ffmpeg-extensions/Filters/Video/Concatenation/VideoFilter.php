@@ -11,6 +11,10 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\Concatenation;
 
 use FFMpeg\Exception\InvalidArgumentException;
 
+/**
+ * Class VideoFilter
+ * @package Sharapov\FFMpegExtensions\Filters\Video\Concatenation
+ */
 class VideoFilter
 {
   private static $_instance = null;
@@ -35,12 +39,12 @@ class VideoFilter
     if (!file_exists($file)) {
       throw new InvalidArgumentException('Path ' . $file . ' is incorrect');
     }
-    $this->_inputs[] = $file;
+    array_push($this->_inputs, $file);
 
     return $this;
   }
 
-  public function getFiles()
+  public function getInputs()
   {
     return $this->_inputs;
   }

@@ -9,15 +9,10 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Overlay;
 
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Exception\InvalidArgumentException;
-use FFMpeg\Filters\Video\VideoFilterInterface;
-use FFMpeg\Media\Video;
-use FFMpeg\Format\VideoInterface;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Image;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\OverlayInterface;
-use Sharapov\FFMpegExtensions\Filters\Video\Overlay\Text;
-
+/**
+ * Class AbstractFilter
+ * @package Sharapov\FFMpegExtensions\Filters\Video\Overlay
+ */
 abstract class AbstractFilter
 {
   /**
@@ -28,6 +23,7 @@ abstract class AbstractFilter
 
   /**
    * Filter constructor.
+   *
    * @param int $priority
    */
   public function __construct($priority = 0)

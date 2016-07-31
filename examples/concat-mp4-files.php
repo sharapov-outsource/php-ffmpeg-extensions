@@ -23,7 +23,7 @@ $ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create(array(
 ), $logger);
 
 // Open first file
-$video = $ffmpeg->open(dirname(__FILE__).'/source/demo_video_720p_HD.mp4');
+$video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Stream\VideoFile(dirname(__FILE__).'/source/demo_video_720p_HD.mp4'));
 
 // Transcode mp4 to transport stream
 $format = new \Sharapov\FFMpegExtensions\Format\Video\TransportStream();
@@ -36,7 +36,7 @@ $video
     ->save($format, dirname(__FILE__).'/source/im1.ts');
 
 // Open second file
-$video = $ffmpeg->open(dirname(__FILE__).'/source/intro_720p_muted.mp4');
+$video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Stream\VideoFile(dirname(__FILE__).'/source/intro_720p_muted.mp4'));
 
 // Transcode mp4 to transport stream
 $format = new \Sharapov\FFMpegExtensions\Format\Video\TransportStream();
@@ -49,10 +49,10 @@ $video
     ->save($format, dirname(__FILE__).'/source/im2.ts');
 
 // Merge two files using concatProtocol
-$video = $ffmpeg->open(dirname(__FILE__).'/source/im1.ts');
+$video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Stream\VideoFile(dirname(__FILE__).'/source/im1.ts'));
 $video
     ->concatProtocol()
-    ->join(dirname(__FILE__).'/source/im2.ts');
+    ->setInput(new \Sharapov\FFMpegExtensions\Stream\VideoFile(dirname(__FILE__).'/source/im2.ts'));
 
 $video
     ->merge(dirname(__FILE__).'/output/export-concatProtocol.mp4');

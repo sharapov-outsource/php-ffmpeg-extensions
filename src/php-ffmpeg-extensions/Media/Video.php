@@ -10,20 +10,56 @@
 namespace Sharapov\FFMpegExtensions\Media;
 
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use FFMpeg\Driver\FFMpegDriver;
 use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Exception\RuntimeException;
+use FFMpeg\FFProbe;
 use FFMpeg\Format\FormatInterface;
 use FFMpeg\Format\ProgressableInterface;
 use Sharapov\FFMpegExtensions\Filters\Video\Concatenation\DemuxerFilter;
 use Sharapov\FFMpegExtensions\Filters\Video\Concatenation\ProtocolFilter;
 use Sharapov\FFMpegExtensions\Format\Video\TransportStream;
+use Sharapov\FFMpegExtensions\Stream\FileInterface;
+use Sharapov\FFMpegExtensions\Stream\Mapper;
 
+/**
+ * Class Video
+ * @package Sharapov\FFMpegExtensions\Media
+ */
 class Video extends \FFMpeg\Media\Video
 {
   /**
    * @var object
    */
-  private $_concatFilter;
+  protected $_concatFilter;
+
+  protected $_mapper;
+
+  protected $_file;
+
+  public function __construct(FileInterface $file, FFMpegDriver $driver, FFProbe $ffprobe)
+  {
+    $this->_file = $file;
+    parent::__construct($file->getFile(), $driver, $ffprobe);
+  }
+
+  /**
+   * Mapper method.
+   * Allows to replace media streams on target video.
+   * @return null|Mapper
+   */
+  public function remap()
+  {
+    $this->_mapper = Mapper::init();
+
+    // Pass video file
+    if (count($this->_mapper->getInputs()) == 0) {
+      $this->_mapper
+          ->setInput($this->_file);
+    }
+
+    return $this->_mapper;
+  }
 
   /**
    * Concat protocol.
@@ -32,7 +68,14 @@ class Video extends \FFMpeg\Media\Video
    */
   public function concatProtocol()
   {
-    return $this->_concatFilter = ProtocolFilter::init();
+    $this->_concatFilter = ProtocolFilter::init();
+    // Pass video file
+    if (count($this->_concatFilter->getInputs()) == 0) {
+      $this->_concatFilter
+          ->setInput($this->_file);
+    }
+
+    return $this->_concatFilter;
   }
 
   /**
@@ -55,6 +98,34 @@ class Video extends \FFMpeg\Media\Video
     throw new InvalidArgumentException('ConcatDemuxer does not implemented');
   }
 
+  public function combine($outputPathfile)
+  {
+    if ($this->_mapper instanceof Mapper) {
+
+      $commands = $this->_mapper->getCommand('-y');
+      $commands[] = '-codec';
+      $commands[] = 'copy';
+      $commands[] = '-shortest';
+      $commands[] = $outputPathfile;
+
+      $failure = null;
+
+      try {
+        $this->driver->command($commands, false);
+      } catch (ExecutionFailureException $e) {
+        $failure = $e;
+      }
+
+      if (null !== $failure) {
+        throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
+      }
+
+      return $this;
+    } else {
+      throw new RuntimeException('Unsupported mapper method');
+    }
+  }
+
   /**
    * Runs concatenation process using one of concat methods: Protocol or Demuxer.
    *
@@ -72,7 +143,7 @@ class Video extends \FFMpeg\Media\Video
         throw new InvalidArgumentException('Concat protocol supports only file level concatenation: MPEG-1, MPEG-2 PS, DV.');
       }
 
-      $inputs = $this->_concatFilter->getFiles();
+      $inputs = $this->_concatFilter->getInputs();
 
       array_unshift($inputs, $this->pathfile);
 
@@ -80,8 +151,8 @@ class Video extends \FFMpeg\Media\Video
           '-y',
           '-i',
           sprintf('concat:%s', implode("|", $inputs)),
-          //'-c',
-          //'copy',
+        //'-c',
+        //'copy',
           '-bsf:a',
           'aac_adtstoasc',
           $outputPathfile
@@ -100,10 +171,10 @@ class Video extends \FFMpeg\Media\Video
       }
 
       return $this;
-    } elseif($this->_concatFilter instanceof DemuxerFilter) {
+    } elseif ($this->_concatFilter instanceof DemuxerFilter) {
       throw new RuntimeException('ConcatDemuxer does not implemented yet');
     } else {
-      throw new RuntimeException('Unsupported concat method');
+      throw new RuntimeException('Unsupported concat method or no concat filter attached');
     }
   }
 

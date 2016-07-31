@@ -18,6 +18,7 @@ use FFMpeg\Format\ProgressListener\VideoProgressListener;
 
 /**
  * Transport stream video handler.
+ * @package Sharapov\FFMpegExtensions\Format\Video
  */
 class TransportStream extends EventEmitter implements FormatInterface, ProgressableInterface
 {
