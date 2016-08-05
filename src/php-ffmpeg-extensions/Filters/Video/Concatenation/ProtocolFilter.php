@@ -9,6 +9,7 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\Concatenation;
 
+use FFMpeg\Media\AbstractStreamableMedia;
 use Sharapov\FFMpegExtensions\Stream\FileInterface;
 
 /**
@@ -35,7 +36,7 @@ class ProtocolFilter
     return self::$_instance;
   }
 
-  public function setInput(FileInterface $file)
+  public function setInput(AbstractStreamableMedia $file)
   {
     array_push($this->_inputs, $file);
 
@@ -67,7 +68,7 @@ class ProtocolFilter
 
     $inputs = [];
     foreach ($this->getInputs() as $input) {
-      $inputs[] = $input->getFile();
+      $inputs[] = $input->getPathFile();
     }
 
     $commands[] = '-i';

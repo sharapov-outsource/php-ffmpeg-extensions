@@ -17,13 +17,36 @@ use FFMpeg\Exception\InvalidArgumentException;
  */
 class File implements FileInterface
 {
+  protected $_metaData;
   protected $_file;
 
-  public function __construct($file = null)
+  public function __construct($file = null, $title = null)
   {
+    $this->_metaData = new MetaData();
     if (!is_null($file)) {
       $this->setFile($file);
     }
+
+    if (!is_null($title)) {
+      $this->setTitle($title);
+    }
+  }
+
+  public function setTitle($title)
+  {
+    $this->_metaData->add('title', $title);
+
+    return $this;
+  }
+
+  public function getTitle()
+  {
+    return $this->_metaData->get('title');
+  }
+
+  public function getMetadata()
+  {
+    return $this->_metaData->get();
   }
 
   public function setFile($file)

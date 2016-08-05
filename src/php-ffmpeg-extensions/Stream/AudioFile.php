@@ -17,8 +17,6 @@ use FFMpeg\Exception\InvalidArgumentException;
  */
 class AudioFile extends File implements FileInterface
 {
-  protected $_metadata;
-
   public function setFile($file)
   {
     if (!file_exists($file)) {

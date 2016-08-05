@@ -94,9 +94,9 @@ class FFMpeg
     }
 
     if (0 < count($streams->videos())) {
-      return new Video($file, $this->getFFMpegDriver(), $this->getFFProbe());
+      return new \Sharapov\FFMpegExtensions\Media\Video($file, $this->getFFMpegDriver(), $this->getFFProbe());
     } elseif (0 < count($streams->audios())) {
-      return new Audio($file->getFile(), $this->getFFMpegDriver(), $this->getFFProbe());
+      return new \Sharapov\FFMpegExtensions\Media\Audio($file, $this->getFFMpegDriver(), $this->getFFProbe());
     }
 
     throw new InvalidArgumentException('Unable to detect file format, only audio and video supported');

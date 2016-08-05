@@ -43,6 +43,16 @@ class Video extends \FFMpeg\Media\Video
     parent::__construct($file->getFile(), $driver, $ffprobe);
   }
 
+  public function getFileObject()
+  {
+    return $this->_file;
+  }
+
+  public function getConcatFilter()
+  {
+    return $this->_concatFilter;
+  }
+
   /**
    * Mapper method.
    * Allows to replace media streams on target video.
@@ -52,10 +62,10 @@ class Video extends \FFMpeg\Media\Video
   {
     $this->_mapper = Mapper::init();
 
-    // Pass video file
+    // Pass $this main file to stream mapper
     if (count($this->_mapper->getInputs()) == 0) {
       $this->_mapper
-          ->setInput($this->_file);
+          ->setInput($this);
     }
 
     return $this->_mapper;
@@ -72,7 +82,7 @@ class Video extends \FFMpeg\Media\Video
     // Pass video file
     if (count($this->_concatFilter->getInputs()) == 0) {
       $this->_concatFilter
-          ->setInput($this->_file);
+          ->setInput($this);
     }
 
     return $this->_concatFilter;

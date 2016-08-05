@@ -8,6 +8,8 @@
  */
 
 namespace Sharapov\FFMpegExtensions\Stream;
+use FFMpeg\Media\AbstractStreamableMedia;
+use FFMpeg\Media\Audio;
 
 /**
  * Stream Mapper
@@ -33,7 +35,7 @@ class Mapper
     return self::$_instance;
   }
 
-  public function setInput(FileInterface $file)
+  public function setInput(AbstractStreamableMedia $file)
   {
     array_push($this->_inputs, $file);
 
@@ -57,25 +59,52 @@ class Mapper
     // Put input files
     foreach ($this->getInputs() as $i => $input) {
       $commands[] = '-i';
-      $commands[] = $input->getFile();
+      $commands[] = $input->getPathFile();
     }
 
     // Put command string
     foreach ($this->getInputs() as $i => $input) {
-      if ($input instanceof VideoFile) {
+      if ($input instanceof \Sharapov\FFMpegExtensions\Media\Video) {
         $commands[] = '-map';
         $commands[] = sprintf("%s:v", $i);
-        foreach ($input->getMappedAudioStreams() as $audioStream) {
+        foreach ($input->getFileObject()->getMappedAudioStreams() as $audioStream) {
           $commands[] = '-map';
           $commands[] = sprintf('%s:a:%s', $i, $audioStream);
         }
-      } elseif ($input instanceof AudioFile) {
+      } elseif ($input instanceof \FFMpeg\Media\Audio) {
         $commands[] = '-map';
         $commands[] = sprintf("%s:a", $i);
       }
 
+      // -metadata:s:a:0 language=eng
+
+      print '<pre>';
+      print_r($input->getFileObject()->getTitle());
+      print '</pre>';
     }
 
+    // Put metadata
+    foreach ($this->getInputs() as $i => $input) {
+     // if ($input instanceof \FFMpeg\Media\Audio) {
+        if($meta = $input->getFileObject()->getMetadata() and $meta !== null) {
+          foreach ($meta as $key => $value) {
+            $commands[] = sprintf("-metadata:s:a:%s", $i);
+            $commands[] = sprintf("%s=%s", $key, $value);
+          }
+        }
+
+
+        /*if()
+
+        $commands[] = ''*/
+      //}
+    }
+
+    print '<pre>';
+    print_r($commands);
+    print '</pre>';
+
+    //die;
     //  '/home/givmfull/public_html/php-ffmpeg-extensions/examples/../ffmpeg-static/ffmpeg' '-y' '-i' '/home/givmfull/public_html/php-ffmpeg-extensions/examples/source/GREEN_SCREEN_TEST-marketing-spokesperson.mp4' '-map' '0:v' '-map' '0:a:0' '-i' '/home/givmfull/public_html/php-ffmpeg-extensions/examples/source/forest_sound.mp3' '-map' '1:a' '-codec' 'copy' '-shortest' '/home/givmfull/public_html/php-ffmpeg-extensions/examples/output/export-concatProtocol.mp4'
 
     /*
