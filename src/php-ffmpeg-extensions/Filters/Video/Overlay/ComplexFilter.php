@@ -52,10 +52,10 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
 
       $this->_colorKeyFilter = $overlay;
       if ($overlay->getImageFile() != null) {
-        $this->_inputs[] = $overlay->getImageFile()->getFile();
+        $this->_inputs[] = $overlay->getImageFile();
       }
       if ($overlay->getVideoFile() != null) {
-        $this->_inputs[] = $overlay->getVideoFile()->getFile();
+        $this->_inputs[] = $overlay->getVideoFile();
       }
 
     } elseif ($overlay instanceof Image) {
@@ -69,7 +69,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       }
 
       $this->_imageOverlay[] = $overlay;
-      $this->_inputs[] = $overlay->getImageFile()->getFile();
+      $this->_inputs[] = $overlay->getImageFile();
     } elseif ($overlay instanceof Text) {
       $this->_textOverlay[] = $overlay;
     } elseif ($overlay instanceof Box) {
