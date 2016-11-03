@@ -47,6 +47,15 @@ class ProtocolFilter
     return $this->_inputs;
   }
 
+  public function getInputsArray()
+  {
+    $inputs = [];
+    foreach ($this->getInputs() as $input) {
+      $inputs[] = $input->getFile();
+    }
+    return $inputs;
+  }
+
   public function getCommand($commands = null)
   {
     if (is_null($commands)) {

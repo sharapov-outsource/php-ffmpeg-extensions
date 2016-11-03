@@ -14,6 +14,7 @@ use Sharapov\FFMpegExtensions\Coordinate\Point;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 use Sharapov\FFMpegExtensions\Coordinate\Dimension;
 use FFMpeg\Exception\InvalidArgumentException;
+use VideoCreator\Model\Filters\Audio\Amerge;
 
 /**
  * Class ComplexFilter
@@ -26,6 +27,8 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
   protected $_textOverlay = [];
 
   protected $_boxOverlay = [];
+
+  protected $_amerge;
 
   protected $_colorKeyFilter;
 
@@ -74,6 +77,9 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       $this->_textOverlay[] = $overlay;
     } elseif ($overlay instanceof Box) {
       $this->_boxOverlay[] = $overlay;
+    } elseif ($overlay instanceof Amerge) {
+      $this->_amerge = $overlay;
+      $this->_inputs[] = $overlay->getImageFile();
     } else {
       throw new InvalidArgumentException('Unsupported overlay requested. Only ColorKey, Image, Text, Box are supported.');
     }
@@ -95,7 +101,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       $filterOptions[] = sprintf('[0:v]colorkey=%s[sck]', $this->_colorKeyFilter->getColor());
       // Color key background input is always the first stream
       $filterOptions[] = sprintf('[1:v]scale=%s[out1]', $this->_colorKeyFilter->getDimensions());
-      $filterOptions[] = sprintf('[out1][sck]overlay%s', ((count($this->_imageOverlay) > 0 or count($this->_textOverlay) > 0) ? '[out2]' : ''));
+      $filterOptions[] = sprintf('[out1][sck]overlay%s', ((count($this->_imageOverlay) > 0 or count($this->_textOverlay) > 0 or $this->_amerge != null) ? '[out2]' : ''));
 
       $filterNumStart = 2;
     } else {
@@ -124,12 +130,25 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
         $cmd .= sprintf(":enable='between(t,%s)'", $filter->getTimeLine());
       }
 
-      if (isset($this->_imageOverlay[($k + 1)]) or count($this->_textOverlay) > 0) {
+      if (isset($this->_imageOverlay[($k + 1)]) or count($this->_textOverlay) > 0 or $this->_amerge != null) {
         $cmd .= sprintf("[out%s]", ($filterNumStart + 1));
       }
       $filterOptions[] = $cmd;
 
       $filterNumStart++;
+    }
+
+    if ($this->_amerge != null) {
+      $an = 2;
+      foreach ($this->_inputs as $i => $input) {
+        if($input->getFile() == $this->_amerge->getImageFile()) {
+          $an = $i;
+        }
+      }
+      if ($this->_colorKeyFilter instanceof ColorKey) {
+        $an++;
+      }
+      $filterOptions[] = sprintf('[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo[a1],[%s:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo[a2],[a1][a2]amerge,pan=stereo|c0<c0+c2|c1<c1+c3[aout]', $an);
     }
 
     // Compile drawtext filters
@@ -141,7 +160,7 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       }
       $cmd .= implode(",", $this->_textOverlay);
 
-      if (count($this->_boxOverlay) > 0) {
+      if (count($this->_boxOverlay) > 0 or $this->_amerge != null) {
         $cmd .= sprintf("[out%s]", ($filterNumStart + 1));
       }
       $filterOptions[] = $cmd;
@@ -160,8 +179,17 @@ class ComplexFilter extends AbstractFilter implements VideoFilterInterface
       $commands[] = $input->getFile();
     }
 
+    // Cut 1/10 from the beginning of video
+    $commands[] = '-ss';
+    $commands[] = '0.1';
     $commands[] = '-filter_complex';
     $commands[] = implode(",", $filterOptions);
+    if ($this->_amerge != null) {
+      $commands[] = '-map';
+      $commands[] = '[aout]';
+      $commands[] = '-map';
+      $commands[] = sprintf("[out%s]", $filterNumStart);
+    }
 
     return $commands;
   }

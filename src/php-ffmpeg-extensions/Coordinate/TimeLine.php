@@ -24,12 +24,12 @@ class TimeLine
    */
   public function __construct($start, $end)
   {
-    if ($start <= 0 || $end <= 0) {
-      throw new InvalidArgumentException('Start and end time should be positive integer');
+    if ($start < 0 || $end < 0) {
+      throw new InvalidArgumentException('Start and end time should be positive integer. '.$start.', '.$end.' given.');
     }
 
-    $this->start = (int)$start;
-    $this->end = (int)$end;
+    $this->start = preg_replace( '/,/', '.', $start);
+    $this->end = preg_replace( '/,/', '.', $end);
   }
 
   /**

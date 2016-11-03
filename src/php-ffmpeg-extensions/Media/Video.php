@@ -143,9 +143,9 @@ class Video extends \FFMpeg\Media\Video
         throw new InvalidArgumentException('Concat protocol supports only file level concatenation: MPEG-1, MPEG-2 PS, DV.');
       }
 
-      $inputs = $this->_concatFilter->getInputs();
+      $inputs = $this->_concatFilter->getInputsArray();
 
-      array_unshift($inputs, $this->pathfile);
+      //array_unshift($inputs, $this->pathfile);
 
       $commands = [
           '-y',
