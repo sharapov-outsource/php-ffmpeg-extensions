@@ -1,12 +1,10 @@
 <?php
-
-/*
- * This file is part of PHP-FFmpeg.
+/**
+ * This file is part of PHP-FFmpeg-Extensions library.
  *
- * (c) Alchemy <info@alchemy.fr>
+ * (c) Alexander Sharapov <alexander@sharapov.biz>
+ * http://sharapov.biz/
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  */
 
 namespace Sharapov\FFMpegExtensions\FFProbe\DataMapping;

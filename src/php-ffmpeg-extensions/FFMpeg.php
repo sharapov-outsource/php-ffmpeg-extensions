@@ -9,11 +9,10 @@
 
 namespace Sharapov\FFMpegExtensions;
 
-use FFMpeg\Exception\InvalidArgumentException;
-use FFMpeg\Exception\RuntimeException;
 use Alchemy\BinaryDriver\ConfigurationInterface;
 use FFMpeg\Driver\FFMpegDriver;
-use FFMpeg\FFProbe;
+use FFMpeg\Exception\InvalidArgumentException;
+use FFMpeg\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Audio;
@@ -21,6 +20,11 @@ use Sharapov\FFMpegExtensions\Media\Video;
 
 class FFMpeg extends \FFMpeg\FFMpeg
 {
+  public function __construct(FFMpegDriver $ffmpeg, FFProbe $ffprobe)
+  {
+    parent::__construct($ffmpeg, $ffprobe);
+  }
+
   /**
    * Opens a file in order to be processed.
    *
@@ -43,9 +47,27 @@ class FFMpeg extends \FFMpeg\FFMpeg
     if (0 < count($streams->videos())) {
       return new Video($file, $this->getFFMpegDriver(), $this->getFFProbe());
     } elseif (0 < count($streams->audios())) {
-      return new Video($file, $this->getFFMpegDriver(), $this->getFFProbe());
+      return new Audio($file, $this->getFFMpegDriver(), $this->getFFProbe());
     }
 
     throw new InvalidArgumentException('Unable to detect file format, only audio and video supported');
+  }
+
+  /**
+   * Creates a new FFMpeg instance.
+   *
+   * @param array|ConfigurationInterface $configuration
+   * @param LoggerInterface              $logger
+   * @param FFProbe                      $probe
+   *
+   * @return FFMpeg
+   */
+  public static function create($configuration = array(), LoggerInterface $logger = null, FFProbe $probe = null)
+  {
+    if (null === $probe) {
+      $probe = \Sharapov\FFMpegExtensions\FFProbe::create($configuration, $logger, null);
+    }
+
+    return new static(FFMpegDriver::create($logger, $configuration), $probe);
   }
 }
