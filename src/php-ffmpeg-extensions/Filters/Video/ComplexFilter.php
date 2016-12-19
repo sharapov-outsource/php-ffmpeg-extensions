@@ -27,14 +27,14 @@ class ComplexFilter implements VideoFilterInterface {
    */
   public function __construct(OptionsCollection $optionsCollection = null) {
     if($optionsCollection instanceof OptionsCollection) {
-      $this->setOptions($optionsCollection);
+      $this->setOptionsCollection($optionsCollection);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getOptions()
+  public function getOptionsCollection()
   {
     return $this->optionsCollection;
   }
@@ -42,7 +42,7 @@ class ComplexFilter implements VideoFilterInterface {
   /**
    * {@inheritdoc}
    */
-  public function setOptions(OptionsCollection $optionsCollection)
+  public function setOptionsCollection(OptionsCollection $optionsCollection)
   {
     $this->optionsCollection = $optionsCollection;
   }
@@ -63,21 +63,17 @@ class ComplexFilter implements VideoFilterInterface {
     $commands = ['-filter_complex'];
 
     // Place draw text
-    $commands[] = (string)$this->_fetchDrawText();
+    $commands[] = (string)$this->_getDrawTextCommand();
 
     return $commands;
   }
 
-  private function _fetchDrawText()
+  private function _getDrawTextCommand()
   {
-    return new OptionsCollection(array_filter((array)$this->getOptions()->getIterator(), function (OptionsInterface $option) {
+    return new OptionsCollection(array_filter((array)$this->getOptionsCollection()->getIterator(), function (OptionsInterface $option) {
       if($option instanceof OptionDrawText) {
         return true;
       }
     }));
   }
 }
-
-/*
- "D:/Projects/videomachine2/ffmpeg/bin/ffmpeg.exe" "-y" "-i" "D:/Projects/php-ffmpeg-extensions/examples/source/demo_video_720p_HD.mp4"  "-filter_complex" "drawtext=text='This is the default text'" "-threads" "12" "-vcodec" "libx264" "-acodec" "libmp3lame" "-b:v" "1000k" "-refs" "6" "-coder" "1" "-sc_threshold" "40" "-flags" "+loop" "-me_range" "16" "-subq" "7" "-i_qfactor" "0.71" "-qcomp" "0.6" "-qdiff" "4" "-trellis" "1" "-b:a" "128k" "D:/Projects/php-ffmpeg-extensions/output.mp4"
- */

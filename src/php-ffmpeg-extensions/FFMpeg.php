@@ -18,11 +18,63 @@ use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Audio;
 use Sharapov\FFMpegExtensions\Media\Video;
 
-class FFMpeg extends \FFMpeg\FFMpeg
+class FFMpeg
 {
+  /** @var FFMpegDriver */
+  private $driver;
+  /** @var FFProbe */
+  private $ffprobe;
+
   public function __construct(FFMpegDriver $ffmpeg, FFProbe $ffprobe)
   {
-    parent::__construct($ffmpeg, $ffprobe);
+    $this->driver = $ffmpeg;
+    $this->ffprobe = $ffprobe;
+  }
+
+  /**
+   * Sets FFProbe.
+   *
+   * @param FFProbe
+   *
+   * @return FFMpeg
+   */
+  public function setFFProbe(FFProbe $ffprobe)
+  {
+    $this->ffprobe = $ffprobe;
+
+    return $this;
+  }
+
+  /**
+   * Gets FFProbe.
+   *
+   * @return FFProbe
+   */
+  public function getFFProbe()
+  {
+    return $this->ffprobe;
+  }
+
+  /**
+   * Sets the ffmpeg driver.
+   *
+   * @return FFMpeg
+   */
+  public function setFFMpegDriver(FFMpegDriver $ffmpeg)
+  {
+    $this->driver = $ffmpeg;
+
+    return $this;
+  }
+
+  /**
+   * Gets the ffmpeg driver.
+   *
+   * @return FFMpegDriver
+   */
+  public function getFFMpegDriver()
+  {
+    return $this->driver;
   }
 
   /**
