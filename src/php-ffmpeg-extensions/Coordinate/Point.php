@@ -21,16 +21,17 @@ class Point
 
   /**
    * Point constructor.
+   *
    * @param mixed $x
    * @param mixed $y
    */
   public function __construct($x = self::AUTO_HORIZONTAL, $y = self::AUTO_VERTICAL)
   {
-    if($this->x != self::AUTO_HORIZONTAL and $x < 0) {
-      throw new InvalidArgumentException('X should be positive integer or "'.self::AUTO_HORIZONTAL.'"');
+    if ($x != self::AUTO_HORIZONTAL and !is_int($x)) {
+      throw new InvalidArgumentException('X should be positive integer or "' . self::AUTO_HORIZONTAL . '". ' . $x . ' given.');
     }
-    if($this->y != self::AUTO_VERTICAL and $y < 0) {
-      throw new InvalidArgumentException('Y should be positive integer or "'.self::AUTO_VERTICAL.'"');
+    if ($y != self::AUTO_VERTICAL and !is_int($y)) {
+      throw new InvalidArgumentException('Y should be positive integer or "' . self::AUTO_VERTICAL . '". ' . $y . ' given.');
     }
 
     $this->x = $x;
@@ -58,6 +59,6 @@ class Point
    */
   public function __toString()
   {
-    return $this->getX() . ":" . $this->getY();
+    return sprintf("%s:%s", $this->getX(), $this->getY());
   }
 }

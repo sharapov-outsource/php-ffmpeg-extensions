@@ -70,10 +70,10 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    *
    * @return array
    */
-  public function getCommand($separator = ',')
-  {
-    return implode($separator, $this->_options);
-  }
+  //public function getCommand($separator = ',')
+  //{
+    //return implode($separator, $this->_options);
+  //}
 
   /**
    * {@inheritdoc}
@@ -81,6 +81,25 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   public function getIterator()
   {
     return new \ArrayIterator($this->_options);
+  }
+
+  /**
+   * Returns the imploded command string of contained options.
+   *
+   * @param string $separator
+   * @param bool $sortZIndex
+   *
+   * @return array
+   */
+  public function getCommand($separator = ',', $sortZIndex = true)
+  {
+    $optionsIterator = $this->getIterator();
+    if($sortZIndex) {
+      $optionsIterator->uasort(function ($a, $b) {
+        return strnatcmp($a->getZIndex(), $b->getZIndex());
+      });
+    }
+    return implode($separator, (array)$optionsIterator);
   }
 
   /**

@@ -30,8 +30,8 @@ class Dimension
    */
   public function __construct($width, $height)
   {
-    if (($width <= 0 and $width != self::WIDTH_MAX) || ($height <= 0 and $width != self::HEIGHT_MAX)) {
-      throw new InvalidArgumentException('Width and height should be positive integer or "iw", "ih"');
+    if ((!is_int($width) and $width != self::WIDTH_MAX) || (!is_int($height) and $width != self::HEIGHT_MAX)) {
+      throw new InvalidArgumentException('Width and height should be positive integer or "' . self::WIDTH_MAX . '", "' . self::HEIGHT_MAX . '". ' . $width . ', ' . $height . ' given.');
     }
 
     $this->width = $width;
@@ -63,6 +63,6 @@ class Dimension
    */
   public function __toString()
   {
-    return $this->getWidth() . ":" . $this->getHeight();
+    return sprintf("%s:%s", $this->getWidth(), $this->getHeight());
   }
 }

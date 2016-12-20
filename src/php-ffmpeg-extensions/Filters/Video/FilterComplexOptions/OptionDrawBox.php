@@ -100,11 +100,11 @@ class OptionDrawBox implements OptionsInterface
   public function getCommand()
   {
     $filterOptions = [
-        "width="  => $this->getDimensions()->getWidth(),
-        "height=" => $this->getDimensions()->getHeight(),
-        "color="  => $this->getColor(),
-        "x="      => $this->getCoordinates()->getX(),
-        "y="      => $this->getCoordinates()->getY()
+        "x=" . $this->getCoordinates()->getX(),
+        "y=" . $this->getCoordinates()->getY(),
+        "w=" . $this->getDimensions()->getWidth(),
+        "h=" . $this->getDimensions()->getHeight(),
+        "color='" . $this->getColor() . "'"
     ];
 
     if ($this->_timeLine instanceof TimeLine) {
