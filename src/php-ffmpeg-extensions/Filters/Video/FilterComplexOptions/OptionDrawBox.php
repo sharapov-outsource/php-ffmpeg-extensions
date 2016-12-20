@@ -49,12 +49,12 @@ class OptionDrawBox implements OptionsInterface
    */
   public function setColor($color, $transparency = 0.4, $thickness = 'max')
   {
-    if ($transparency > 1 || $transparency < 0) {
-      throw new InvalidArgumentException('Invalid value of transparency. Should be integer or float value from 0 to 1');
+    if (!is_numeric($transparency) || $transparency < 0 || $transparency > 1) {
+      throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
     }
 
-    if ($thickness <= 0 and $thickness != 'max') {
-      throw new InvalidArgumentException('Invalid value of thickness. Should be positive integer or "max"');
+    if ($thickness != 'max' and !is_int($thickness)) {
+      throw new InvalidArgumentException('Thickness should be positive integer or "max". ' . $thickness . ' given.');
     }
     $this->_color = $color . '@' . $transparency . ":t=" . $thickness;
 
