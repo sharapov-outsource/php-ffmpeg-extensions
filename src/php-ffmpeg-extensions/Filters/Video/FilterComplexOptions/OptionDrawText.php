@@ -109,17 +109,17 @@ class OptionDrawText implements OptionsInterface
    * Set font color.
    *
    * @param     $color
-   * @param int $transparent
+   * @param int $transparency
    *
    * @return $this
    */
-  public function setFontColor($color, $transparent = 1)
+  public function setFontColor($color, $transparency = 1)
   {
-    if ($transparent > 1 || $transparent < 0) {
-      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    if ($transparency > 1 || $transparency < 0) {
+      throw new InvalidArgumentException('Invalid value of transparency. Should be integer or float value from 0 to 1');
     }
 
-    $this->_fontColor = $color . '@' . $transparent;
+    $this->_fontColor = $color . '@' . $transparency;
 
     return $this;
   }
@@ -141,14 +141,14 @@ class OptionDrawText implements OptionsInterface
    * @param     $color
    * @param int $x
    * @param int $y
-   * @param int $transparent
+   * @param int $transparency
    *
    * @return $this
    */
-  public function setTextShadow($color, $x = 0, $y = 0, $transparent = 1)
+  public function setTextShadow($color, $x = 0, $y = 0, $transparency = 1)
   {
-    if ($transparent > 1 || $transparent < 0) {
-      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    if ($transparency > 1 || $transparency < 0) {
+      throw new InvalidArgumentException('Invalid value of transparency. Should be integer or float value from 0 to 1');
     }
 
     if (!is_numeric($x) or !is_numeric($y)) {
@@ -156,7 +156,7 @@ class OptionDrawText implements OptionsInterface
     }
 
     $this->_textShadow = [
-        "shadowcolor='" . $color . "'@" . $transparent,
+        "shadowcolor='" . $color . "'@" . $transparency,
         "shadowx=" . $x,
         "shadowy=" . $y
     ];
@@ -178,14 +178,14 @@ class OptionDrawText implements OptionsInterface
    *
    * @param     $color
    * @param int $border
-   * @param int $transparent
+   * @param int $transparency
    *
    * @return $this
    */
-  public function setTextBorder($color, $border = 2, $transparent = 1)
+  public function setTextBorder($color, $border = 2, $transparency = 1)
   {
-    if ($transparent > 1 || $transparent < 0) {
-      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    if ($transparency > 1 || $transparency < 0) {
+      throw new InvalidArgumentException('Invalid value of transparency. Should be integer or float value from 0 to 1');
     }
 
     if (!is_integer($border)) {
@@ -193,7 +193,7 @@ class OptionDrawText implements OptionsInterface
     }
 
     $this->_textBorder = [
-        "bordercolor='" . $color . "'@" . $transparent,
+        "bordercolor='" . $color . "'@" . $transparency,
         "borderw=" . $border
     ];
 
@@ -214,14 +214,14 @@ class OptionDrawText implements OptionsInterface
    *
    * @param     $color
    * @param int $border
-   * @param int $transparent
+   * @param int $transparency
    *
    * @return $this
    */
-  public function setBoundingBox($color, $border = 10, $transparent = 1)
+  public function setBoundingBox($color, $border = 10, $transparency = 1)
   {
-    if ($transparent > 1 || $transparent < 0) {
-      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    if ($transparency > 1 || $transparency < 0) {
+      throw new InvalidArgumentException('Invalid value of transparency. Should be integer or float value from 0 to 1');
     }
 
     if (!is_integer($border)) {
@@ -229,7 +229,7 @@ class OptionDrawText implements OptionsInterface
     }
 
     $this->_boundingBox = [
-        "boxcolor='" . $color . "'@" . $transparent,
+        "boxcolor='" . $color . "'@" . $transparency,
         "boxborderw=" . $border
     ];
 

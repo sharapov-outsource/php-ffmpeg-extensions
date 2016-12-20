@@ -30,33 +30,33 @@ class OptionDrawBox implements OptionsInterface
    * Constructor. Set box color.
    *
    * @param        $color
-   * @param float  $transparent
+   * @param float  $transparency
    * @param string $thickness
    */
-  public function __construct($color = 'black', $transparent = 0.4, $thickness = 'max')
+  public function __construct($color = 'black', $transparency = 0.4, $thickness = 'max')
   {
-    $this->setColor($color, $transparent, $thickness);
+    $this->setColor($color, $transparency, $thickness);
   }
 
   /**
    * Set box color.
    *
    * @param        $color
-   * @param float  $transparent
+   * @param float  $transparency
    * @param string $thickness
    *
    * @return $this
    */
-  public function setColor($color, $transparent = 0.4, $thickness = 'max')
+  public function setColor($color, $transparency = 0.4, $thickness = 'max')
   {
-    if ($transparent > 1 || $transparent < 0) {
-      throw new InvalidArgumentException('Invalid value of transparent. Should be integer or float value from 0 to 1');
+    if ($transparency > 1 || $transparency < 0) {
+      throw new InvalidArgumentException('Invalid value of transparency. Should be integer or float value from 0 to 1');
     }
 
     if ($thickness <= 0 and $thickness != 'max') {
       throw new InvalidArgumentException('Invalid value of thickness. Should be positive integer or "max"');
     }
-    $this->_color = $color . '@' . $transparent . ":t=" . $thickness;
+    $this->_color = $color . '@' . $transparency . ":t=" . $thickness;
 
     return $this;
   }
