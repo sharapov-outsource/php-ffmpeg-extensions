@@ -36,6 +36,10 @@ class OptionDrawText implements OptionsInterface
 
   protected $_textBorder;
 
+  protected $_escapeSymbols = [
+      ':' => '\:'
+  ];
+
   /**
    * Set path to font file.
    *
@@ -52,6 +56,7 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Get path.
+   *
    * @return mixed
    */
   public function getFontFile()
@@ -75,6 +80,7 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Get font size.
+   *
    * @return int
    */
   public function getFontSize()
@@ -98,11 +104,36 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Get text.
+   *
    * @return string
    */
   public function getText()
   {
     return $this->_text;
+  }
+
+  /**
+   * Set pairs to escape.
+   *
+   * @param array $pairs
+   *
+   * @return $this
+   */
+  public function setEscapeSymbols(array $pairs)
+  {
+    $this->_escapeSymbols = $pairs;
+
+    return $this;
+  }
+
+  /**
+   * Get pairs to escape.
+   *
+   * @return array
+   */
+  public function getEscapeSymbols()
+  {
+    return $this->_escapeSymbols;
   }
 
   /**
@@ -126,6 +157,7 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Get font color.
+   *
    * @return string
    */
   public function getFontColor()
@@ -166,6 +198,7 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Returns text shadow value.
+   *
    * @return mixed
    */
   public function getTextShadow()
@@ -202,6 +235,7 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Returns text border value.
+   *
    * @return mixed
    */
   public function getTextBorder()
@@ -238,6 +272,7 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Returns box color value.
+   *
    * @return mixed
    */
   public function getBoundingBox()
@@ -247,13 +282,14 @@ class OptionDrawText implements OptionsInterface
 
   /**
    * Returns command string.
+   *
    * @return string
    */
   public function getCommand()
   {
     $filterOptions = [
         "fontfile=" . $this->getFontFile()->getPath(),
-        "text='" . $this->getText() . "'",
+        "text='" . $this->_escapeSymbols() . "'",
         "fontcolor='" . $this->getFontColor() . "'",
         "fontsize=" . $this->getFontSize(),
         "x=" . $this->getCoordinates()->getX(),
@@ -290,5 +326,15 @@ class OptionDrawText implements OptionsInterface
   public function __toString()
   {
     return $this->getCommand();
+  }
+
+  /**
+   * Replaces special symbols.
+   *
+   * @return string
+   */
+  private function _escapeSymbols()
+  {
+    return strtr($this->getText(), $this->_escapeSymbols);
   }
 }
