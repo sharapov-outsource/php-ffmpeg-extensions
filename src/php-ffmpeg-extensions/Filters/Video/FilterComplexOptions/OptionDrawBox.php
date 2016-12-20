@@ -10,7 +10,6 @@
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use FFMpeg\Exception\InvalidArgumentException;
-use Sharapov\FFMpegExtensions\Coordinate\Dimension;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 
 /**
@@ -21,10 +20,9 @@ class OptionDrawBox implements OptionsInterface
 {
   use TimeLineTrait;
   use CoordinatesTrait;
+  use DimensionsTrait;
 
   protected $_color = 'black@0.4:t=max';
-
-  protected $_dimensions;
 
   /**
    * Constructor. Set box color.
@@ -68,29 +66,6 @@ class OptionDrawBox implements OptionsInterface
   public function getColor()
   {
     return $this->_color;
-  }
-
-  /**
-   * Returns coordinates object.
-   *
-   * @param Dimension $dimension
-   *
-   * @return mixed
-   */
-  public function setDimensions(Dimension $dimension)
-  {
-    $this->_dimensions = $dimension;
-
-    return $this;
-  }
-
-  /**
-   * Returns dimensions object.
-   * @return mixed
-   */
-  public function getDimensions()
-  {
-    return $this->_dimensions;
   }
 
   /**
