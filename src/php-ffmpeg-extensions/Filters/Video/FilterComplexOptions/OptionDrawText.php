@@ -28,7 +28,7 @@ class OptionDrawText implements OptionsInterface
 
   protected $_fontColor = '#000000';
 
-  protected $_overlayText = 'Default text';
+  protected $_text = 'Default text';
 
   protected $_boundingBox;
 
@@ -89,9 +89,9 @@ class OptionDrawText implements OptionsInterface
    *
    * @return $this
    */
-  public function setOverlayText($text)
+  public function setText($text)
   {
-    $this->_overlayText = $text;
+    $this->_text = $text;
 
     return $this;
   }
@@ -100,9 +100,9 @@ class OptionDrawText implements OptionsInterface
    * Get text.
    * @return string
    */
-  public function getOverlayText()
+  public function getText()
   {
-    return $this->_overlayText;
+    return $this->_text;
   }
 
   /**
@@ -253,7 +253,7 @@ class OptionDrawText implements OptionsInterface
   {
     $filterOptions = [
         "fontfile=" . $this->getFontFile()->getPath(),
-        "text='" . $this->getOverlayText() . "'",
+        "text='" . $this->getText() . "'",
         "fontcolor='" . $this->getFontColor() . "'",
         "fontsize=" . $this->getFontSize(),
         "x=" . $this->getCoordinates()->getX(),

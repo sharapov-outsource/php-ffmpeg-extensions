@@ -1,41 +1,23 @@
-# php-ffmpeg-extensions
-An extensions library for the PHP FFMpeg (https://github.com/PHP-FFMpeg/PHP-FFMpeg)
+<?php
+/**
+ * This file is part of PHP-FFmpeg-Extensions library.
+ *
+ * (c) Alexander Sharapov <alexander@sharapov.biz>
+ * http://sharapov.biz/
+ *
+ */
 
-Installation (via Composer):
-============================
-
-For composer installation, add:
-
-```json
-"require": {
-    "sharapov/php-ffmpeg-extensions": "dev-master"
-},
-```
-
-to your composer.json file and update your dependencies. Or you can run:
-
-```sh
-$ composer require sharapov/php-ffmpeg-extensions
-```
-
-Usage:
-======
-
-Now you can autoload or use the class via its namespace. Below are examples of how to use the library.
-
-Draw texts and boxes
---------------------------
-
-```php
+ini_set('display_errors', 1);
+date_default_timezone_set('UTC');
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
-// Init FFMpeg library
-$ffmpeg = \FFMpeg\FFMpeg::create(array(
-    'ffmpeg.binaries'  => '/usr/local/bin/ffmpeg', // Path to FFMpeg
-    'ffprobe.binaries' => '/usr/local/bin/ffprobe', // Path to FFProbe
-    'timeout'          => 3600, // The timeout for the underlying process
-    'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
-));
+// Init ffmpeg library
+$ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create([
+                                                        'ffmpeg.binaries'  => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg',
+                                                        'ffprobe.binaries' => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffprobe',
+                                                        'timeout'          => 3600, // The timeout for the underlying process
+                                                        'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
+                                                    ]);
 
 // Open source video
 $video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/demo_video_720p_HD.mp4'));
@@ -119,20 +101,3 @@ $format->on('progress', function ($video, $format, $percentage) {
 
 $video
     ->save($format, dirname(__FILE__) . '/output/output.mp4');
-```
-
-You will find other examples in "/examples" folder. 
-
-Changelog
-=========
-
-
-Links
-=====
-[PHP FFMpeg Homepage](https://github.com/PHP-FFMpeg/PHP-FFMpeg)
-
-[Composer](https://getcomposer.org/)
-
-[GitHub](https://github.com/sharapovweb/php-ffmpeg-extensions)
-
-[Packagist](https://packagist.org/packages/sharapov/php-ffmpeg-extensions)

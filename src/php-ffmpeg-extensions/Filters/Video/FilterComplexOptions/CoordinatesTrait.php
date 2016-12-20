@@ -45,6 +45,9 @@ trait CoordinatesTrait
   /**
    * Set z-index coordinate.
    *
+   * The z-index property specifies the stack order of an element.
+   * An element with greater stack order is always in front of an element with a lower stack order.
+   *
    * @param int $z
    *
    * @return $this
