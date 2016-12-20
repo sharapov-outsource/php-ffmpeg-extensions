@@ -10,16 +10,18 @@
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use FFMpeg\Exception\InvalidArgumentException;
-use Sharapov\FFMpegExtensions\Coordinate\Point;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 
 /**
- * Class Text
+ * DrawText filter option
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
 class OptionDrawText implements OptionsInterface
 {
+  use TimeLineTrait;
+  use CoordinatesTrait;
+
   protected $_fontFile;
 
   protected $_fontSize = 20;
@@ -27,10 +29,6 @@ class OptionDrawText implements OptionsInterface
   protected $_fontColor = '#000000';
 
   protected $_overlayText = 'Default text';
-
-  protected $_coordinates;
-
-  protected $_timeLine;
 
   protected $_boundingBox;
 
@@ -136,52 +134,6 @@ class OptionDrawText implements OptionsInterface
   }
 
   /**
-   * Set _coordinates object.
-   *
-   * @param Point $point
-   *
-   * @return $this
-   */
-  public function setCoordinates(Point $point)
-  {
-    $this->_coordinates = $point;
-
-    return $this;
-  }
-
-  /**
-   * Return _coordinates object.
-   * @return mixed
-   */
-  public function getCoordinates()
-  {
-    return $this->_coordinates;
-  }
-
-  /**
-   * Set timeline object.
-   *
-   * @param TimeLine $timeLine
-   *
-   * @return $this
-   */
-  public function setTimeLine(TimeLine $timeLine)
-  {
-    $this->_timeLine = $timeLine;
-
-    return $this;
-  }
-
-  /**
-   * Return timeline object
-   * @return mixed
-   */
-  public function getTimeLine()
-  {
-    return $this->_timeLine;
-  }
-
-  /**
    * The color to be used for drawing a shadow behind the drawn text.
    * The x and y offsets for the text shadow position with respect to the position of the text. They can be either
    * positive or negative values.
@@ -213,7 +165,7 @@ class OptionDrawText implements OptionsInterface
   }
 
   /**
-   * Return text shadow value.
+   * Returns text shadow value.
    * @return mixed
    */
   public function getTextShadow()
@@ -249,7 +201,7 @@ class OptionDrawText implements OptionsInterface
   }
 
   /**
-   * Return text border value.
+   * Returns text border value.
    * @return mixed
    */
   public function getTextBorder()
@@ -285,7 +237,7 @@ class OptionDrawText implements OptionsInterface
   }
 
   /**
-   * Return box color value.
+   * Returns box color value.
    * @return mixed
    */
   public function getBoundingBox()
@@ -294,7 +246,7 @@ class OptionDrawText implements OptionsInterface
   }
 
   /**
-   * Return command string.
+   * Returns command string.
    * @return string
    */
   public function getCommand()

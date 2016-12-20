@@ -11,11 +11,11 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 class OptionsCollection implements \Countable, \IteratorAggregate
 {
-  private $options;
+  private $_options;
 
   public function __construct(array $options = [])
   {
-    $this->options = array_values($options);
+    $this->_options = array_values($options);
   }
 
   /**
@@ -26,7 +26,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    */
   public function first()
   {
-    $option = reset($this->options);
+    $option = reset($this->_options);
 
     return $option ? : null;
   }
@@ -40,7 +40,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    */
   public function add(OptionsInterface $option)
   {
-    $this->options[] = $option;
+    $this->_options[] = $option;
 
     return $this;
   }
@@ -50,7 +50,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    */
   public function count()
   {
-    return count($this->options);
+    return count($this->_options);
   }
 
   /**
@@ -60,7 +60,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    */
   public function all()
   {
-    return $this->options;
+    return $this->_options;
   }
 
   /**
@@ -72,7 +72,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    */
   public function getCommand($separator = ',')
   {
-    return implode($separator, $this->options);
+    return implode($separator, $this->_options);
   }
 
   /**
@@ -80,7 +80,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    */
   public function getIterator()
   {
-    return new \ArrayIterator($this->options);
+    return new \ArrayIterator($this->_options);
   }
 
   /**

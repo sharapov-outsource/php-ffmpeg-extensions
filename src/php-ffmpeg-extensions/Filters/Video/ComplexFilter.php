@@ -17,7 +17,7 @@ use Sharapov\FFMpegExtensions\Media\Video;
 
 class ComplexFilter implements VideoFilterInterface {
 
-  private $optionsCollection;
+  private $_optionsCollection;
 
   /** @var integer */
   private $priority;
@@ -36,7 +36,7 @@ class ComplexFilter implements VideoFilterInterface {
    */
   public function getOptionsCollection()
   {
-    return $this->optionsCollection;
+    return $this->_optionsCollection;
   }
 
   /**
@@ -44,7 +44,7 @@ class ComplexFilter implements VideoFilterInterface {
    */
   public function setOptionsCollection(OptionsCollection $optionsCollection)
   {
-    $this->optionsCollection = $optionsCollection;
+    $this->_optionsCollection = $optionsCollection;
   }
 
   /**
@@ -70,7 +70,7 @@ class ComplexFilter implements VideoFilterInterface {
 
   private function _getDrawTextCommand()
   {
-    return new OptionsCollection(array_filter((array)$this->getOptionsCollection()->getIterator(), function (OptionsInterface $option) {
+    return new OptionsCollection(array_filter((array)$this->_optionsCollection->getIterator(), function (OptionsInterface $option) {
       if($option instanceof OptionDrawText) {
         return true;
       }
