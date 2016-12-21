@@ -9,7 +9,7 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
-interface OptionsInterface
+interface OptionInterface
 {
   public function getCommand();
   public function __toString();

@@ -13,7 +13,7 @@ use FFMpeg\Format\VideoInterface;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollection;
-use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsInterface;
+use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionInterface;
 use Sharapov\FFMpegExtensions\Media\Video;
 
 class ComplexFilter implements VideoFilterInterface {
@@ -61,16 +61,66 @@ class ComplexFilter implements VideoFilterInterface {
    */
   public function apply(Video $video, VideoInterface $format)
   {
+    print '<pre>';
+    print_r($video);
+    print '</pre>';
     $commands = [
-        '-filter_complex',
-        $this->_optionsCollection->getCommand()
+          '-filter_complex',
     ];
+
+    $inputs = [
+
+    ];
+
+    $filterComplexOptions = [
+       '[0:v]'
+    ];
+
+    if($optionsOverlay = $this->getOptionsCollection()->filter('Overlay') and $optionsOverlay->count() > 0) {
+      foreach ($optionsOverlay as $option) {
+        print '<pre>';
+        print_r((string)$option);
+        print '</pre>';
+        $inputs[] = '-i';
+        $inputs[] = $option->getOverlayInput()->getPath();
+      }
+
+    }
+
+    if($optionsDrawText = $this->getOptionsCollection()->filter('DrawText') and $optionsOverlay->count() > 0) {
+      foreach ($optionsDrawText as $option) {
+        $filterComplexOptions[] = (string)$option;
+      }
+    }
+
+    print '<pre>';
+    print_r($inputs);
+    print '</pre>';
+
+    print '<pre>';
+    print_r($filterComplexOptions);
+    print '</pre>';
+
+
+    //print_r($this->_optionsCollection->getCommand());
+
+    /*
+    '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg' '-y' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/demo_video_720p_HD.mp4' '-filter_complex' '[0:v]drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''default tex1t1'\'':fontsize=33:x=430:y=150,drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''text'\'':fontsize=33:x=230:y=150' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/output/output.mp4'
+
+    */
+
+    /*
+     * '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg' '-y' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/demo_video_720p_HD.mp4' '-threads' '12' '-vcodec' 'libx264' '-acodec' 'libmp3lame' '-filter_complex' '[%si:v]scale=120:60[vOut%so],[vOut%so][%si:v]overlay:enable='\''between(t,1,6)'\''[vOut%so],drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''http\://www.com This is the @ default text'\'':fontcolor='\''#ffffff@1'\'':fontsize=33:x=230:y=150:enable='\''between(t,1,6)'\''' '-map' '[vOut%so]' '-b:v' '1000k' '-refs' '6' '-coder' '1' '-sc_threshold' '40' '-flags' '+loop' '-me_range' '16' '-subq' '7' '-i_qfactor' '0.71' '-qcomp' '0.6' '-qdiff' '4' '-trellis' '1' '-b:a' '128k'
+     */
+    die;
+
+
     return $commands;
   }
 /*
   private function _getDrawTextCommand()
   {
-    return new OptionsCollection(array_filter((array)$this->_optionsCollection->getIterator(), function (OptionsInterface $option) {
+    return new OptionsCollection(array_filter((array)$this->_optionsCollection->getIterator(), function (OptionInterface $option) {
       if($option instanceof OptionDrawText) {
         return true;
       }
@@ -79,7 +129,7 @@ class ComplexFilter implements VideoFilterInterface {
 
   private function _getDrawBoxCommand()
   {
-    return new OptionsCollection(array_filter((array)$this->_optionsCollection->getIterator(), function (OptionsInterface $option) {
+    return new OptionsCollection(array_filter((array)$this->_optionsCollection->getIterator(), function (OptionInterface $option) {
       if($option instanceof OptionDrawBox) {
         return true;
       }

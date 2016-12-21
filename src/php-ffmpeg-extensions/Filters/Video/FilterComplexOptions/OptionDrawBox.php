@@ -16,7 +16,7 @@ use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
  * DrawText filter option
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
-class OptionDrawBox implements OptionsInterface
+class OptionDrawBox implements OptionInterface
 {
   use TimeLineTrait;
   use CoordinatesTrait;
@@ -74,7 +74,7 @@ class OptionDrawBox implements OptionsInterface
    */
   public function getCommand()
   {
-    $filterOptions = [
+    $options = [
         "x=" . $this->getCoordinates()->getX(),
         "y=" . $this->getCoordinates()->getY(),
         "w=" . $this->getDimensions()->getWidth(),
@@ -83,10 +83,10 @@ class OptionDrawBox implements OptionsInterface
     ];
 
     if ($this->_timeLine instanceof TimeLine) {
-      $filterOptions[] = $this->_timeLine->getCommand();
+      $options[] = $this->_timeLine->getCommand();
     }
 
-    return "drawbox=" . implode(":", $filterOptions);
+    return "drawbox=" . implode(":", $options);
   }
 
   /**

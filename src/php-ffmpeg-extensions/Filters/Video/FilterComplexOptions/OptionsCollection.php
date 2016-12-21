@@ -9,8 +9,14 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
+use FFMpeg\Exception\InvalidArgumentException;
+
 class OptionsCollection implements \Countable, \IteratorAggregate
 {
+  const TYPE_OVERLAY = 'Overlay';
+  const TYPE_DRAWTEXT = 'DrawText';
+  const TYPE_DRAWBOX = 'DrawBox';
+
   private $_options;
 
   public function __construct(array $options = [])
@@ -22,7 +28,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    * Returns the first stream of the collection, null if the collection is
    * empty.
    *
-   * @return null|OptionsInterface
+   * @return null|OptionInterface
    */
   public function first()
   {
@@ -34,11 +40,11 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * Adds an option to the collection.
    *
-   * @param OptionsInterface $option
+   * @param OptionInterface $option
    *
    * @return OptionsCollection
    */
-  public function add(OptionsInterface $option)
+  public function add(OptionInterface $option)
   {
     $this->_options[] = $option;
 
@@ -63,17 +69,44 @@ class OptionsCollection implements \Countable, \IteratorAggregate
     return $this->_options;
   }
 
-  /**
-   * Returns the imploded command string of contained options.
-   *
-   * @param string $separator
-   *
-   * @return array
-   */
-  //public function getCommand($separator = ',')
-  //{
-    //return implode($separator, $this->_options);
-  //}
+  public function filter($typeName)
+  {
+    switch ($typeName) {
+      case self::TYPE_DRAWBOX:
+      case self::TYPE_DRAWTEXT:
+      case self::TYPE_OVERLAY:
+      return new OptionsCollection(array_filter((array)$this->getIterator(), [$this, '_filter'.ucfirst($typeName)]));
+      default :
+        throw new InvalidArgumentException('Invalid option type requested');
+    }
+  }
+
+  private function _filterOverlay(OptionInterface $option) {
+    if($option instanceof OptionOverlay) {
+      return true;
+    }
+  }
+
+  private function _filterDrawText(OptionInterface $option) {
+    if($option instanceof OptionDrawText) {
+      return true;
+    }
+  }
+
+  private function _filterDrawBox(OptionInterface $option) {
+    if($option instanceof OptionDrawBox) {
+      return true;
+    }
+  }
+
+  public function getOverlayOptions()
+  {
+    return new OptionsCollection(array_filter((array)$this->getIterator(), function (OptionInterface $option) {
+      if($option instanceof OptionOverlay) {
+        return true;
+      }
+    }));
+  }
 
   /**
    * {@inheritdoc}

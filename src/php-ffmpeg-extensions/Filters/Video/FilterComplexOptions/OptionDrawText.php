@@ -17,7 +17,7 @@ use Sharapov\FFMpegExtensions\Input\FileInterface;
  * DrawText filter option
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
-class OptionDrawText implements OptionsInterface
+class OptionDrawText implements OptionInterface
 {
   use TimeLineTrait;
   use CoordinatesTrait;
@@ -287,7 +287,7 @@ class OptionDrawText implements OptionsInterface
    */
   public function getCommand()
   {
-    $filterOptions = [
+    $options = [
         "fontfile=" . $this->getFontFile()->getPath(),
         "text='" . $this->_escapeSymbols() . "'",
         "fontcolor='" . $this->getFontColor() . "'",
@@ -297,25 +297,25 @@ class OptionDrawText implements OptionsInterface
     ];
 
     if ($this->_timeLine instanceof TimeLine) {
-      $filterOptions[] = (string)$this->_timeLine;
+      $options[] = (string)$this->_timeLine;
     }
 
     // Bounding box
     if ($this->_boundingBox != null) {
-      $filterOptions[] = "box=1:" . implode(":", $this->_boundingBox);
+      $options[] = "box=1:" . implode(":", $this->_boundingBox);
     }
 
     // Text shadow
     if ($this->_textShadow != null) {
-      $filterOptions[] = implode(":", $this->_textShadow);
+      $options[] = implode(":", $this->_textShadow);
     }
 
     // Text border
     if ($this->_textBorder != null) {
-      $filterOptions[] = implode(":", $this->_textBorder);
+      $options[] = implode(":", $this->_textBorder);
     }
 
-    return "drawtext=" . implode(":", $filterOptions);
+    return "drawtext=" . implode(":", $options);
   }
 
   /**
