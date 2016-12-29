@@ -10,10 +10,10 @@
 namespace Sharapov\FFMpegExtensions;
 
 use Alchemy\BinaryDriver\ConfigurationInterface;
-use FFMpeg\Driver\FFMpegDriver;
 use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
+use Sharapov\FFMpegExtensions\Driver\FFMpegDriver;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Audio;
 use Sharapov\FFMpegExtensions\Media\Video;
