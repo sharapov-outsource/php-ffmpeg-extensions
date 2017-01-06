@@ -10,18 +10,20 @@
 namespace Sharapov\FFMpegExtensions\Filters\Video;
 
 use FFMpeg\Format\VideoInterface;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox;
+use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionOverlay;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollection;
-use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionInterface;
 use Sharapov\FFMpegExtensions\Media\Video;
 
-class ComplexFilter implements VideoFilterInterface
+class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
 {
-
   private $_optionsCollection;
 
   private $_optionsPrepared;
+
+  private $_extraInputStreams = [];
 
   /** @var integer */
   private $priority;
@@ -47,6 +49,23 @@ class ComplexFilter implements VideoFilterInterface
   /**
    * {@inheritdoc}
    */
+  public function getExtraInputStreams()
+  {
+    return $this->_extraInputStreams;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setExtraInputStream($input)
+  {
+    $this->_extraInputStreams[] = '-i';
+    $this->_extraInputStreams[] = $input;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setOptionsCollection(OptionsCollection $optionsCollection)
   {
     $this->_optionsCollection = $optionsCollection;
@@ -66,15 +85,15 @@ class ComplexFilter implements VideoFilterInterface
   public function apply(Video $video, VideoInterface $format)
   {
     $firstStreamId = '0:v';
-    $lastStreamId  = null;
-    $streamMapping = $inputs = [];
+    $lastStreamId  = $firstStreamId;
+    $inputsMapping = $inputs = [];
     // Detect all additional inputs numbers
     for ($i = 0; $i <= $this
         ->getOptionsCollection()
         ->filter('Overlay')
         ->count(); $i++
     ) {
-      $streamMapping[] = sprintf('%s:v', $i);
+      $inputsMapping[] = sprintf('%s:v', $i);
     }
 
     //$filterComplexOptions = [
@@ -93,10 +112,62 @@ class ComplexFilter implements VideoFilterInterface
     */
 
     // Prepare overlay inputs
-    if ($optionsOverlay = $this->getOptionsCollection()->filter('Overlay') and $optionsOverlay->count() > 0) {
-      foreach ($optionsOverlay as $i => $option) {
-        $i++;
+    $optionsOverlay = $this->getOptionsCollection()->sortByZindex();
+    $imn = 1;
+    $stm = 1;
+    if ($optionsOverlay->count() > 0) {
+      foreach ($optionsOverlay as $option) {
+        if($option instanceof OptionDrawText) {
+
+          $this->_optionsPrepared[] =
+              str_replace([
+                              ':s1', ':s2'
+                          ], [
+                              $lastStreamId,
+                              's' . $stm
+                          ], $option->getCommand());
+
+          $lastStreamId = 's' . $stm;
+
+          print 'DT='.$option->getCommand().'<br />';
+        } elseif ($option instanceof OptionDrawBox) {
+
+          $this->_optionsPrepared[] =
+              str_replace([
+                              ':s1', ':s2'
+                          ], [
+                              $lastStreamId,
+                              's' . $stm
+                          ], $option->getCommand());
+
+          $lastStreamId = 's' . $stm;
+
+          print 'DB='.$option->getCommand().'<br />';
+        } elseif ($option instanceof OptionOverlay) {
+
+          $this->_optionsPrepared[] =
+              str_replace([
+                              ':s1', ':s2', ':s3', ':s4', ':s5'
+                          ], [
+                  $inputsMapping[$imn],
+                              't' . ($imn),
+                  $lastStreamId,
+                  't' . $imn,
+                  's' . $stm
+                          ], $option->getCommand());
+          // We need to get a last stream id to apply next options in the correct order
+          $lastStreamId = 's' . $stm;
+          // Pass input paths to the separate array
+          $this->setExtraInputStream($option->getOverlayInput()->getPath());
+
+          $imn++;
+          print 'OO='.$option->getCommand().'<br />';
+        } else {}
+
+
+        $stm++;
         // Mark up them
+        /*
         $this->_optionsPrepared[] =
             str_replace([
                             ':s1', ':s2', ':s3', ':s4', ':s5'
@@ -112,17 +183,27 @@ class ComplexFilter implements VideoFilterInterface
         // Pass input paths to the separate array
         $inputs[] = '-i';
         $inputs[] = $option->getOverlayInput()->getPath();
-      }
+      */
+        }
     }
 
-    /*
+    /* // '-refs' '6' '-coder' '1' '-sc_threshold' '40' '-flags' '+loop' '-me_range' '16' '-subq' '7' '-i_qfactor' '0.71' '-qcomp' '0.6' '-qdiff' '4' '-trellis' '1'
+     *
+    '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg' '-y' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/demo_video_720p_HD.mp4' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/intro_720p_muted.mp4' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/bg_green.jpeg' '-filter_complex' '[1:v]scale=120:60[t1],[0:v][t1]overlay=130:180[s1],[s1]drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''Layer2'\'':fontcolor='\''#ffffff@1'\'':fontsize=20:x=130:y=160:box=1:boxcolor='\''000000'\''@1:boxborderw=10[s2],[2:v]scale=120:60[t2],[s2][t2]overlay=130:150[s3],[s3]drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''Layer1'\'':fontcolor='\''#ffffff@1'\'':fontsize=20:x=130:y=150:box=1:boxcolor='\''red'\''@1:boxborderw=10' '-b:v' '1000k' '-b:a' '128k' '-pass' '1' '-passlogfile' '/tmp/ffmpeg-passes5866721d0c83d74tp0/pass-5866721d0c932' -map '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/output/output.mp4'
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      * '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg' '-y' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/demo_video_720p_HD.mp4' '-threads' '12' '-vcodec' 'libx264' '-acodec' 'libmp3lame' '-filter_complex' '[%si:v]scale=120:60[vOut%so],[vOut%so][%si:v]overlay:enable='\''between(t,1,6)'\''[vOut%so],drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''http\://www.com This is the @ default text'\'':fontcolor='\''#ffffff@1'\'':fontsize=33:x=230:y=150:enable='\''between(t,1,6)'\''' '-map' '[vOut%so]' '-b:v' '1000k' '-refs' '6' '-coder' '1' '-sc_threshold' '40' '-flags' '+loop' '-me_range' '16' '-subq' '7' '-i_qfactor' '0.71' '-qcomp' '0.6' '-qdiff' '4' '-trellis' '1' '-b:a' '128k'
      */
 
     // Prepare draw text options
-    if ($optionsDrawText = $this->getOptionsCollection()->filter('DrawText') and $optionsDrawText->count() > 0) {
-      $this->_optionsPrepared[] = $lastStreamId.implode(',', $optionsDrawText->getIterator()->getArrayCopy());
-    }
+    //if ($optionsDrawText = $this->getOptionsCollection()->filter('DrawText') and $optionsDrawText->count() > 0) {
+      //$this->_optionsPrepared[] = $lastStreamId.implode(',', $optionsDrawText->sortByZindex()->getArrayCopy());
+    //}
 
     print '<pre>';
     //print_r();
@@ -136,12 +217,18 @@ class ComplexFilter implements VideoFilterInterface
 */
 
 
-    $commands = array_merge($inputs, [
-        '-filter_complex',
-        implode(',',$this->_optionsPrepared)
-    ]);
+    if(count($this->_optionsPrepared) > 0) {
+      $commands = array_merge($inputs, [
+          '-filter_complex',
+          rtrim(implode(',', $this->_optionsPrepared), '[' . $lastStreamId . ']')
+      ]);
+    } else {
+      $commands = [];
+    }
 
+    print '<pre>';
     print_r($commands);
+    print '</pre>';
 
     /*
     '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg' '-y' '-i' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/demo_video_720p_HD.mp4' '-filter_complex' '[0:v]drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''default tex1t1'\'':fontsize=33:x=430:y=150,drawtext=fontfile=/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/source/OpenSansRegular.ttf:text='\''text'\'':fontsize=33:x=230:y=150' '/home/ezmembersarea/public_html/app/ffmpeg-ext/examples/output/output.mp4'

@@ -117,31 +117,15 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   }
 
   /**
-   * Returns the imploded command string of contained options.
-   *
-   * @param string $separator
-   * @param bool $sortZIndex
-   *
-   * @return array
+   * Returns options sorted by z-index.
+   * @return \ArrayIterator|\Traversable
    */
-  public function getCommand($separator = ',', $sortZIndex = true)
+  public function sortByZindex()
   {
     $optionsIterator = $this->getIterator();
-    if($sortZIndex) {
-      $optionsIterator->uasort(function ($a, $b) {
-        return strnatcmp($a->getZIndex(), $b->getZIndex());
-      });
-    }
-    return implode($separator, (array)$optionsIterator);
-  }
-
-  /**
-   * Returns a command string.
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->getCommand();
+    $optionsIterator->uasort(function ($a, $b) {
+      return strnatcmp($a->getZIndex(), $b->getZIndex());
+    });
+    return $optionsIterator;
   }
 }

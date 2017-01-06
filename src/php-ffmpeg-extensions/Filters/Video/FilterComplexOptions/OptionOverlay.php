@@ -78,7 +78,7 @@ class OptionOverlay implements OptionInterface, OptionProbeInterface
       $cmd .= sprintf(":%s", (string)$this->getTimeLine());
     }
 
-    return sprintf("[%s]scale=%s[%s],", ':s1', (string)$this->getDimensions(), ':s2').$cmd.'[:s5]';
+    return sprintf("[%s]scale=%s[%s],%s[%s]", ':s1', (string)$this->getDimensions(), ':s2', $cmd, ':s5');
   }
 
   /**

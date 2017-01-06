@@ -86,7 +86,7 @@ class OptionDrawBox implements OptionInterface
       $options[] = $this->_timeLine->getCommand();
     }
 
-    return "drawbox=" . implode(":", $options);
+    return sprintf("[%s]drawbox=%s[%s]", ':s1', implode(":", $options), ':s2');
   }
 
   /**

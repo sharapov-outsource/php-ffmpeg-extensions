@@ -315,7 +315,7 @@ class OptionDrawText implements OptionInterface
       $options[] = implode(":", $this->_textBorder);
     }
 
-    return "drawtext=" . implode(":", $options);
+    return sprintf("[%s]drawtext=%s[%s]", ':s1', implode(":", $options), ':s2');
   }
 
   /**
