@@ -28,8 +28,7 @@ $options = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\Opt
 // Create alphakey option
 $alphaKey = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionAlphakey();
 $alphaKey
-    // Set background. Could be video or image
-    ->setExtraInputStream(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__). '/source/intro_720p_muted.mp4'))
+    ->setExtraInputStream(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__). '/source/demo_video_720p_HD.mp4'))
     ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(1280, 720));
 
 $filterOptions
@@ -38,13 +37,14 @@ $filterOptions
 // Create drawtext option (more examples are in the file draw-texts-and-boxes.php)
 $text1 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text1
-    ->setZIndex(160)
-    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/calibri.ttf'))
-    ->setFontColor('#ffffff')
-    ->setFontSize(33)
-    ->setText('Alphakey example')
-    ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(\Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_HORIZONTAL, 50))
-    ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 20));
+    ->setZIndex(360)
+    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/OpenSansRegular.ttf'))// Set path to font file
+    ->setFontColor('#ffffff')// Set font color
+    ->setFontSize(33)// Set font size
+    ->setBoundingBox('000000')
+    ->setText('Alphakey example')// Set overlay text
+    ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(\Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_HORIZONTAL, \Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_VERTICAL))
+    ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(4, 20)); // Set timings (start, stop) in seconds
 
 // Pass option to the options collection
 $options
