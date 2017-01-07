@@ -58,6 +58,6 @@ class TimeLine
    */
   public function __toString()
   {
-    return $this->getStartTime() . "," . $this->getEndTime();
+    return $this->getCommand();
   }
 }

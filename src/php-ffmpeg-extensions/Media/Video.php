@@ -9,188 +9,33 @@
 
 namespace Sharapov\FFMpegExtensions\Media;
 
+use Sharapov\FFMpegExtensions\Filters\Video\VideoFilters;
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use FFMpeg\Driver\FFMpegDriver;
+use FFMpeg\Filters\Audio\SimpleFilter;
 use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Exception\RuntimeException;
-use FFMpeg\FFProbe;
 use FFMpeg\Format\FormatInterface;
 use FFMpeg\Format\ProgressableInterface;
-use Sharapov\FFMpegExtensions\Filters\Video\Concatenation\DemuxerFilter;
-use Sharapov\FFMpegExtensions\Filters\Video\Concatenation\ProtocolFilter;
-use Sharapov\FFMpegExtensions\Format\Video\TransportStream;
-use Sharapov\FFMpegExtensions\Stream\FileInterface;
-use Sharapov\FFMpegExtensions\Stream\Mapper;
+use FFMpeg\Format\AudioInterface;
+use FFMpeg\Format\VideoInterface;
+use Neutron\TemporaryFilesystem\Manager as FsManager;
 
-/**
- * Class Video
- * @package Sharapov\FFMpegExtensions\Media
- */
 class Video extends \FFMpeg\Media\Video
 {
-  /**
-   * @var object
-   */
-  protected $_concatFilter;
-
-  protected $_mapper;
-
-  protected $_file;
-
-  public function __construct(FileInterface $file, FFMpegDriver $driver, FFProbe $ffprobe)
-  {
-    $this->_file = $file;
-    parent::__construct($file->getFile(), $driver, $ffprobe);
-  }
-
-  public function getFileObject()
-  {
-    return $this->_file;
-  }
-
-  public function getConcatFilter()
-  {
-    return $this->_concatFilter;
-  }
+  use MediaTypeTrait;
 
   /**
-   * Mapper method.
-   * Allows to replace media streams on target video.
-   * @return null|Mapper
-   */
-  public function remap()
-  {
-    $this->_mapper = Mapper::init();
-
-    // Pass $this main file to stream mapper
-    if (count($this->_mapper->getInputs()) == 0) {
-      $this->_mapper
-          ->setInput($this);
-    }
-
-    return $this->_mapper;
-  }
-
-  /**
-   * Concat protocol.
-   * Use with formats that support file level concatenation (MPEG-1, MPEG-2 PS, DV).
-   * @return null|ProtocolFilter
-   */
-  public function concatProtocol()
-  {
-    $this->_concatFilter = ProtocolFilter::init();
-    // Pass video file
-    if (count($this->_concatFilter->getInputs()) == 0) {
-      $this->_concatFilter
-          ->setInput($this);
-    }
-
-    return $this->_concatFilter;
-  }
-
-  /**
-   * Concat videofilter.
-   * Useful if you need to re-encode such as when applying filters.
-   * TODO: add concat videofilter support
-   */
-  public function concatVideoFilter()
-  {
-    throw new InvalidArgumentException('ConcatVideoFilter does not implemented');
-  }
-
-  /**
-   * Concat demuxer.
-   * Useful when you want to avoid a re-encode and your format does not support file level concatenation.
-   * TODO: add concat demuxer support
-   */
-  public function concatDemuxer()
-  {
-    throw new InvalidArgumentException('ConcatDemuxer does not implemented');
-  }
-
-  public function combine($outputPathfile)
-  {
-    if ($this->_mapper instanceof Mapper) {
-
-      $commands = $this->_mapper->getCommand('-y');
-      $commands[] = '-codec';
-      $commands[] = 'copy';
-      $commands[] = '-shortest';
-      $commands[] = $outputPathfile;
-
-      $failure = null;
-
-      try {
-        $this->driver->command($commands, false);
-      } catch (ExecutionFailureException $e) {
-        $failure = $e;
-      }
-
-      if (null !== $failure) {
-        throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
-      }
-
-      return $this;
-    } else {
-      throw new RuntimeException('Unsupported mapper method');
-    }
-  }
-
-  /**
-   * Runs concatenation process using one of concat methods: Protocol or Demuxer.
+   * {@inheritdoc}
    *
-   * @param $outputPathfile
-   *
-   * @return Video
-   *
-   * @throws RuntimeException
+   * @return VideoFilters
    */
-  public function merge($outputPathfile)
+  public function filters()
   {
-    if ($this->_concatFilter instanceof ProtocolFilter) {
-      // Make sure the video stream has encoded by h264
-      if ($this->getStreams()->videos()->getIterator()->current()->get('codec_name') != 'h264') {
-        throw new InvalidArgumentException('Concat protocol supports only file level concatenation: MPEG-1, MPEG-2 PS, DV.');
-      }
-
-      $inputs = $this->_concatFilter->getInputsArray();
-
-      //array_unshift($inputs, $this->pathfile);
-
-      $commands = [
-          '-y',
-          '-i',
-          sprintf('concat:%s', implode("|", $inputs)),
-        //'-c',
-        //'copy',
-          '-bsf:a',
-          'aac_adtstoasc',
-          $outputPathfile
-      ];
-
-      $failure = null;
-
-      try {
-        $this->driver->command($commands, false);
-      } catch (ExecutionFailureException $e) {
-        $failure = $e;
-      }
-
-      if (null !== $failure) {
-        throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
-      }
-
-      return $this;
-    } elseif ($this->_concatFilter instanceof DemuxerFilter) {
-      throw new RuntimeException('ConcatDemuxer does not implemented yet');
-    } else {
-      throw new RuntimeException('Unsupported concat method or no concat filter attached');
-    }
+    return new VideoFilters($this);
   }
 
   /**
    * Exports the video in the desired format, applies registered filters.
-   * Extends an original Save method
    *
    * @param FormatInterface $format
    * @param string          $outputPathfile
@@ -201,49 +46,133 @@ class Video extends \FFMpeg\Media\Video
    */
   public function save(FormatInterface $format, $outputPathfile)
   {
-    // We have own export processing for TransportStream format
-    if ($format instanceof TransportStream) {
+    $commands = array('-y', '-i', $this->pathfile);
 
-      // Make sure the video stream has encoded by h264
-      if ($this->getStreams()->videos()->getIterator()->current()->get('codec_name') != 'h264') {
-        throw new InvalidArgumentException('Transport stream supports only h264');
+    $filters = clone $this->filters;
+    $extraFilters = [];
+
+    foreach ($filters as $filter) {
+      if($filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface) {
+        $extraFilters = array_merge($extraFilters, $filter->apply($this, $format));
+      }
+      if($filter instanceof \Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface) {
+        $commands = array_merge($commands, $filter->getExtraInputStreams());
+      }
+    }
+
+    $commands = array_merge($commands, $extraFilters);
+
+    $filters->add(new SimpleFilter($format->getExtraParams(), 10));
+
+    if ($this->driver->getConfiguration()->has('ffmpeg.threads')) {
+      $filters->add(new SimpleFilter(array('-threads', $this->driver->getConfiguration()->get('ffmpeg.threads'))));
+    }
+    if ($format instanceof VideoInterface) {
+      if (null !== $format->getVideoCodec()) {
+        $filters->add(new SimpleFilter(array('-vcodec', $format->getVideoCodec())));
+      }
+    }
+    if ($format instanceof AudioInterface) {
+      if (null !== $format->getAudioCodec()) {
+        $filters->add(new SimpleFilter(array('-acodec', $format->getAudioCodec())));
+      }
+    }
+
+    foreach ($filters as $filter) {
+      if(!$filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface) {
+        $commands = array_merge($commands, $filter->apply($this, $format));
+      }
+    }
+
+    if ($format instanceof VideoInterface) {
+      $commands[] = '-b:v';
+      $commands[] = $format->getKiloBitrate() . 'k';
+      $commands[] = '-refs';
+      $commands[] = '6';
+      $commands[] = '-coder';
+      $commands[] = '1';
+      $commands[] = '-sc_threshold';
+      $commands[] = '40';
+      $commands[] = '-flags';
+      $commands[] = '+loop';
+      $commands[] = '-me_range';
+      $commands[] = '16';
+      $commands[] = '-subq';
+      $commands[] = '7';
+      $commands[] = '-i_qfactor';
+      $commands[] = '0.71';
+      $commands[] = '-qcomp';
+      $commands[] = '0.6';
+      $commands[] = '-qdiff';
+      $commands[] = '4';
+      $commands[] = '-trellis';
+      $commands[] = '1';
+    }
+
+    if ($format instanceof AudioInterface) {
+      if (null !== $format->getAudioKiloBitrate()) {
+        $commands[] = '-b:a';
+        $commands[] = $format->getAudioKiloBitrate() . 'k';
+      }
+      if (null !== $format->getAudioChannels()) {
+        $commands[] = '-ac';
+        $commands[] = $format->getAudioChannels();
+      }
+    }
+
+    print '<pre>';
+    print_r($commands);
+    print '</pre>';
+
+    $fs = FsManager::create();
+    $fsId = uniqid('ffmpeg-passes');
+    $passPrefix = $fs->createTemporaryDirectory(0777, 50, $fsId) . '/' . uniqid('pass-');
+    $passes = array();
+    $totalPasses = $format->getPasses();
+
+    if (1 > $totalPasses) {
+      throw new InvalidArgumentException('Pass number should be a positive value.');
+    }
+
+    for ($i = 1; $i <= $totalPasses; $i++) {
+      $pass = $commands;
+
+      if ($totalPasses > 1) {
+        $pass[] = '-pass';
+        $pass[] = $i;
+        $pass[] = '-passlogfile';
+        $pass[] = $passPrefix;
       }
 
-      $commands = [
-          '-y',
-          '-i',
-          $this->pathfile,
-          '-c',
-          'copy',
-          '-bsf:v',
-          'h264_mp4toannexb',
-          '-f',
-          'mpegts',
-          $outputPathfile
-      ];
+      $pass[] = $outputPathfile;
 
-      $failure = null;
+      $passes[] = $pass;
+    }
 
+    $failure = null;
+
+    foreach ($passes as $pass => $passCommands) {
       try {
         /** add listeners here */
         $listeners = null;
 
         if ($format instanceof ProgressableInterface) {
-          $listeners = $format->createProgressListener($this, $this->ffprobe, $format->getPasses(), $format->getPasses());
+          $listeners = $format->createProgressListener($this, $this->ffprobe, $pass + 1, $totalPasses);
         }
 
-        $this->driver->command($commands, false, $listeners);
+        $this->driver->command($passCommands, false, $listeners);
       } catch (ExecutionFailureException $e) {
         $failure = $e;
+        break;
       }
-
-      if (null !== $failure) {
-        throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
-      }
-
-      return $this;
     }
 
-    return parent::save($format, $outputPathfile);
+    $fs->clean($fsId);
+
+    if (null !== $failure) {
+      throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
+    }
+
+    return $this;
   }
 }
