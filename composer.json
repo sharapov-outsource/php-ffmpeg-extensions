@@ -7,6 +7,8 @@
     "ffmpeg",
     "php-ffmpeg",
     "ffmpeg overlay",
+    "chromakey",
+    "colorkey",
     "video processing",
     "video",
     "audio processing",

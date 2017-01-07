@@ -47,7 +47,7 @@ $options = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\Opt
 $text1 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text1
     // Set z-index property. Greater value is always in front
-    ->setZIndex(60)
+    ->setZIndex(160)
     // Set font path
     ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/calibri.ttf'))
     // Set font color. Accepts transparency value as the second argument. Float value between 0 and 1.
@@ -69,7 +69,7 @@ $options
 // Create drawtext option 2
 $text2 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text2
-    ->setZIndex(60)
+    ->setZIndex(160)
     ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/arial.ttf'))
     ->setFontColor('#ffffff')
     ->setFontSize(28)
@@ -83,7 +83,7 @@ $options
 // Create drawbox option
 $box = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox();
 $box
-    ->setZIndex(30)
+    ->setZIndex(130)
     ->setColor('black')
     ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(\Sharapov\FFMpegExtensions\Coordinate\Dimension::WIDTH_MAX, 60))
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(0, 580))// Set coordinates
@@ -95,7 +95,7 @@ $options
 // Create drawtext option 3
 $text2 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text2
-    ->setZIndex(60)
+    ->setZIndex(160)
     ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/arial.ttf'))
     ->setFontColor('#ffffff')
     ->setFontSize(28)
