@@ -20,7 +20,7 @@ $ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create([
                                                     ]);
 
 // Open source video
-$video = $ffmpeg->open('PATH_TO_MOV_WITH_ALPHA_LAYER');
+$video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/Vault.mov'));
 
 // Create complex filter collection
 $options = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollection();
