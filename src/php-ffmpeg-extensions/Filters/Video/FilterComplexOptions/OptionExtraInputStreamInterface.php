@@ -9,9 +9,10 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
-interface OptionInterface
+use Sharapov\FFMpegExtensions\Input\FileInterface;
+
+interface OptionExtraInputStreamInterface
 {
-  public function getCommand();
-  public function __toString();
-  public function getZIndex();
+  public function setExtraInputStream(FileInterface $file);
+  public function getExtraInputStream();
 }

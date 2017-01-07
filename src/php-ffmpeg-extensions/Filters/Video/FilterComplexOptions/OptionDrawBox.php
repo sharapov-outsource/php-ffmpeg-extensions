@@ -21,8 +21,9 @@ class OptionDrawBox implements OptionInterface
   use TimeLineTrait;
   use CoordinatesTrait;
   use DimensionsTrait;
+  use ZindexTrait;
 
-  protected $_color = 'black@0.4:t=max';
+  protected $_color = '000000@0.4:t=max';
 
   /**
    * Constructor. Set box color.
@@ -31,7 +32,7 @@ class OptionDrawBox implements OptionInterface
    * @param float  $transparency
    * @param string $thickness
    */
-  public function __construct($color = 'black', $transparency = 0.4, $thickness = 'max')
+  public function __construct($color = '000000', $transparency = 0.4, $thickness = 'max')
   {
     $this->setColor($color, $transparency, $thickness);
   }
@@ -54,6 +55,13 @@ class OptionDrawBox implements OptionInterface
     if ($thickness != 'max' and !is_int($thickness)) {
       throw new InvalidArgumentException('Thickness should be positive integer or "max". ' . $thickness . ' given.');
     }
+
+    $color = ltrim($color, '#');
+    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
+    if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
+      throw new InvalidArgumentException('Color should be HEX string. ' . $color . ' given.');
+    }
+
     $this->_color = $color . '@' . $transparency . ":t=" . $thickness;
 
     return $this;

@@ -18,41 +18,18 @@ use FFMpeg\Exception\InvalidArgumentException;
  * Overlay filter option
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
-class OptionOverlay implements OptionInterface, OptionProbeInterface
+class OptionOverlay
+    implements
+    OptionInterface,
+    OptionProbeInterface,
+    OptionExtraInputStreamInterface
 {
   use TimeLineTrait;
   use CoordinatesTrait;
   use DimensionsTrait;
   use ProbeTrait;
-
-  protected $_overlayInput;
-
-  /**
-   * Set path to font file.
-   *
-   * @param $file
-   *
-   * @return $this
-   */
-  public function setOverlayInput(FileInterface $file)
-  {
-    $this->_overlayInput = $file;
-    return $this;
-  }
-
-  /**
-   * Get path.
-   *
-   * @return mixed
-   */
-  public function getOverlayInput()
-  {
-    if (!$this->_overlayInput instanceof FileInterface) {
-      throw new InvalidArgumentException('Overlay input is undefined.');
-    }
-
-    return $this->_overlayInput;
-  }
+  use ExtraInputStreamTrait;
+  use ZindexTrait;
 
   /**
    * Get input streams collection.
@@ -61,7 +38,7 @@ class OptionOverlay implements OptionInterface, OptionProbeInterface
    */
   public function getProbeData()
   {
-    return $this->getProbe()->streams($this->getOverlayInput()->getPath());
+    return $this->getProbe()->streams($this->getExtraInputStream()->getPath());
   }
 
   /**

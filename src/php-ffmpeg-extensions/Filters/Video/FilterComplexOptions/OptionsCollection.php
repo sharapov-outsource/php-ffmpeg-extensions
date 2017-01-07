@@ -16,6 +16,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   const TYPE_OVERLAY = 'Overlay';
   const TYPE_DRAWTEXT = 'DrawText';
   const TYPE_DRAWBOX = 'DrawBox';
+  const TYPE_CHROMAKEY = 'Chromakey';
 
   private $_options;
 
@@ -69,43 +70,77 @@ class OptionsCollection implements \Countable, \IteratorAggregate
     return $this->_options;
   }
 
+  /**
+   * Returns options that has an extra input streams.
+   * @return \ArrayIterator|\Traversable
+   */
+  public function filterHasExtraInputs()
+  {
+    return new OptionsCollection(array_filter((array)$this->getIterator(), function (OptionInterface $option) {
+      if ($option instanceof OptionExtraInputStreamInterface) {
+        return true;
+      }
+    }));
+  }
+
+  /**
+   * Returns options filtered by type.
+   *
+   * @param string $typeName
+   *
+   * @return \ArrayIterator|\Traversable
+   */
   public function filter($typeName)
   {
     switch ($typeName) {
       case self::TYPE_DRAWBOX:
       case self::TYPE_DRAWTEXT:
       case self::TYPE_OVERLAY:
-      return new OptionsCollection(array_filter((array)$this->getIterator(), [$this, '_filter'.ucfirst($typeName)]));
+      case self::TYPE_CHROMAKEY:
+        return new OptionsCollection(array_filter((array)$this->getIterator(), [$this, '_filter' . ucfirst($typeName)]));
       default :
-        throw new InvalidArgumentException('Invalid option type requested');
+        throw new InvalidArgumentException('Invalid option type requested.');
     }
   }
 
-  private function _filterOverlay(OptionInterface $option) {
-    if($option instanceof OptionOverlay) {
-      return true;
-    }
-  }
-
-  private function _filterDrawText(OptionInterface $option) {
-    if($option instanceof OptionDrawText) {
-      return true;
-    }
-  }
-
-  private function _filterDrawBox(OptionInterface $option) {
-    if($option instanceof OptionDrawBox) {
-      return true;
-    }
-  }
-
-  public function getOverlayOptions()
+  /**
+   * {@inheritdoc}
+   */
+  private function _filterOverlay(OptionInterface $option)
   {
-    return new OptionsCollection(array_filter((array)$this->getIterator(), function (OptionInterface $option) {
-      if($option instanceof OptionOverlay) {
-        return true;
-      }
-    }));
+    if ($option instanceof OptionOverlay) {
+      return true;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function _filterDrawText(OptionInterface $option)
+  {
+    if ($option instanceof OptionDrawText) {
+      return true;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function _filterDrawBox(OptionInterface $option)
+  {
+    if ($option instanceof OptionDrawBox) {
+      return true;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function _filterChromakey(OptionInterface $option)
+  {
+    if ($option instanceof OptionChromakey) {
+      return true;
+    }
   }
 
   /**
@@ -126,6 +161,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
     $optionsIterator->uasort(function ($a, $b) {
       return strnatcmp($a->getZIndex(), $b->getZIndex());
     });
+
     return $optionsIterator;
   }
 }

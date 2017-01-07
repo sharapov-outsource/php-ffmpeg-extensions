@@ -9,8 +9,10 @@
 
 namespace Sharapov\FFMpegExtensions\Filters;
 
+use Sharapov\FFMpegExtensions\Input\FileInterface;
+
 interface ExtraInputStreamInterface
 {
   public function getExtraInputStreams();
-  public function setExtraInputStream($input);
+  public function setExtraInputStream(FileInterface $input);
 }

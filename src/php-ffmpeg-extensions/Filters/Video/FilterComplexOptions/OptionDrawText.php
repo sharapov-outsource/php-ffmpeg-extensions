@@ -21,6 +21,7 @@ class OptionDrawText implements OptionInterface
 {
   use TimeLineTrait;
   use CoordinatesTrait;
+  use ZindexTrait;
 
   protected $_fontFile;
 
@@ -154,6 +155,12 @@ class OptionDrawText implements OptionInterface
       throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
     }
 
+    $color = ltrim($color, '#');
+    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
+    if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
+      throw new InvalidArgumentException('Color should be HEX string. ' . $color . ' given.');
+    }
+
     $this->_fontColor = $color . '@' . $transparency;
 
     return $this;
@@ -264,6 +271,12 @@ class OptionDrawText implements OptionInterface
 
     if (!is_integer($border)) {
       throw new InvalidArgumentException('Border should be positive integer. ' . $border . ' given.');
+    }
+
+    $color = ltrim($color, '#');
+    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
+    if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
+      throw new InvalidArgumentException('Color should be HEX string. ' . $color . ' given.');
     }
 
     $this->_boundingBox = [
