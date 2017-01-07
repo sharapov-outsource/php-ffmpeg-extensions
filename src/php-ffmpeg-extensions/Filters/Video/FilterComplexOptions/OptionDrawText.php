@@ -61,6 +61,10 @@ class OptionDrawText implements OptionInterface
    */
   public function getFontFile()
   {
+    if (!$this->_fontFile instanceof FileInterface) {
+      throw new InvalidArgumentException('Font is undefined.');
+    }
+
     return $this->_fontFile;
   }
 

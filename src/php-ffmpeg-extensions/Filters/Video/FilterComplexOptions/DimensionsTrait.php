@@ -10,6 +10,7 @@
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use Sharapov\FFMpegExtensions\Coordinate\Dimension;
+use FFMpeg\Exception\InvalidArgumentException;
 
 trait DimensionsTrait {
 
@@ -35,6 +36,10 @@ trait DimensionsTrait {
    */
   public function getDimensions()
   {
+    if (!$this->_dimensions instanceof Dimension) {
+      throw new InvalidArgumentException('Dimensions are empty.');
+    }
+
     return $this->_dimensions;
   }
 }

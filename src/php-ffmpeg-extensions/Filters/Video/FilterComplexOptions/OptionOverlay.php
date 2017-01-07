@@ -12,6 +12,7 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 use Sharapov\FFMpegExtensions\Coordinate\Point;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
+use FFMpeg\Exception\InvalidArgumentException;
 
 /**
  * Overlay filter option
@@ -46,6 +47,10 @@ class OptionOverlay implements OptionInterface, OptionProbeInterface
    */
   public function getOverlayInput()
   {
+    if (!$this->_overlayInput instanceof FileInterface) {
+      throw new InvalidArgumentException('Overlay input is undefined.');
+    }
+
     return $this->_overlayInput;
   }
 
@@ -56,7 +61,7 @@ class OptionOverlay implements OptionInterface, OptionProbeInterface
    */
   public function getProbeData()
   {
-    return $this->getProbe()->streams($this->_overlayInput->getPath());
+    return $this->getProbe()->streams($this->getOverlayInput()->getPath());
   }
 
   /**

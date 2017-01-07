@@ -39,6 +39,10 @@ trait CoordinatesTrait
    */
   public function getCoordinates()
   {
+    if (!$this->_coordinates instanceof Point) {
+      throw new InvalidArgumentException('Coordinates are empty.');
+    }
+
     return $this->_coordinates;
   }
 
