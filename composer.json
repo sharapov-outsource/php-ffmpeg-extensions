@@ -9,6 +9,8 @@
     "ffmpeg overlay",
     "chromakey",
     "colorkey",
+    "alpha layer",
+    "mov",
     "video processing",
     "video",
     "audio processing",

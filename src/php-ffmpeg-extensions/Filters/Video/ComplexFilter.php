@@ -11,6 +11,7 @@ namespace Sharapov\FFMpegExtensions\Filters\Video;
 
 use FFMpeg\Format\VideoInterface;
 use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
+use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionAlphakey;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionChromakey;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox;
@@ -173,6 +174,24 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
                               $inputsMapping[$imn],
                               //$lastStreamId,
                               //'t' . $imn,
+                              's' . $stm
+                          ], $option->getCommand());
+          // We need to get a last stream id to apply next options in the correct order
+          $lastStreamId = 's' . $stm;
+          // Pass input paths to the separate array
+          $this->setExtraInputStream($option->getExtraInputStream());
+
+          $imn++;
+          print 'OO='.$option->getCommand().'<br />';
+        } elseif ($option instanceof OptionAlphakey) {
+          $this->_optionsPrepared[] =
+              str_replace([
+                              ':s1', ':s2', ':s3'
+                          ], [
+                              $lastStreamId,
+                              $inputsMapping[$imn],
+                            //$lastStreamId,
+                            //'t' . $imn,
                               's' . $stm
                           ], $option->getCommand());
           // We need to get a last stream id to apply next options in the correct order

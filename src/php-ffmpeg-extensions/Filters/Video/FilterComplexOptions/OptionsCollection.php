@@ -17,6 +17,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   const TYPE_DRAWTEXT = 'DrawText';
   const TYPE_DRAWBOX = 'DrawBox';
   const TYPE_CHROMAKEY = 'Chromakey';
+  const TYPE_ALPHAKEY = 'Alphakey';
 
   private $_options;
 
@@ -97,6 +98,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
       case self::TYPE_DRAWTEXT:
       case self::TYPE_OVERLAY:
       case self::TYPE_CHROMAKEY:
+      case self::TYPE_ALPHAKEY:
         return new OptionsCollection(array_filter((array)$this->getIterator(), [$this, '_filter' . ucfirst($typeName)]));
       default :
         throw new InvalidArgumentException('Invalid option type requested.');
@@ -139,6 +141,16 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   private function _filterChromakey(OptionInterface $option)
   {
     if ($option instanceof OptionChromakey) {
+      return true;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function _filterAlphakey(OptionInterface $option)
+  {
+    if ($option instanceof OptionAlphakey) {
       return true;
     }
   }
