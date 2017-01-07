@@ -86,27 +86,6 @@ class OptionChromakey
    */
   public function getCommand()
   {
-    // [1:v]colorkey=0x<color>:<similarity>:<blend>[ckout];[0:v][ckout]overlay
-
-    /*
-     * $filterOptions[] = sprintf('[0:v]colorkey=%s[sck]', $this->_colorKeyFilter->getColor());
-        // Color key background input is always the first stream
-        $filterOptions[] = sprintf('[1:v]scale=%s[out1]', $this->_colorKeyFilter->getDimensions());
-        $filterOptions[] = sprintf('[out1][sck]overlay%s', ((count($this->_imageOverlay) > 0 or count($this->_textOverlay) > 0 or $this->_amerge != null) ? '[out2]' : ''));
-     */
-    /*
-        $cmd = sprintf('', ':s1', ':s2');
-
-        if ($this->getCoordinates() instanceof Point) {
-          $cmd .= sprintf("%s", (string)$this->getCoordinates());
-        } else {
-          $cmd .= '0:0';
-        }
-
-        if ($this->getTimeLine() instanceof TimeLine) {
-          $cmd .= sprintf(":%s", (string)$this->getTimeLine());
-        }
-    */
     return sprintf("[%s]chromakey=%s[chromky];[%s]scale=%s[bg],[bg][chromky]overlay[%s]", ':s1', $this->getColor(), ':s2', (string)$this->getDimensions(), ':s3');
   }
 
