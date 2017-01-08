@@ -120,10 +120,6 @@ class Video extends \FFMpeg\Media\Video
       }
     }
 
-    print '<pre>';
-    print_r($commands);
-    print '</pre>';
-
     $fs = FsManager::create();
     $fsId = uniqid('ffmpeg-passes');
     $passPrefix = $fs->createTemporaryDirectory(0777, 50, $fsId) . '/' . uniqid('pass-');

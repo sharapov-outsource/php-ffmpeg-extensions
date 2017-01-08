@@ -9,7 +9,19 @@
 
 namespace Sharapov\FFMpegExtensions\Media;
 
+use Sharapov\FFMpegExtensions\Filters\Audio\AudioFilters;
+
 class Audio extends \FFMpeg\Media\Audio
 {
   use MediaTypeTrait;
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return AudioFilters
+   */
+  public function filters()
+  {
+    return new AudioFilters($this);
+  }
 }
