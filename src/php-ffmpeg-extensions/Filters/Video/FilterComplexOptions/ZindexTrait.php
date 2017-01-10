@@ -16,6 +16,16 @@ trait ZindexTrait
   protected $_zIndex = null;
 
   /**
+   * Returns Z-Index coordinate.
+   *
+   * @return mixed
+   */
+  public function getZIndex()
+  {
+    return $this->_zIndex;
+  }
+
+  /**
    * Set Z-Index coordinate.
    *
    * The z-index property specifies the stack order of an element.
@@ -28,22 +38,12 @@ trait ZindexTrait
    */
   public function setZIndex($z)
   {
-    if (!is_int($z) or $z <= 100) {
-      throw new InvalidArgumentException('Z-Index should be positive integer more than 100. ' . $z . ' given.');
+    if (!is_int($z) or $z < 100) {
+      throw new InvalidArgumentException('Z-Index should be positive integer more than or equal 100. ' . $z . ' given.');
     }
 
     $this->_zIndex = $z;
 
     return $this;
-  }
-
-  /**
-   * Returns Z-Index coordinate.
-   *
-   * @return mixed
-   */
-  public function getZIndex()
-  {
-    return $this->_zIndex;
   }
 }

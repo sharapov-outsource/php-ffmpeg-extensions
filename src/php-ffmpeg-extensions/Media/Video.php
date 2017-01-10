@@ -171,4 +171,9 @@ class Video extends \FFMpeg\Media\Video
 
     return $this;
   }
+
+  public function getStreamDuration()
+  {
+    return $this->getStreams()->videos()->first()->get('duration');
+  }
 }

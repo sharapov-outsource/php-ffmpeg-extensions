@@ -25,6 +25,7 @@ class OptionOverlay
     OptionExtraInputStreamInterface
 {
   use TimeLineTrait;
+  use FadeInOutTrait;
   use CoordinatesTrait;
   use DimensionsTrait;
   use ProbeTrait;
@@ -48,19 +49,32 @@ class OptionOverlay
    */
   public function getCommand()
   {
-    $cmd = sprintf('[%s][%s]overlay=', ':s3', ':s4');
-
-    if ($this->getCoordinates() instanceof Point) {
-      $cmd .= sprintf("%s", (string)$this->getCoordinates());
-    } else {
-      $cmd .= '0:0';
-    }
+    $coordinates = ($this->getCoordinates() instanceof Point) ? (string)$this->getCoordinates() : '0:0';
 
     if ($this->getTimeLine() instanceof TimeLine) {
-      $cmd .= sprintf(":%s", (string)$this->getTimeLine());
+      $timeLine = sprintf(":%s", (string)$this->getTimeLine());
+    } else {
+      $timeLine = '';
     }
 
-    return sprintf("[%s]scale=%s[%s],%s[%s]", ':s1', (string)$this->getDimensions(), ':s2', $cmd, ':s5');
+    if($this->_fadeInSeconds or $this->_fadeOutSeconds) {
+      $fadeTime = [];
+      if($this->_fadeInSeconds) {
+        $fadeTime[] = sprintf("fade=t=in:st=0:d=%s", $this->_fadeInSeconds);
+      }
+      if($this->_fadeOutSeconds) {
+        if ($this->getTimeLine() instanceof TimeLine) {
+          $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
+        } else {
+          $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds);
+        }
+      }
+      $fadeTime = sprintf(",%s", implode(",", $fadeTime));
+    } else {
+      $fadeTime = '';
+    }
+
+    return sprintf("[%s]scale=%s%s[%s],[%s][%s]overlay=%s%s[%s]", ':s1', (string)$this->getDimensions(), $fadeTime, ':s2', ':s3', ':s4', $coordinates, $timeLine, ':s5');
   }
 
   /**

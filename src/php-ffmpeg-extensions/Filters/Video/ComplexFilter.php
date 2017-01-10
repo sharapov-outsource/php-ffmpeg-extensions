@@ -88,7 +88,7 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
   public function apply(Video $video, VideoInterface $format)
   {
     $firstStreamId = '0:v';
-    $lastStreamId  = $firstStreamId;
+    $lastStreamId = $firstStreamId;
     $inputsMapping = $inputs = [];
     // Detect all additional inputs numbers
     for ($i = 0; $i <= $this
@@ -105,7 +105,7 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
     $stm = 1;
     if ($optionsOverlay->count() > 0) {
       foreach ($optionsOverlay as $option) {
-        if($option instanceof OptionDrawText) {
+        if ($option instanceof OptionDrawText) {
 
           $this->_optionsPrepared[] =
               str_replace([
@@ -133,61 +133,59 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
 
           $this->_optionsPrepared[] =
               str_replace([
-                              ':s1', ':s2', ':s3', ':s4', ':s5'
+                              ':s1', ':s2', ':s3', ':s4', ':s5', '{VIDEO_LENGTH}'
                           ], [
-                  $inputsMapping[$imn],
+                              $inputsMapping[$imn],
                               't' . ($imn),
-                  $lastStreamId,
-                  't' . $imn,
-                  's' . $stm
+                              $lastStreamId,
+                              't' . $imn,
+                              's' . $stm,
+                              ($video->getStreamDuration() - $option->getFadeOut())
                           ], $option->getCommand());
-          // We need to get a last stream id to apply next options in the correct order
+          // We need to save last stream id to apply next options in the correct order
           $lastStreamId = 's' . $stm;
           // Pass input paths to the separate array
           $this->setExtraInputStream($option->getExtraInputStream());
-
           $imn++;
+
         } elseif ($option instanceof OptionChromakey) {
+
           $this->_optionsPrepared[] =
               str_replace([
                               ':s1', ':s2', ':s3'
                           ], [
                               $lastStreamId,
                               $inputsMapping[$imn],
-                              //$lastStreamId,
-                              //'t' . $imn,
                               's' . $stm
                           ], $option->getCommand());
           // We need to get a last stream id to apply next options in the correct order
           $lastStreamId = 's' . $stm;
           // Pass input paths to the separate array
           $this->setExtraInputStream($option->getExtraInputStream());
-
           $imn++;
+
         } elseif ($option instanceof OptionAlphakey) {
+
           $this->_optionsPrepared[] =
               str_replace([
                               ':s1', ':s2', ':s3'
                           ], [
                               $lastStreamId,
                               $inputsMapping[$imn],
-                            //$lastStreamId,
-                            //'t' . $imn,
                               's' . $stm
                           ], $option->getCommand());
           // We need to get a last stream id to apply next options in the correct order
           $lastStreamId = 's' . $stm;
           // Pass input paths to the separate array
           $this->setExtraInputStream($option->getExtraInputStream());
-
           $imn++;
-        } else {}
 
+        } else {}
         $stm++;
-        }
+      }
     }
 
-    if(count($this->_optionsPrepared) > 0) {
+    if (count($this->_optionsPrepared) > 0) {
       $commands = array_merge($inputs, [
           '-filter_complex',
           rtrim(implode(',', $this->_optionsPrepared), '[' . $lastStreamId . ']')

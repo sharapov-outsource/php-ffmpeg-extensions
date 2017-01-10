@@ -16,6 +16,15 @@ trait TimeLineTrait {
   protected $_timeLine;
 
   /**
+   * Returns timeline object
+   * @return mixed
+   */
+  public function getTimeLine()
+  {
+    return $this->_timeLine;
+  }
+
+  /**
    * Set timeline object.
    *
    * @param TimeLine $timeLine
@@ -27,14 +36,5 @@ trait TimeLineTrait {
     $this->_timeLine = $timeLine;
 
     return $this;
-  }
-
-  /**
-   * Returns timeline object
-   * @return mixed
-   */
-  public function getTimeLine()
-  {
-    return $this->_timeLine;
   }
 }
