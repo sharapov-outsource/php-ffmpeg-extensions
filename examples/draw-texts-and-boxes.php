@@ -66,7 +66,7 @@ $options
 $box = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox();
 $box
     ->setZIndex(130)
-    ->setColor('black')
+    ->setColor('000000')
     ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(\Sharapov\FFMpegExtensions\Coordinate\Dimension::WIDTH_MAX, 60))
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(0, 580))// Set coordinates
     ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 20)); // Set timings (start, stop) in seconds
