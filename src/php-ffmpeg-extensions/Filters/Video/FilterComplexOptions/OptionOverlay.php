@@ -84,8 +84,10 @@ class OptionOverlay
       }
       if($this->_fadeOutSeconds) {
         if ($this->getTimeLine() instanceof TimeLine) {
+          // We have to calculate the starting point of fade out if we have the TimeLine object
           $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s:alpha=1", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
         } else {
+          // Otherwise we add {VIDEO_LENGTH} tag to calculate the starting point on the next step
           $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s:alpha=1", $this->_fadeOutSeconds);
         }
       }
@@ -94,6 +96,7 @@ class OptionOverlay
       $fadeTime = '';
     }
 
+    // We have to add shortest=1 for images to stop the overlay when the main video ends
     if($this->isImage()) {
       $shortest = ":shortest='1'";
     } else {
