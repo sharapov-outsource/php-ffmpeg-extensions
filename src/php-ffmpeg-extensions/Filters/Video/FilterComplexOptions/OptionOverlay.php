@@ -43,6 +43,26 @@ class OptionOverlay
   }
 
   /**
+   * Get input stream format.
+   *
+   * @return \FFMpeg\FFProbe\DataMapping\Format
+   */
+  public function getFormat()
+  {
+    return $this->getProbe()->format($this->getExtraInputStream()->getPath());
+  }
+
+  /**
+   * Checks if overlay is image.
+   *
+   * @return bool
+   */
+  public function isImage()
+  {
+    return false !== @imagecreatefromstring(@file_get_contents($this->getExtraInputStream()->getPath()));
+  }
+
+  /**
    * Returns command string.
    *
    * @return string
@@ -60,13 +80,13 @@ class OptionOverlay
     if($this->_fadeInSeconds or $this->_fadeOutSeconds) {
       $fadeTime = [];
       if($this->_fadeInSeconds) {
-        $fadeTime[] = sprintf("fade=t=in:st=0:d=%s", $this->_fadeInSeconds);
+        $fadeTime[] = sprintf("fade=t=in:st=0:d=%s:alpha=1", $this->_fadeInSeconds);
       }
       if($this->_fadeOutSeconds) {
         if ($this->getTimeLine() instanceof TimeLine) {
-          $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
+          $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s:alpha=1", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
         } else {
-          $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds);
+          $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s:alpha=1", $this->_fadeOutSeconds);
         }
       }
       $fadeTime = sprintf(",%s", implode(",", $fadeTime));
@@ -74,7 +94,13 @@ class OptionOverlay
       $fadeTime = '';
     }
 
-    return sprintf("[%s]scale=%s%s[%s],[%s][%s]overlay=%s%s[%s]", ':s1', (string)$this->getDimensions(), $fadeTime, ':s2', ':s3', ':s4', $coordinates, $timeLine, ':s5');
+    if($this->isImage()) {
+      $shortest = ":shortest='1'";
+    } else {
+      $shortest = '';
+    }
+
+    return sprintf("[%s]format=yuva420p,scale=%s%s[%s],[%s][%s]overlay=%s%s%s[%s]", ':s1', (string)$this->getDimensions(), $fadeTime, ':s2', ':s3', ':s4', $coordinates, $shortest, $timeLine, ':s5');
   }
 
   /**

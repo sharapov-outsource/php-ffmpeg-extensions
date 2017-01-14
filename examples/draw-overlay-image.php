@@ -29,27 +29,49 @@ $video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE_
 // Create complex filter collection
 $options = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollection();
 
-// Create drawtext option 1
+// Create overlay option 1
 $overlay1 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionOverlay();
 $overlay1
     // Set z-index property. Greater value is always in front
     ->setZIndex(160)
     // You can use fade-in and fade-out effects. Set time in seconds
     ->setFadeIn(2)
-    ->setFadeOut(8)
+    ->setFadeOut(2)
     // Set image path
     ->setExtraInputStream(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/demo_video_720p_HD.mp4'))
     // Coordinates where the text should be rendered. Accepts positive integer or
     // constants "(w-tw)/2", "(h-th)/2" to handle auto-horizontal, auto-vertical values
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(23, 50))
     // Set image dimensions
-    ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(450, 200));
+    ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(450, 200))
     // Set timings (start, stop) in seconds. Accepts float values as well
-    //->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 15));
+    ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(1, 10));
 
 // Pass option to the options collection
 $options
     ->add($overlay1);
+
+// Create overlay option 1
+$overlay2 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionOverlay();
+$overlay2
+    // Set z-index property. Greater value is always in front
+    ->setZIndex(260)
+    // You can use fade-in and fade-out effects. Set time in seconds
+    ->setFadeIn(4)
+    ->setFadeOut(4)
+    // Set image path
+    ->setExtraInputStream(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/bg_red.jpg'))
+    // Coordinates where the text should be rendered. Accepts positive integer or
+    // constants "(w-tw)/2", "(h-th)/2" to handle auto-horizontal, auto-vertical values
+    ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(230, 200))
+    // Set image dimensions
+    ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(450, 200))
+    // Set timings (start, stop) in seconds. Accepts float values as well
+    ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(3, 13));
+
+// Pass option to the options collection
+$options
+   ->add($overlay2);
 
 // Apply filter options to video
 $video
