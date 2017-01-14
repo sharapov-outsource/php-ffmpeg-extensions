@@ -30,6 +30,9 @@ $text1 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\Optio
 $text1
     // Set z-index property. Greater value is always in front
     ->setZIndex(160)
+    // You can use fade-in and fade-out effects. Set time in seconds
+    ->setFadeIn(2)
+    ->setFadeOut(2)
     // Set font path
     ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/calibri.ttf'))
     // Set font color. Accepts transparency value as the second argument. Float value between 0 and 1.
@@ -52,6 +55,8 @@ $options
 $text2 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text2
     ->setZIndex(160)
+    ->setFadeIn(2)
+    ->setFadeOut(2)
     ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/arial.ttf'))
     ->setFontColor('#ffffff')
     ->setFontSize(28)
@@ -66,6 +71,8 @@ $options
 $box = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox();
 $box
     ->setZIndex(130)
+    ->setFadeIn(2)
+    ->setFadeOut(2)
     ->setColor('000000')
     ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(\Sharapov\FFMpegExtensions\Coordinate\Dimension::WIDTH_MAX, 60))
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(0, 580))// Set coordinates
@@ -78,6 +85,8 @@ $options
 $text2 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text2
     ->setZIndex(160)
+    ->setFadeIn(2)
+    ->setFadeOut(2)
     ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/arial.ttf'))
     ->setFontColor('#ffffff')
     ->setFontSize(28)

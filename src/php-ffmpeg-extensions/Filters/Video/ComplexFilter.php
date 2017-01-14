@@ -109,10 +109,11 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
 
           $this->_optionsPrepared[] =
               str_replace([
-                              ':s1', ':s2'
+                              ':s1', ':s2', '{VIDEO_LENGTH}'
                           ], [
                               $lastStreamId,
-                              's' . $stm
+                              's' . $stm,
+                              ($video->getStreamDuration() - $option->getFadeOut())
                           ], $option->getCommand());
 
           $lastStreamId = 's' . $stm;
@@ -121,10 +122,11 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
 
           $this->_optionsPrepared[] =
               str_replace([
-                              ':s1', ':s2'
+                              ':s1', ':s2', '{VIDEO_LENGTH}'
                           ], [
                               $lastStreamId,
-                              's' . $stm
+                              's' . $stm,
+                              ($video->getStreamDuration() - $option->getFadeOut())
                           ], $option->getCommand());
 
           $lastStreamId = 's' . $stm;

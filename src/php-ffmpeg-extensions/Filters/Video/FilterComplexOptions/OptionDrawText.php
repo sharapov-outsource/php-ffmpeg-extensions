@@ -20,6 +20,7 @@ use Sharapov\FFMpegExtensions\Input\FileInterface;
 class OptionDrawText implements OptionInterface
 {
   use TimeLineTrait;
+  use FadeInOutTrait;
   use CoordinatesTrait;
   use ZindexTrait;
 
@@ -317,6 +318,25 @@ class OptionDrawText implements OptionInterface
       $options[] = (string)$this->_timeLine;
     }
 
+    if($this->_fadeInSeconds or $this->_fadeOutSeconds) {
+      $fadeTime = [];
+      if($this->_fadeInSeconds) {
+        $fadeTime[] = sprintf("fade=t=in:st=0:d=%s", $this->_fadeInSeconds);
+      }
+      if($this->_fadeOutSeconds) {
+        if ($this->getTimeLine() instanceof TimeLine) {
+          // We have to calculate the starting point of fade out if we have the TimeLine object
+          $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
+        } else {
+          // Otherwise we add {VIDEO_LENGTH} tag to calculate the starting point on the next step
+          $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds);
+        }
+      }
+      $fadeTime = sprintf(",%s", implode(",", $fadeTime));
+    } else {
+      $fadeTime = '';
+    }
+
     // Bounding box
     if ($this->_boundingBox != null) {
       $options[] = "box=1:" . implode(":", $this->_boundingBox);
@@ -332,7 +352,7 @@ class OptionDrawText implements OptionInterface
       $options[] = implode(":", $this->_textBorder);
     }
 
-    return sprintf("[%s]drawtext=%s[%s]", ':s1', implode(":", $options), ':s2');
+    return sprintf("[%s]drawtext=%s%s[%s]", ':s1', implode(":", $options), $fadeTime, ':s2');
   }
 
   /**

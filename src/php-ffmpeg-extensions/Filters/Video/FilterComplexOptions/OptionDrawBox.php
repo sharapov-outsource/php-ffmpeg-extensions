@@ -19,6 +19,7 @@ use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
 class OptionDrawBox implements OptionInterface
 {
   use TimeLineTrait;
+  use FadeInOutTrait;
   use CoordinatesTrait;
   use DimensionsTrait;
   use ZindexTrait;
@@ -94,7 +95,26 @@ class OptionDrawBox implements OptionInterface
       $options[] = $this->_timeLine->getCommand();
     }
 
-    return sprintf("[%s]drawbox=%s[%s]", ':s1', implode(":", $options), ':s2');
+    if($this->_fadeInSeconds or $this->_fadeOutSeconds) {
+      $fadeTime = [];
+      if($this->_fadeInSeconds) {
+        $fadeTime[] = sprintf("fade=t=in:st=0:d=%s", $this->_fadeInSeconds);
+      }
+      if($this->_fadeOutSeconds) {
+        if ($this->getTimeLine() instanceof TimeLine) {
+          // We have to calculate the starting point of fade out if we have the TimeLine object
+          $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
+        } else {
+          // Otherwise we add {VIDEO_LENGTH} tag to calculate the starting point on the next step
+          $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds);
+        }
+      }
+      $fadeTime = sprintf(",%s", implode(",", $fadeTime));
+    } else {
+      $fadeTime = '';
+    }
+
+    return sprintf("[%s]drawbox=%s%s[%s]", ':s1', implode(":", $options), $fadeTime, ':s2');
   }
 
   /**
