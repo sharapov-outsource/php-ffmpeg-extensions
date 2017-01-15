@@ -97,6 +97,7 @@ class FFMpeg
     }
 
     if (0 < count($streams->videos())) {
+      print_r($streams->videos());
       return new Video($file, $this->getFFMpegDriver(), $this->getFFProbe());
     } elseif (0 < count($streams->audios())) {
       return new Audio($file, $this->getFFMpegDriver(), $this->getFFProbe());

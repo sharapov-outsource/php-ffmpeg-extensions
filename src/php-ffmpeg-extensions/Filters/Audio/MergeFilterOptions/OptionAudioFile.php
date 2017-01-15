@@ -9,32 +9,24 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Audio\MergeFilterOptions;
 
-use Sharapov\FFMpegExtensions\Coordinate\Point;
-use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
-use Sharapov\FFMpegExtensions\Filters\ProbeInterface;
-use Sharapov\FFMpegExtensions\Filters\ProbeTrait;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamTrait;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
-use FFMpeg\Exception\InvalidArgumentException;
 
 /**
- * Overlay filter option
+ * Audiofile filter option
  * @package Sharapov\FFMpegExtensions\Filters\Audio\MergeFilterOptions
  */
 class OptionAudioFile
     implements
     OptionInterface,
-    ProbeInterface
+    ExtraInputStreamInterface
 {
-  use ProbeTrait;
+  use ExtraInputStreamTrait;
 
-  /**
-   * Get input streams collection.
-   *
-   * @return \FFMpeg\FFProbe\DataMapping\StreamCollection
-   */
-  public function getProbeData()
+  public function __construct(FileInterface $file)
   {
-    return $this->getProbe()->streams($this->getExtraInputStream()->getPath());
+    $this->setExtraInputStream($file);
   }
 
   /**

@@ -11,17 +11,12 @@ namespace Sharapov\FFMpegExtensions\Filters\Video;
 
 use FFMpeg\Filters\FilterInterface;
 use FFMpeg\Format\VideoInterface;
+use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Video;
 
 interface VideoFilterInterface extends FilterInterface
 {
-  /**
-   * Applies the filter on the the Video media given an format.
-   *
-   * @param Video          $video
-   * @param VideoInterface $format
-   *
-   * @return array An array of arguments
-   */
+  public function getExtraInputs();
+  public function setExtraInput(FileInterface $input);
   public function apply(Video $video, VideoInterface $format);
 }

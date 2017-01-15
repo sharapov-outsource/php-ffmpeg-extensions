@@ -9,9 +9,8 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
-use Sharapov\FFMpegExtensions\Coordinate\Point;
-use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
-use Sharapov\FFMpegExtensions\Input\FileInterface;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamTrait;
 use FFMpeg\Exception\InvalidArgumentException;
 
 /**
@@ -21,11 +20,10 @@ use FFMpeg\Exception\InvalidArgumentException;
 class OptionChromakey
     implements
     OptionInterface,
-    OptionExtraInputStreamInterface
+    ExtraInputStreamInterface
 {
   use TimeLineTrait;
   use DimensionsTrait;
-  use ProbeTrait;
   use ExtraInputStreamTrait;
 
   protected $_color = '0x3BBD1E:0.6:0.3';

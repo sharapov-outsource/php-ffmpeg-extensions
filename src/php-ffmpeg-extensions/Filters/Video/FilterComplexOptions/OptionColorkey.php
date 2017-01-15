@@ -9,10 +9,7 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
-use Sharapov\FFMpegExtensions\Coordinate\Point;
-use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
-use Sharapov\FFMpegExtensions\Input\FileInterface;
-use FFMpeg\Exception\InvalidArgumentException;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 
 /**
  * Colorkey filter option. Actually it's the same as OptionChromakey
@@ -21,7 +18,7 @@ use FFMpeg\Exception\InvalidArgumentException;
 class OptionColorkey extends OptionChromakey
     implements
     OptionInterface,
-    OptionExtraInputStreamInterface
+    ExtraInputStreamInterface
 {
   /**
    * Returns command string.

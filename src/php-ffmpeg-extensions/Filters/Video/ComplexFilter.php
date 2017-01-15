@@ -10,7 +10,6 @@
 namespace Sharapov\FFMpegExtensions\Filters\Video;
 
 use FFMpeg\Format\VideoInterface;
-use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionAlphakey;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionChromakey;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText;
@@ -20,13 +19,13 @@ use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollecti
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Video;
 
-class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
+class ComplexFilter implements VideoFilterInterface
 {
   private $_optionsCollection;
 
   private $_optionsPrepared;
 
-  private $_extraInputStreams = [];
+  private $_extraInputs = [];
 
   /** @var integer */
   private $priority;
@@ -52,18 +51,18 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
   /**
    * {@inheritdoc}
    */
-  public function getExtraInputStreams()
+  public function getExtraInputs()
   {
-    return $this->_extraInputStreams;
+    return $this->_extraInputs;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setExtraInputStream(FileInterface $file)
+  public function setExtraInput(FileInterface $file)
   {
-    $this->_extraInputStreams[] = '-i';
-    $this->_extraInputStreams[] = $file->getPath();
+    $this->_extraInputs[] = '-i';
+    $this->_extraInputs[] = $file->getPath();
   }
 
   /**
@@ -148,11 +147,11 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
           $lastStreamId = 's' . $stm;
           // For image overlay we have to add -loop 1 before input
           if($option->isImage()) {
-            $this->_extraInputStreams[] = '-loop';
-            $this->_extraInputStreams[] = '1';
+            $this->_extraInputs[] = '-loop';
+            $this->_extraInputs[] = '1';
           }
           // Pass input paths to the separate array
-          $this->setExtraInputStream($option->getExtraInputStream());
+          $this->setExtraInput($option->getExtraInputStream());
           $imn++;
 
         } elseif ($option instanceof OptionChromakey) {
@@ -168,7 +167,7 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
           // We need to get a last stream id to apply next options in the correct order
           $lastStreamId = 's' . $stm;
           // Pass input paths to the separate array
-          $this->setExtraInputStream($option->getExtraInputStream());
+          $this->setExtraInput($option->getExtraInputStream());
           $imn++;
 
         } elseif ($option instanceof OptionAlphakey) {
@@ -184,7 +183,7 @@ class ComplexFilter implements ExtraInputStreamInterface, VideoFilterInterface
           // We need to get a last stream id to apply next options in the correct order
           $lastStreamId = 's' . $stm;
           // Pass input paths to the separate array
-          $this->setExtraInputStream($option->getExtraInputStream());
+          $this->setExtraInput($option->getExtraInputStream());
           $imn++;
 
         } else {}

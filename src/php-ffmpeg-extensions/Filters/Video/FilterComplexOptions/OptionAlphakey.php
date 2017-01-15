@@ -9,6 +9,9 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamTrait;
+
 /**
  * Alpha layer filter option
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
@@ -16,23 +19,11 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 class OptionAlphakey
     implements
     OptionInterface,
-    OptionProbeInterface,
-    OptionExtraInputStreamInterface
+    ExtraInputStreamInterface
 {
   use DimensionsTrait;
-  use ProbeTrait;
   use ExtraInputStreamTrait;
   use ZindexTrait;
-
-  /**
-   * Get input streams collection.
-   *
-   * @return \FFMpeg\FFProbe\DataMapping\StreamCollection
-   */
-  public function getProbeData()
-  {
-    return $this->getProbe()->streams($this->getExtraInputStream()->getPath());
-  }
 
   /**
    * Returns command string.

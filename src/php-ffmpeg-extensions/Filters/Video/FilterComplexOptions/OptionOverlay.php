@@ -11,8 +11,8 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use Sharapov\FFMpegExtensions\Coordinate\Point;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
-use Sharapov\FFMpegExtensions\Input\FileInterface;
-use FFMpeg\Exception\InvalidArgumentException;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamTrait;
 
 /**
  * Overlay filter option
@@ -21,14 +21,12 @@ use FFMpeg\Exception\InvalidArgumentException;
 class OptionOverlay
     implements
     OptionInterface,
-    OptionProbeInterface,
-    OptionExtraInputStreamInterface
+    ExtraInputStreamInterface
 {
   use TimeLineTrait;
   use FadeInOutTrait;
   use CoordinatesTrait;
   use DimensionsTrait;
-  use ProbeTrait;
   use ExtraInputStreamTrait;
   use ZindexTrait;
 

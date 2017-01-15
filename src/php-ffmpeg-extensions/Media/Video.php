@@ -52,11 +52,13 @@ class Video extends \FFMpeg\Media\Video
     $extraFilters = [];
 
     foreach ($filters as $filter) {
+      // Video filter options must be attached after all the extra input streams
       if($filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface) {
         $extraFilters = array_merge($extraFilters, $filter->apply($this, $format));
       }
-      if($filter instanceof \Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface) {
-        $commands = array_merge($commands, $filter->getExtraInputStreams());
+      // If filter has extra input streams, we need to attach them into the command
+      if(count($filter->getExtraInputs()) > 0) {
+        $commands = array_merge($commands, $filter->getExtraInputs());
       }
     }
 

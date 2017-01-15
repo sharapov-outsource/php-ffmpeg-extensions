@@ -7,10 +7,11 @@
  *
  */
 
-namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
+namespace Sharapov\FFMpegExtensions\Filters;
 
 use FFMpeg\Exception\InvalidArgumentException;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
+use Sharapov\FFMpegExtensions\FFProbe;
 
 trait ExtraInputStreamTrait {
 
@@ -41,5 +42,24 @@ trait ExtraInputStreamTrait {
     }
 
     return $this->_extraInputStream;
+  }
+
+  /**
+   * Returns FFProbe driver
+   * @return FFProbe
+   */
+  public function getProbe()
+  {
+    return FFProbe::getInstance();
+  }
+
+  /**
+   * Get probe data of extra input stream.
+   *
+   * @return \FFMpeg\FFProbe\DataMapping\StreamCollection
+   */
+  public function getProbeData()
+  {
+    return $this->getProbe()->streams($this->getExtraInputStream()->getPath());
   }
 }

@@ -13,6 +13,6 @@ use Sharapov\FFMpegExtensions\Input\FileInterface;
 
 interface ExtraInputStreamInterface
 {
-  public function getExtraInputStreams();
-  public function setExtraInputStream(FileInterface $input);
+  public function setExtraInputStream(FileInterface $file);
+  public function getExtraInputStream();
 }

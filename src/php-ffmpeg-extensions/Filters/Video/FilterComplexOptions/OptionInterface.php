@@ -12,6 +12,6 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 interface OptionInterface
 {
   public function getCommand();
-  public function __toString();
   public function getZIndex();
+  public function __toString();
 }

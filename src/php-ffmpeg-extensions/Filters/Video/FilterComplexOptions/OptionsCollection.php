@@ -10,6 +10,7 @@
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use FFMpeg\Exception\InvalidArgumentException;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 
 class OptionsCollection implements \Countable, \IteratorAggregate
 {
@@ -78,7 +79,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   public function filterHasExtraInputs()
   {
     return new OptionsCollection(array_filter((array)$this->getIterator(), function (OptionInterface $option) {
-      if ($option instanceof OptionExtraInputStreamInterface) {
+      if ($option instanceof ExtraInputStreamInterface) {
         return true;
       }
     }));
