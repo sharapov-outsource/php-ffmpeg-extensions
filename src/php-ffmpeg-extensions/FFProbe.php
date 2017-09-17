@@ -22,6 +22,9 @@ class FFProbe extends \FFMpeg\FFProbe
     self::$_instance = $this;
   }
 
+  /**
+   * @return \Sharapov\FFMpegExtensions\FFProbe
+   */
   public static function getInstance()
   {
     return self::$_instance;

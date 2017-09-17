@@ -337,6 +337,8 @@ class OptionDrawText implements OptionInterface
       $fadeTime = '';
     }
 
+    print_r($fadeTime);
+
     // Bounding box
     if ($this->_boundingBox != null) {
       $options[] = "box=1:" . implode(":", $this->_boundingBox);

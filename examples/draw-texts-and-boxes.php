@@ -11,13 +11,15 @@ ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
+$params = [
+  'ffmpeg.binaries'  => 'D:\Projects\php-ffmpeg-extensions\examples\ffmpeg-20170915-6743351-win64-static\bin\ffmpeg.exe',
+  'ffprobe.binaries' => 'D:\Projects\php-ffmpeg-extensions\examples\ffmpeg-20170915-6743351-win64-static\bin\ffprobe.exe',
+  'timeout'          => 3600, // The timeout for the underlying process
+  'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
+];
+
 // Init ffmpeg library
-$ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create([
-                                                        'ffmpeg.binaries'  => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg',
-                                                        'ffprobe.binaries' => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffprobe',
-                                                        'timeout'          => 3600, // The timeout for the underlying process
-                                                        'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
-                                                    ]);
+$ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create($params);
 
 // Open source video
 $video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/demo_video_720p_HD.mp4'));
@@ -34,7 +36,7 @@ $text1
     ->setFadeIn(2)
     ->setFadeOut(2)
     // Set font path
-    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/calibri.ttf'))
+    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File('source/calibri.ttf'))
     // Set font color. Accepts transparency value as the second argument. Float value between 0 and 1.
     ->setFontColor('#ffffff')
     // Set font size in pixels
@@ -57,7 +59,7 @@ $text2
     ->setZIndex(160)
     ->setFadeIn(2)
     ->setFadeOut(2)
-    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/arial.ttf'))
+    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File('source/arial.ttf'))
     ->setFontColor('#ffffff')
     ->setFontSize(28)
     ->setText('Sharapov A. (www.sharapov.biz)')
@@ -87,7 +89,7 @@ $text2
     ->setZIndex(160)
     ->setFadeIn(2)
     ->setFadeOut(2)
-    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/arial.ttf'))
+    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File('source/arial.ttf'))
     ->setFontColor('#ffffff')
     ->setFontSize(28)
     ->setText('v2.0')

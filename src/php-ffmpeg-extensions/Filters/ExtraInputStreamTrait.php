@@ -24,9 +24,9 @@ trait ExtraInputStreamTrait {
    *
    * @return $this
    */
-  public function setExtraInputStream(FileInterface $file)
-  {
+  public function setExtraInputStream( FileInterface $file ) {
     $this->_extraInputStream = $file;
+
     return $this;
   }
 
@@ -35,10 +35,9 @@ trait ExtraInputStreamTrait {
    *
    * @return mixed
    */
-  public function getExtraInputStream()
-  {
-    if (!$this->_extraInputStream instanceof FileInterface) {
-      throw new InvalidArgumentException('Extra input stream for '.__CLASS__.' is undefined.');
+  public function getExtraInputStream() {
+    if ( ! $this->_extraInputStream instanceof FileInterface ) {
+      throw new InvalidArgumentException( 'Extra input stream for ' . __CLASS__ . ' is undefined.' );
     }
 
     return $this->_extraInputStream;
@@ -48,8 +47,7 @@ trait ExtraInputStreamTrait {
    * Returns FFProbe driver
    * @return FFProbe
    */
-  public function getProbe()
-  {
+  public function getProbe() {
     return FFProbe::getInstance();
   }
 
@@ -58,8 +56,7 @@ trait ExtraInputStreamTrait {
    *
    * @return \FFMpeg\FFProbe\DataMapping\StreamCollection
    */
-  public function getProbeData()
-  {
-    return $this->getProbe()->streams($this->getExtraInputStream()->getPath());
+  public function getProbeData() {
+    return $this->getProbe()->streams( $this->getExtraInputStream()->getPath() );
   }
 }

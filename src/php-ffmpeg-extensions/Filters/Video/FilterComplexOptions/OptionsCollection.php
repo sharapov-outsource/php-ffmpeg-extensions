@@ -109,7 +109,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  private function _filterOverlay(OptionInterface $option)
+  protected function _filterOverlay(OptionInterface $option)
   {
     if ($option instanceof OptionOverlay) {
       return true;
@@ -119,7 +119,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  private function _filterDrawText(OptionInterface $option)
+  protected function _filterDrawText(OptionInterface $option)
   {
     if ($option instanceof OptionDrawText) {
       return true;
@@ -129,7 +129,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  private function _filterDrawBox(OptionInterface $option)
+  protected function _filterDrawBox(OptionInterface $option)
   {
     if ($option instanceof OptionDrawBox) {
       return true;
@@ -139,7 +139,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  private function _filterChromakey(OptionInterface $option)
+  protected function _filterChromakey(OptionInterface $option)
   {
     if ($option instanceof OptionChromakey) {
       return true;
@@ -149,7 +149,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  private function _filterAlphakey(OptionInterface $option)
+  protected function _filterAlphakey(OptionInterface $option)
   {
     if ($option instanceof OptionAlphakey) {
       return true;

@@ -11,13 +11,17 @@ ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
+$logger = new \Monolog\Logger('debug');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler('render.log', \Monolog\Logger::ERROR));
+$logger->pushHandler(new \Monolog\Handler\StreamHandler('info.log', \Monolog\Logger::INFO));
+
 // Init ffmpeg library
 $ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create([
-                                                        'ffmpeg.binaries'  => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg',
-                                                        'ffprobe.binaries' => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffprobe',
+                                                        'ffmpeg.binaries'  => 'D:\Projects\php-ffmpeg-extensions\examples\ffmpeg-20170915-6743351-win64-static\bin\ffmpeg.exe',
+                                                        'ffprobe.binaries' => 'D:\Projects\php-ffmpeg-extensions\examples\ffmpeg-20170915-6743351-win64-static\bin\ffprobe.exe',
                                                         'timeout'          => 3600, // The timeout for the underlying process
                                                         'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
-                                                    ]);
+                                                    ], $logger);
 
 // Open source video
 $video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/Vault.mov'));
@@ -31,24 +35,35 @@ $alphaKey
     ->setExtraInputStream(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__). '/source/demo_video_720p_HD.mp4'))
     ->setDimensions(new \Sharapov\FFMpegExtensions\Coordinate\Dimension(1280, 720));
 
-$filterOptions
+$options
     ->add($alphaKey);
 
-// Create drawtext option (more examples are in the file draw-texts-and-boxes.php)
+
+// Create drawtext option 1
 $text1 = new \Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText();
 $text1
-    ->setZIndex(360)
-    ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/OpenSansRegular.ttf'))// Set path to font file
-    ->setFontColor('#ffffff')// Set font color
-    ->setFontSize(33)// Set font size
-    ->setBoundingBox('000000')
-    ->setText('Alphakey example')// Set overlay text
-    ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(\Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_HORIZONTAL, \Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_VERTICAL))
-    ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(4, 20)); // Set timings (start, stop) in seconds
+  // Set z-index property. Greater value is always in front
+  ->setZIndex(160)
+  // You can use fade-in and fade-out effects. Set time in seconds
+  ->setFadeIn(2)
+  ->setFadeOut(2)
+  // Set font path
+  ->setFontFile(new \Sharapov\FFMpegExtensions\Input\File('source/calibri.ttf'))
+  // Set font color. Accepts transparency value as the second argument. Float value between 0 and 1.
+  ->setFontColor('#ffffff')
+  // Set font size in pixels
+  ->setFontSize(33)
+  // Set text string
+  ->setText('alphakey demonstration')
+  // Coordinates where the text should be rendered. Accepts positive integer or
+  // constants "(w-tw)/2", "(h-th)/2" to handle auto-horizontal, auto-vertical values
+  ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(\Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_HORIZONTAL, 50))
+  // Set timings (start, stop) in seconds. Accepts float values as well
+  ->setTimeLine(new \Sharapov\FFMpegExtensions\Coordinate\TimeLine(6, 20));
 
 // Pass option to the options collection
 $options
-    ->add($text1);
+  ->add($text1);
 
 // Apply filter options to video
 $video

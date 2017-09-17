@@ -17,10 +17,10 @@ $logger->pushHandler(new \Monolog\Handler\StreamHandler('info.log', \Monolog\Log
 
 // Init ffmpeg library
 $ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create([
-                                                        'ffmpeg.binaries'  => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffmpeg',
-                                                        'ffprobe.binaries' => '/home/ezmembersarea/videoapp/app/module/RenderEngine/FFmpegStatic/ffprobe',
-                                                        'timeout'          => 3600, // The timeout for the underlying process
-                                                        'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
+                                                      'ffmpeg.binaries'  => 'D:\Projects\php-ffmpeg-extensions\examples\ffmpeg-20170915-6743351-win64-static\bin\ffmpeg.exe',
+                                                      'ffprobe.binaries' => 'D:\Projects\php-ffmpeg-extensions\examples\ffmpeg-20170915-6743351-win64-static\bin\ffprobe.exe',
+                                                      'timeout'          => 3600, // The timeout for the underlying process
+                                                      'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
                                                     ], $logger);
 
 // Open source video

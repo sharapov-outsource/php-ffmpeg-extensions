@@ -13,7 +13,7 @@ use Alchemy\BinaryDriver\ConfigurationInterface;
 use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Exception\RuntimeException;
 use Psr\Log\LoggerInterface;
-use Sharapov\FFMpegExtensions\Driver\FFMpegDriver;
+use FFMpeg\Driver\FFMpegDriver;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Audio;
 use Sharapov\FFMpegExtensions\Media\Video;
@@ -97,7 +97,6 @@ class FFMpeg
     }
 
     if (0 < count($streams->videos())) {
-      print_r($streams->videos());
       return new Video($file, $this->getFFMpegDriver(), $this->getFFProbe());
     } elseif (0 < count($streams->audios())) {
       return new Audio($file, $this->getFFMpegDriver(), $this->getFFProbe());

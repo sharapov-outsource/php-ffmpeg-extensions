@@ -1,4 +1,6 @@
 .idea
 vendor
 composer.lock
+examples/source
 examples/output
+examples/ffmpeg-20170915-6743351-win64-static

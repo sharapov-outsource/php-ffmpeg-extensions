@@ -10,6 +10,7 @@
 namespace Sharapov\FFMpegExtensions\Filters\Audio\MergeFilterOptions;
 
 use FFMpeg\Exception\InvalidArgumentException;
+use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 
 class OptionsCollection implements \Countable, \IteratorAggregate
 {
@@ -65,6 +66,19 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   public function all()
   {
     return $this->_options;
+  }
+
+  /**
+   * Returns options that has an extra input streams.
+   * @return \ArrayIterator|\Traversable
+   */
+  public function filterHasExtraInputs()
+  {
+    return new OptionsCollection(array_filter((array)$this->getIterator(), function (OptionInterface $option) {
+      if ($option instanceof ExtraInputStreamInterface) {
+        return true;
+      }
+    }));
   }
 
   /**
