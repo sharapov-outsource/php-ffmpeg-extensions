@@ -133,6 +133,6 @@ Links
 
 [Composer](https://getcomposer.org/)
 
-[GitHub](https://github.com/sharapovweb/php-ffmpeg-extensions)
+[GitHub](https://github.com/sharapov-outsource/php-ffmpeg-extensions)
 
 [Packagist](https://packagist.org/packages/sharapov/php-ffmpeg-extensions)
