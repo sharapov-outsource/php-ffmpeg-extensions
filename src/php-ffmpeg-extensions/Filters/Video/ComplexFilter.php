@@ -16,22 +16,30 @@ use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawText;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionDrawBox;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionOverlay;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollection;
+use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionInterface;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Video;
 
 class ComplexFilter implements VideoFilterInterface
 {
+  /**
+   * @var OptionsCollection
+   */
   private $_optionsCollection;
 
   private $_optionsPrepared;
 
   private $_extraInputs = [];
 
-  /** @var integer */
+  /**
+   * @var integer
+   */
   private $priority;
 
   /**
-   * {@inheritdoc}
+   * ComplexFilter constructor.
+   *
+   * @param OptionsCollection|null $optionsCollection
    */
   public function __construct(OptionsCollection $optionsCollection = null)
   {
@@ -41,7 +49,7 @@ class ComplexFilter implements VideoFilterInterface
   }
 
   /**
-   * {@inheritdoc}
+   * @return OptionsCollection
    */
   public function getOptionsCollection()
   {

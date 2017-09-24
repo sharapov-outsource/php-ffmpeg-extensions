@@ -12,8 +12,11 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 use FFMpeg\Exception\InvalidArgumentException;
 use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 
-class OptionsCollection implements \Countable, \IteratorAggregate
-{
+/**
+ * Options collection
+ * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
+ */
+class OptionsCollection implements \Countable, \IteratorAggregate {
   const TYPE_OVERLAY = 'Overlay';
   const TYPE_DRAWTEXT = 'DrawText';
   const TYPE_DRAWBOX = 'DrawBox';
@@ -22,9 +25,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
 
   private $_options;
 
-  public function __construct(array $options = [])
-  {
-    $this->_options = array_values($options);
+  public function __construct( array $options = [] ) {
+    $this->_options = array_values( $options );
   }
 
   /**
@@ -33,9 +35,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    *
    * @return null|OptionInterface
    */
-  public function first()
-  {
-    $option = reset($this->_options);
+  public function first() {
+    $option = reset( $this->_options );
 
     return $option ? : null;
   }
@@ -47,8 +48,7 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    *
    * @return OptionsCollection
    */
-  public function add(OptionInterface $option)
-  {
+  public function add( OptionInterface $option ) {
     $this->_options[] = $option;
 
     return $this;
@@ -57,9 +57,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  public function count()
-  {
-    return count($this->_options);
+  public function count() {
+    return count( $this->_options );
   }
 
   /**
@@ -67,22 +66,20 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    *
    * @return array
    */
-  public function all()
-  {
+  public function all() {
     return $this->_options;
   }
 
   /**
    * Returns options that has an extra input streams.
-   * @return \ArrayIterator|\Traversable
+   * @return null|\ArrayIterator|\Traversable
    */
-  public function filterHasExtraInputs()
-  {
-    return new OptionsCollection(array_filter((array)$this->getIterator(), function (OptionInterface $option) {
-      if ($option instanceof ExtraInputStreamInterface) {
+  public function filterHasExtraInputs() {
+    return new OptionsCollection( array_filter( (array) $this->getIterator(), function ( OptionInterface $option ) {
+      if ( $option instanceof ExtraInputStreamInterface ) {
         return true;
       }
-    }));
+    } ) );
   }
 
   /**
@@ -92,26 +89,27 @@ class OptionsCollection implements \Countable, \IteratorAggregate
    *
    * @return \ArrayIterator|\Traversable
    */
-  public function filter($typeName)
-  {
-    switch ($typeName) {
+  public function filter( $typeName ) {
+    switch ( $typeName ) {
       case self::TYPE_DRAWBOX:
       case self::TYPE_DRAWTEXT:
       case self::TYPE_OVERLAY:
       case self::TYPE_CHROMAKEY:
       case self::TYPE_ALPHAKEY:
-        return new OptionsCollection(array_filter((array)$this->getIterator(), [$this, '_filter' . ucfirst($typeName)]));
+        return new OptionsCollection( array_filter( (array) $this->getIterator(), [
+          $this,
+          '_filter' . ucfirst( $typeName )
+        ] ) );
       default :
-        throw new InvalidArgumentException('Invalid option type requested.');
+        throw new InvalidArgumentException( 'Invalid option type requested.' );
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function _filterOverlay(OptionInterface $option)
-  {
-    if ($option instanceof OptionOverlay) {
+  protected function _filterOverlay( OptionInterface $option ) {
+    if ( $option instanceof OptionOverlay ) {
       return true;
     }
   }
@@ -119,9 +117,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  protected function _filterDrawText(OptionInterface $option)
-  {
-    if ($option instanceof OptionDrawText) {
+  protected function _filterDrawText( OptionInterface $option ) {
+    if ( $option instanceof OptionDrawText ) {
       return true;
     }
   }
@@ -129,9 +126,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  protected function _filterDrawBox(OptionInterface $option)
-  {
-    if ($option instanceof OptionDrawBox) {
+  protected function _filterDrawBox( OptionInterface $option ) {
+    if ( $option instanceof OptionDrawBox ) {
       return true;
     }
   }
@@ -139,9 +135,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  protected function _filterChromakey(OptionInterface $option)
-  {
-    if ($option instanceof OptionChromakey) {
+  protected function _filterChromakey( OptionInterface $option ) {
+    if ( $option instanceof OptionChromakey ) {
       return true;
     }
   }
@@ -149,9 +144,8 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  protected function _filterAlphakey(OptionInterface $option)
-  {
-    if ($option instanceof OptionAlphakey) {
+  protected function _filterAlphakey( OptionInterface $option ) {
+    if ( $option instanceof OptionAlphakey ) {
       return true;
     }
   }
@@ -159,21 +153,21 @@ class OptionsCollection implements \Countable, \IteratorAggregate
   /**
    * {@inheritdoc}
    */
-  public function getIterator()
-  {
-    return new \ArrayIterator($this->_options);
+  public function getIterator() {
+    return new \ArrayIterator( $this->_options );
   }
 
   /**
    * Returns options sorted by z-index.
    * @return \ArrayIterator|\Traversable
    */
-  public function sortByZindex()
-  {
+  public function sortByZindex() {
     $optionsIterator = $this->getIterator();
-    $optionsIterator->uasort(function ($a, $b) {
-      return strnatcmp($a->getZIndex(), $b->getZIndex());
-    });
+    $optionsIterator->uasort( function ( $a, $b ) {
+      /** @var OptionInterface $a */
+      /** @var OptionInterface $b */
+      return strnatcmp( $a->getZIndex(), $b->getZIndex() );
+    } );
 
     return $optionsIterator;
   }

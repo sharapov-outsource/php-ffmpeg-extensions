@@ -23,8 +23,7 @@ trait DimensionsTrait {
    *
    * @return mixed
    */
-  public function setDimensions(Dimension $dimension)
-  {
+  public function setDimensions( Dimension $dimension ) {
     $this->_dimensions = $dimension;
 
     return $this;
@@ -34,10 +33,9 @@ trait DimensionsTrait {
    * Returns dimensions object.
    * @return mixed
    */
-  public function getDimensions()
-  {
-    if (!$this->_dimensions instanceof Dimension) {
-      throw new InvalidArgumentException('Dimensions are empty.');
+  public function getDimensions() {
+    if ( ! $this->_dimensions instanceof Dimension ) {
+      throw new InvalidArgumentException( 'Dimensions are empty.' );
     }
 
     return $this->_dimensions;

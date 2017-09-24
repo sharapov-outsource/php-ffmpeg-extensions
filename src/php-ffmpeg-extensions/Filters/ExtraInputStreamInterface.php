@@ -11,8 +11,8 @@ namespace Sharapov\FFMpegExtensions\Filters;
 
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 
-interface ExtraInputStreamInterface
-{
-  public function setExtraInputStream(FileInterface $file);
+interface ExtraInputStreamInterface {
+  public function setExtraInputStream( FileInterface $file );
+
   public function getExtraInputStream();
 }

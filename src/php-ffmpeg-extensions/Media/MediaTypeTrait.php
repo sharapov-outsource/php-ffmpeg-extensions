@@ -17,13 +17,12 @@ trait MediaTypeTrait {
 
   private $_file;
 
-  public function __construct(FileInterface $file, FFMpegDriver $driver, FFProbe $ffprobe)
-  {
+  public function __construct( FileInterface $file, FFMpegDriver $driver, FFProbe $ffprobe ) {
     $this->_file = $file;
-    parent::__construct($file->getPath(), $driver, $ffprobe);
+    parent::__construct( $file->getPath(), $driver, $ffprobe );
   }
 
-  public function setFile(FileInterface $file) {
+  public function setFile( FileInterface $file ) {
     $this->_file = $file;
   }
 

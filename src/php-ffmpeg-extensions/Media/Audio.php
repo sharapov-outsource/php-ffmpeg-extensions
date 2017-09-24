@@ -20,8 +20,7 @@ use FFMpeg\Format\ProgressableInterface;
 use Sharapov\FFMpegExtensions\Filters\Audio\AudioFilterInterface;
 use Sharapov\FFMpegExtensions\Filters\Audio\AudioFilters;
 
-class Audio extends \FFMpeg\Media\Audio
-{
+class Audio extends \FFMpeg\Media\Audio {
   use MediaTypeTrait;
 
   /**
@@ -29,9 +28,8 @@ class Audio extends \FFMpeg\Media\Audio
    *
    * @return AudioFilters
    */
-  public function filters()
-  {
-    return new AudioFilters($this);
+  public function filters() {
+    return new AudioFilters( $this );
   }
 
   /**
@@ -39,13 +37,12 @@ class Audio extends \FFMpeg\Media\Audio
    *
    * @return Audio
    */
-  public function addFilter(FilterInterface $filter)
-  {
-    if (!$filter instanceof AudioFilterInterface) {
-      throw new InvalidArgumentException('Audio only accepts AudioFilterInterface filters');
+  public function addFilter( FilterInterface $filter ) {
+    if ( ! $filter instanceof AudioFilterInterface ) {
+      throw new InvalidArgumentException( 'Audio only accepts AudioFilterInterface filters' );
     }
 
-    $this->filters->add($filter);
+    $this->filters->add( $filter );
 
     return $this;
   }
@@ -60,46 +57,46 @@ class Audio extends \FFMpeg\Media\Audio
    *
    * @throws RuntimeException
    */
-  public function save(FormatInterface $format, $outputPathfile)
-  {
-    $commands = array('-y', '-i', $this->pathfile);
+  public function save( FormatInterface $format, $outputPathfile ) {
+    $commands = [ '-y', '-i', $this->pathfile ];
 
-    $filters = clone $this->filters;
+    $filters      = clone $this->filters;
     $extraFilters = [];
 
-    foreach ($filters as $filter) {
+    foreach ( $filters as $filter ) {
       // Video filter options must be attached after all the extra input streams
-      if($filter instanceof \Sharapov\FFMpegExtensions\Filters\Audio\AudioFilterInterface) {
-        $extraFilters = array_merge($extraFilters, $filter->apply($this, $format));
+      if ( $filter instanceof \Sharapov\FFMpegExtensions\Filters\Audio\AudioFilterInterface ) {
+        /** @var \FFMpeg\Format\AudioInterface $format */
+        $extraFilters = array_merge( $extraFilters, $filter->apply( $this, $format ) );
       }
       // If filter has extra input streams, we need to attach them into the command
-      if(count($filter->getExtraInputs()) > 0) {
-        $commands = array_merge($commands, $filter->getExtraInputs());
+      if ( count( $filter->getExtraInputs() ) > 0 ) {
+        $commands = array_merge( $commands, $filter->getExtraInputs() );
       }
     }
 
-    $commands = array_merge($commands, $extraFilters);
+    $commands = array_merge( $commands, $extraFilters );
 
-    $filters->add(new SimpleFilter($format->getExtraParams(), 10));
+    $filters->add( new SimpleFilter( $format->getExtraParams(), 10 ) );
 
-    if ($this->driver->getConfiguration()->has('ffmpeg.threads')) {
-      $filters->add(new SimpleFilter(array('-threads', $this->driver->getConfiguration()->get('ffmpeg.threads'))));
+    if ( $this->driver->getConfiguration()->has( 'ffmpeg.threads' ) ) {
+      $filters->add( new SimpleFilter( [ '-threads', $this->driver->getConfiguration()->get( 'ffmpeg.threads' ) ] ) );
     }
-    if (null !== $format->getAudioCodec()) {
-      $filters->add(new SimpleFilter(array('-acodec', $format->getAudioCodec())));
+    if ( null !== $format->getAudioCodec() ) {
+      $filters->add( new SimpleFilter( [ '-acodec', $format->getAudioCodec() ] ) );
     }
 
-    foreach ($filters as $filter) {
-      if(!$filter instanceof \Sharapov\FFMpegExtensions\Filters\Audio\AudioFilterInterface) {
-        $commands = array_merge($commands, $filter->apply($this, $format));
+    foreach ( $filters as $filter ) {
+      if ( ! $filter instanceof \Sharapov\FFMpegExtensions\Filters\Audio\AudioFilterInterface ) {
+        $commands = array_merge( $commands, $filter->apply( $this, $format ) );
       }
     }
 
-    if (null !== $format->getAudioKiloBitrate()) {
+    if ( null !== $format->getAudioKiloBitrate() ) {
       $commands[] = '-b:a';
       $commands[] = $format->getAudioKiloBitrate() . 'k';
     }
-    if (null !== $format->getAudioChannels()) {
+    if ( null !== $format->getAudioChannels() ) {
       $commands[] = '-ac';
       $commands[] = $format->getAudioChannels();
     }
@@ -108,14 +105,14 @@ class Audio extends \FFMpeg\Media\Audio
     try {
       $listeners = null;
 
-      if ($format instanceof ProgressableInterface) {
-        $listeners = $format->createProgressListener($this, $this->ffprobe, 1, 1);
+      if ( $format instanceof ProgressableInterface ) {
+        $listeners = $format->createProgressListener( $this, $this->ffprobe, 1, 1 );
       }
 
-      $this->driver->command($commands, false, $listeners);
-    } catch (ExecutionFailureException $e) {
-      $this->cleanupTemporaryFile($outputPathfile);
-      throw new RuntimeException('Encoding failed', $e->getCode(), $e);
+      $this->driver->command( $commands, false, $listeners );
+    } catch ( ExecutionFailureException $e ) {
+      $this->cleanupTemporaryFile( $outputPathfile );
+      throw new RuntimeException( 'Encoding failed', $e->getCode(), $e );
     }
 
     return $this;

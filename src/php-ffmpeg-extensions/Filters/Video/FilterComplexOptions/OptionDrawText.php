@@ -17,8 +17,7 @@ use Sharapov\FFMpegExtensions\Input\FileInterface;
  * DrawText filter option
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
-class OptionDrawText implements OptionInterface
-{
+class OptionDrawText implements OptionInterface {
   use TimeLineTrait;
   use FadeInOutTrait;
   use CoordinatesTrait;
@@ -39,7 +38,7 @@ class OptionDrawText implements OptionInterface
   protected $_textBorder;
 
   protected $_escapeSymbols = [
-      ':' => '\:'
+    ':' => '\:'
   ];
 
   /**
@@ -49,8 +48,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setFontFile(FileInterface $file)
-  {
+  public function setFontFile( FileInterface $file ) {
     $this->_fontFile = $file;
 
     return $this;
@@ -61,10 +59,9 @@ class OptionDrawText implements OptionInterface
    *
    * @return mixed
    */
-  public function getFontFile()
-  {
-    if (!$this->_fontFile instanceof FileInterface) {
-      throw new InvalidArgumentException('Font is undefined.');
+  public function getFontFile() {
+    if ( ! $this->_fontFile instanceof FileInterface ) {
+      throw new InvalidArgumentException( 'Font is undefined.' );
     }
 
     return $this->_fontFile;
@@ -77,9 +74,8 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setFontSize($size)
-  {
-    $this->_fontSize = (int)$size;
+  public function setFontSize( $size ) {
+    $this->_fontSize = (int) $size;
 
     return $this;
   }
@@ -89,8 +85,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return int
    */
-  public function getFontSize()
-  {
+  public function getFontSize() {
     return $this->_fontSize;
   }
 
@@ -101,8 +96,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setText($text)
-  {
+  public function setText( $text ) {
     $this->_text = $text;
 
     return $this;
@@ -113,8 +107,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return string
    */
-  public function getText()
-  {
+  public function getText() {
     return $this->_text;
   }
 
@@ -125,8 +118,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setEscapeSymbols(array $pairs)
-  {
+  public function setEscapeSymbols( array $pairs ) {
     $this->_escapeSymbols = $pairs;
 
     return $this;
@@ -137,8 +129,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return array
    */
-  public function getEscapeSymbols()
-  {
+  public function getEscapeSymbols() {
     return $this->_escapeSymbols;
   }
 
@@ -150,16 +141,15 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setFontColor($color, $transparency = 1)
-  {
-    if (!is_numeric($transparency) || $transparency < 0 || $transparency > 1) {
-      throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
+  public function setFontColor( $color, $transparency = 1 ) {
+    if ( ! is_numeric( $transparency ) || $transparency < 0 || $transparency > 1 ) {
+      throw new InvalidArgumentException( 'Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.' );
     }
 
-    $color = ltrim($color, '#');
-    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
-    if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
-      throw new InvalidArgumentException('Color should be HEX string. ' . $color . ' given.');
+    $color = ltrim( $color, '#' );
+    $color = str_pad( $color, 6, 0, STR_PAD_RIGHT );
+    if ( ! preg_match( '/^[a-f0-9]{6}$/i', $color ) ) {
+      throw new InvalidArgumentException( 'Color should be HEX string. ' . $color . ' given.' );
     }
 
     $this->_fontColor = $color . '@' . $transparency;
@@ -172,8 +162,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return string
    */
-  public function getFontColor()
-  {
+  public function getFontColor() {
     return $this->_fontColor;
   }
 
@@ -189,20 +178,19 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setTextShadow($color, $x = 0, $y = 0, $transparency = 1)
-  {
-    if (!is_numeric($transparency) || $transparency < 0 || $transparency > 1) {
-      throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
+  public function setTextShadow( $color, $x = 0, $y = 0, $transparency = 1 ) {
+    if ( ! is_numeric( $transparency ) || $transparency < 0 || $transparency > 1 ) {
+      throw new InvalidArgumentException( 'Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.' );
     }
 
-    if (!is_numeric($x) or !is_numeric($y)) {
-      throw new InvalidArgumentException('Shadow X and Y should be either positive or negative values. ' . $x . ', ' . $y . ' given.');
+    if ( ! is_numeric( $x ) or ! is_numeric( $y ) ) {
+      throw new InvalidArgumentException( 'Shadow X and Y should be either positive or negative values. ' . $x . ', ' . $y . ' given.' );
     }
 
     $this->_textShadow = [
-        "shadowcolor='" . $color . "'@" . $transparency,
-        "shadowx=" . $x,
-        "shadowy=" . $y
+      "shadowcolor='" . $color . "'@" . $transparency,
+      "shadowx=" . $x,
+      "shadowy=" . $y
     ];
 
     return $this;
@@ -213,8 +201,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return mixed
    */
-  public function getTextShadow()
-  {
+  public function getTextShadow() {
     return $this->_textShadow;
   }
 
@@ -227,19 +214,18 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setTextBorder($color, $border = 2, $transparency = 1)
-  {
-    if (!is_numeric($transparency) || $transparency < 0 || $transparency > 1) {
-      throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
+  public function setTextBorder( $color, $border = 2, $transparency = 1 ) {
+    if ( ! is_numeric( $transparency ) || $transparency < 0 || $transparency > 1 ) {
+      throw new InvalidArgumentException( 'Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.' );
     }
 
-    if (!is_integer($border)) {
-      throw new InvalidArgumentException('Border should be positive integer. ' . $border . ' given.');
+    if ( ! is_integer( $border ) ) {
+      throw new InvalidArgumentException( 'Border should be positive integer. ' . $border . ' given.' );
     }
 
     $this->_textBorder = [
-        "bordercolor='" . $color . "'@" . $transparency,
-        "borderw=" . $border
+      "bordercolor='" . $color . "'@" . $transparency,
+      "borderw=" . $border
     ];
 
     return $this;
@@ -250,8 +236,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return mixed
    */
-  public function getTextBorder()
-  {
+  public function getTextBorder() {
     return $this->_textBorder;
   }
 
@@ -264,25 +249,24 @@ class OptionDrawText implements OptionInterface
    *
    * @return $this
    */
-  public function setBoundingBox($color, $border = 10, $transparency = 1)
-  {
-    if (!is_numeric($transparency) || $transparency < 0 || $transparency > 1) {
-      throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
+  public function setBoundingBox( $color, $border = 10, $transparency = 1 ) {
+    if ( ! is_numeric( $transparency ) || $transparency < 0 || $transparency > 1 ) {
+      throw new InvalidArgumentException( 'Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.' );
     }
 
-    if (!is_integer($border)) {
-      throw new InvalidArgumentException('Border should be positive integer. ' . $border . ' given.');
+    if ( ! is_integer( $border ) ) {
+      throw new InvalidArgumentException( 'Border should be positive integer. ' . $border . ' given.' );
     }
 
-    $color = ltrim($color, '#');
-    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
-    if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
-      throw new InvalidArgumentException('Color should be HEX string. ' . $color . ' given.');
+    $color = ltrim( $color, '#' );
+    $color = str_pad( $color, 6, 0, STR_PAD_RIGHT );
+    if ( ! preg_match( '/^[a-f0-9]{6}$/i', $color ) ) {
+      throw new InvalidArgumentException( 'Color should be HEX string. ' . $color . ' given.' );
     }
 
     $this->_boundingBox = [
-        "boxcolor='" . $color . "'@" . $transparency,
-        "boxborderw=" . $border
+      "boxcolor='" . $color . "'@" . $transparency,
+      "boxborderw=" . $border
     ];
 
     return $this;
@@ -293,8 +277,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return mixed
    */
-  public function getBoundingBox()
-  {
+  public function getBoundingBox() {
     return $this->_boundingBox;
   }
 
@@ -303,58 +286,57 @@ class OptionDrawText implements OptionInterface
    *
    * @return string
    */
-  public function getCommand()
-  {
+  public function getCommand() {
     $options = [
-        "fontfile=" . $this->getFontFile()->getPath(),
-        "text='" . $this->_escapeSymbols() . "'",
-        "fontcolor='" . $this->getFontColor() . "'",
-        "fontsize=" . $this->getFontSize(),
-        "x=" . $this->getCoordinates()->getX(),
-        "y=" . $this->getCoordinates()->getY()
+      "fontfile=" . $this->getFontFile()->getPath(),
+      "text='" . $this->_escapeSymbols() . "'",
+      "fontcolor='" . $this->getFontColor() . "'",
+      "fontsize=" . $this->getFontSize(),
+      "x=" . $this->getCoordinates()->getX(),
+      "y=" . $this->getCoordinates()->getY()
     ];
 
-    if ($this->_timeLine instanceof TimeLine) {
-      $options[] = (string)$this->_timeLine;
+    if ( $this->_timeLine instanceof TimeLine ) {
+      $options[] = (string) $this->_timeLine;
     }
 
-    if($this->_fadeInSeconds or $this->_fadeOutSeconds) {
+    if ( $this->_fadeInSeconds or $this->_fadeOutSeconds ) {
       $fadeTime = [];
-      if($this->_fadeInSeconds) {
-        $fadeTime[] = sprintf("fade=t=in:st=0:d=%s", $this->_fadeInSeconds);
+      if ( $this->_fadeInSeconds ) {
+        $fadeTime[] = sprintf( "fade=t=in:st=0:d=%s", $this->_fadeInSeconds );
       }
-      if($this->_fadeOutSeconds) {
-        if ($this->getTimeLine() instanceof TimeLine) {
+      if ( $this->_fadeOutSeconds ) {
+        if ( $this->getTimeLine() instanceof TimeLine ) {
           // We have to calculate the starting point of fade out if we have the TimeLine object
-          $fadeTime[] = sprintf("fade=t=out:st=%s:d=%s", ($this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds), $this->_fadeOutSeconds);
+          $fadeTime[] = sprintf( "fade=t=out:st=%s:d=%s", ( $this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds ), $this->_fadeOutSeconds );
         } else {
           // Otherwise we add {VIDEO_LENGTH} tag to calculate the starting point on the next step
-          $fadeTime[] = sprintf("fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds);
+          $fadeTime[] = sprintf( "fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds );
         }
       }
-      $fadeTime = sprintf(",%s", implode(",", $fadeTime));
+      $fadeTime = sprintf( ",%s", implode( ",", $fadeTime ) );
     } else {
       $fadeTime = '';
     }
 
-    print_r($fadeTime);
+    print_r( $fadeTime );
 
     // Bounding box
-    if ($this->_boundingBox != null) {
-      $options[] = "box=1:" . implode(":", $this->_boundingBox);
+    if ( $this->_boundingBox != null ) {
+      $options[] = "box=1:" . implode( ":", $this->_boundingBox );
     }
 
     // Text shadow
-    if ($this->_textShadow != null) {
-      $options[] = implode(":", $this->_textShadow);
+    if ( $this->_textShadow != null ) {
+      $options[] = implode( ":", $this->_textShadow );
     }
 
     // Text border
-    if ($this->_textBorder != null) {
-      $options[] = implode(":", $this->_textBorder);
+    if ( $this->_textBorder != null ) {
+      $options[] = implode( ":", $this->_textBorder );
     }
 
-    return sprintf("[%s]drawtext=%s%s[%s]", ':s1', implode(":", $options), $fadeTime, ':s2');
+    return sprintf( "[%s]drawtext=%s%s[%s]", ':s1', implode( ":", $options ), $fadeTime, ':s2' );
   }
 
   /**
@@ -362,8 +344,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return string
    */
-  public function __toString()
-  {
+  public function __toString() {
     return $this->getCommand();
   }
 
@@ -372,8 +353,7 @@ class OptionDrawText implements OptionInterface
    *
    * @return string
    */
-  private function _escapeSymbols()
-  {
-    return strtr($this->getText(), $this->_escapeSymbols);
+  private function _escapeSymbols() {
+    return strtr( $this->getText(), $this->_escapeSymbols );
   }
 }

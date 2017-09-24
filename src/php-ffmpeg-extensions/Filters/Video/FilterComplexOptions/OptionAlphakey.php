@@ -17,10 +17,9 @@ use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamTrait;
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
 class OptionAlphakey
-    implements
-    OptionInterface,
-    ExtraInputStreamInterface
-{
+  implements
+  OptionInterface,
+  ExtraInputStreamInterface {
   use DimensionsTrait;
   use ExtraInputStreamTrait;
   use ZindexTrait;
@@ -30,9 +29,8 @@ class OptionAlphakey
    *
    * @return string
    */
-  public function getCommand()
-  {
-    return sprintf("[%s]scale=%s[abg],[%s][abg]overlay[%s]", ':s1', (string)$this->getDimensions(), ':s2', ':s3');
+  public function getCommand() {
+    return sprintf( "[%s]scale=%s[abg],[%s][abg]overlay[%s]", ':s1', (string) $this->getDimensions(), ':s2', ':s3' );
   }
 
   /**
@@ -40,8 +38,7 @@ class OptionAlphakey
    *
    * @return string
    */
-  public function __toString()
-  {
+  public function __toString() {
     return $this->getCommand();
   }
 }

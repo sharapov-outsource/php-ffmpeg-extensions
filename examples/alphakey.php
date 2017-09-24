@@ -78,3 +78,5 @@ $format->on('progress', function ($video, $format, $percentage) {
 
 $video
     ->save($format, dirname(__FILE__) . '/output/output.mp4');
+
+// "D:/Projects/php-ffmpeg-extensions/examples/ffmpeg-20170915-6743351-win64-static/bin/ffmpeg.exe" "-y" "-i" "D:/Projects/php-ffmpeg-extensions/examples/source/Vault.mov" "-i" "D:/Projects/php-ffmpeg-extensions/examples/source/demo_video_720p_HD.mp4" "-filter_complex" "[0:v]scale=1280:720[abg],[1:v][abg]overlay[s1],[s1]drawtext=fontfile=D:/Projects/php-ffmpeg-extensions/examples/source/calibri.ttf:text='alphakey demonstration':fontcolor='ffffff@1':fontsize=33:x=(w-tw)/2:y=50:enable='between(t,6,20)',fade=t=in:st=0:d=2,fade=t=out:st=18:d=" "-threads" "12" "-vcodec" "libx264" "-acodec" "libmp3lame" "-b:v" "1000k" "-refs" "6" "-coder" "1" "-sc_threshold" "40" "-flags" "+loop" "-me_range" "16" "-subq" "7" "-i_qfactor" "0.71" "-qcomp" "0.6" "-qdiff" "4" "-trellis" "1" "-b:a" "128k" "D:/Projects/php-ffmpeg-extensions/examples/output/output.mp4"

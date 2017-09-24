@@ -16,17 +16,15 @@ use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
 class OptionColorkey extends OptionChromakey
-    implements
-    OptionInterface,
-    ExtraInputStreamInterface
-{
+  implements
+  OptionInterface,
+  ExtraInputStreamInterface {
   /**
    * Returns command string.
    *
    * @return string
    */
-  public function getCommand()
-  {
-    return sprintf("[%s]colorkey=%s[clrky];[%s]scale=%s[bg],[bg][clrky]overlay[%s]", ':s1', $this->getColor(), ':s2', (string)$this->getDimensions(), ':s3');
+  public function getCommand() {
+    return sprintf( "[%s]colorkey=%s[clrky];[%s]scale=%s[bg],[bg][clrky]overlay[%s]", ':s1', $this->getColor(), ':s2', (string) $this->getDimensions(), ':s3' );
   }
 }

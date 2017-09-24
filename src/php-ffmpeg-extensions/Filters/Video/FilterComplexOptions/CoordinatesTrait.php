@@ -12,8 +12,7 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 use Sharapov\FFMpegExtensions\Coordinate\Point;
 use FFMpeg\Exception\InvalidArgumentException;
 
-trait CoordinatesTrait
-{
+trait CoordinatesTrait {
   protected $_coordinates;
 
   /**
@@ -23,8 +22,7 @@ trait CoordinatesTrait
    *
    * @return $this
    */
-  public function setCoordinates(Point $point)
-  {
+  public function setCoordinates( Point $point ) {
     $this->_coordinates = $point;
 
     return $this;
@@ -34,10 +32,9 @@ trait CoordinatesTrait
    * Returns coordinates object.
    * @return mixed
    */
-  public function getCoordinates()
-  {
-    if (!$this->_coordinates instanceof Point) {
-      throw new InvalidArgumentException('Coordinates are empty.');
+  public function getCoordinates() {
+    if ( ! $this->_coordinates instanceof Point ) {
+      throw new InvalidArgumentException( 'Coordinates are empty.' );
     }
 
     return $this->_coordinates;

@@ -10,17 +10,19 @@
 namespace Sharapov\FFMpegExtensions\Filters;
 
 use FFMpeg\Exception\InvalidArgumentException;
+use FFMpeg\FFProbe\DataMapping\StreamCollection;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\FFProbe;
 
 trait ExtraInputStreamTrait {
 
+  /**
+   * @var FileInterface
+   */
   protected $_extraInputStream;
 
   /**
-   * Set path to font file.
-   *
-   * @param $file
+   * @param FileInterface $file
    *
    * @return $this
    */
@@ -31,9 +33,8 @@ trait ExtraInputStreamTrait {
   }
 
   /**
-   * Get path.
-   *
-   * @return mixed
+   * @return FileInterface
+   * @throws InvalidArgumentException
    */
   public function getExtraInputStream() {
     if ( ! $this->_extraInputStream instanceof FileInterface ) {
@@ -44,7 +45,6 @@ trait ExtraInputStreamTrait {
   }
 
   /**
-   * Returns FFProbe driver
    * @return FFProbe
    */
   public function getProbe() {
@@ -54,7 +54,7 @@ trait ExtraInputStreamTrait {
   /**
    * Get probe data of extra input stream.
    *
-   * @return \FFMpeg\FFProbe\DataMapping\StreamCollection
+   * @return StreamCollection
    */
   public function getProbeData() {
     return $this->getProbe()->streams( $this->getExtraInputStream()->getPath() );

@@ -19,8 +19,7 @@ trait TimeLineTrait {
    * Returns timeline object
    * @return mixed
    */
-  public function getTimeLine()
-  {
+  public function getTimeLine() {
     return $this->_timeLine;
   }
 
@@ -31,8 +30,7 @@ trait TimeLineTrait {
    *
    * @return $this
    */
-  public function setTimeLine(TimeLine $timeLine)
-  {
+  public function setTimeLine( TimeLine $timeLine ) {
     $this->_timeLine = $timeLine;
 
     return $this;

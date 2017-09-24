@@ -15,21 +15,18 @@ use FFMpeg\Exception\InvalidArgumentException;
  * Class File
  * @package Sharapov\FFMpegExtensions\Stream
  */
-class File implements FileInterface
-{
+class File implements FileInterface {
   protected $_filePath;
 
-  public function __construct($file = null)
-  {
-    if (!is_null($file)) {
-      $this->setPath($file);
+  public function __construct( $file = null ) {
+    if ( ! is_null( $file ) ) {
+      $this->setPath( $file );
     }
   }
 
-  public function setPath($file)
-  {
-    if (!file_exists($file) or !is_file($file)) {
-      throw new InvalidArgumentException('Incorrect file specified');
+  public function setPath( $file ) {
+    if ( ! file_exists( $file ) or ! is_file( $file ) ) {
+      throw new InvalidArgumentException( 'Incorrect file specified' );
     }
 
     $this->_filePath = $file;
@@ -37,8 +34,7 @@ class File implements FileInterface
     return $this;
   }
 
-  public function getPath()
-  {
+  public function getPath() {
     return $this->_filePath;
   }
 }

@@ -18,10 +18,9 @@ use FFMpeg\Exception\InvalidArgumentException;
  * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
  */
 class OptionChromakey
-    implements
-    OptionInterface,
-    ExtraInputStreamInterface
-{
+  implements
+  OptionInterface,
+  ExtraInputStreamInterface {
   use TimeLineTrait;
   use DimensionsTrait;
   use ExtraInputStreamTrait;
@@ -47,20 +46,19 @@ class OptionChromakey
    *
    * @return $this
    */
-  public function setColor($color, $similarity = 0.6, $blend = 0.3)
-  {
-    if (!is_numeric($similarity) || $similarity < 0 || $similarity > 1) {
-      throw new InvalidArgumentException('Similarity should be integer or float value from 0 to 1. ' . $similarity . ' given.');
+  public function setColor( $color, $similarity = 0.6, $blend = 0.3 ) {
+    if ( ! is_numeric( $similarity ) || $similarity < 0 || $similarity > 1 ) {
+      throw new InvalidArgumentException( 'Similarity should be integer or float value from 0 to 1. ' . $similarity . ' given.' );
     }
 
-    if (!is_numeric($blend) || $blend < 0 || $blend > 1) {
-      throw new InvalidArgumentException('Blend should be integer or float value from 0 to 1. ' . $blend . ' given.');
+    if ( ! is_numeric( $blend ) || $blend < 0 || $blend > 1 ) {
+      throw new InvalidArgumentException( 'Blend should be integer or float value from 0 to 1. ' . $blend . ' given.' );
     }
 
-    $color = ltrim($color, '#');
-    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
-    if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
-      throw new InvalidArgumentException('Invalid value of color. Should be hex color string.');
+    $color = ltrim( $color, '#' );
+    $color = str_pad( $color, 6, 0, STR_PAD_RIGHT );
+    if ( ! preg_match( '/^[a-f0-9]{6}$/i', $color ) ) {
+      throw new InvalidArgumentException( 'Invalid value of color. Should be hex color string.' );
     }
 
     $this->_color = '0x' . $color . ':' . $similarity . ':' . $blend;
@@ -72,8 +70,7 @@ class OptionChromakey
    * Get RGB colorspace.
    * @return string
    */
-  public function getColor()
-  {
+  public function getColor() {
     return $this->_color;
   }
 
@@ -82,9 +79,8 @@ class OptionChromakey
    *
    * @return string
    */
-  public function getCommand()
-  {
-    return sprintf("[%s]chromakey=%s[chromky];[%s]scale=%s[bg],[bg][chromky]overlay[%s]", ':s1', $this->getColor(), ':s2', (string)$this->getDimensions(), ':s3');
+  public function getCommand() {
+    return sprintf( "[%s]chromakey=%s[chromky];[%s]scale=%s[bg],[bg][chromky]overlay[%s]", ':s1', $this->getColor(), ':s2', (string) $this->getDimensions(), ':s3' );
   }
 
   /**
@@ -92,8 +88,7 @@ class OptionChromakey
    *
    * @return string
    */
-  public function __toString()
-  {
+  public function __toString() {
     return $this->getCommand();
   }
 
@@ -102,8 +97,7 @@ class OptionChromakey
    *
    * @return int
    */
-  public function getZIndex()
-  {
+  public function getZIndex() {
     return 0;
   }
 }

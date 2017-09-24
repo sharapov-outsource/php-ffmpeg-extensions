@@ -11,8 +11,7 @@ namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use FFMpeg\Exception\InvalidArgumentException;
 
-trait ZindexTrait
-{
+trait ZindexTrait {
   protected $_zIndex = null;
 
   /**
@@ -20,8 +19,7 @@ trait ZindexTrait
    *
    * @return mixed
    */
-  public function getZIndex()
-  {
+  public function getZIndex() {
     return $this->_zIndex;
   }
 
@@ -36,10 +34,9 @@ trait ZindexTrait
    *
    * @return $this
    */
-  public function setZIndex($z)
-  {
-    if (!is_int($z) or $z < 100) {
-      throw new InvalidArgumentException('Z-Index should be positive integer more than or equal 100. ' . $z . ' given.');
+  public function setZIndex( $z ) {
+    if ( ! is_int( $z ) or $z < 100 ) {
+      throw new InvalidArgumentException( 'Z-Index should be positive integer more than or equal 100. ' . $z . ' given.' );
     }
 
     $this->_zIndex = $z;

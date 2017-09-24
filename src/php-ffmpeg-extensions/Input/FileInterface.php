@@ -13,8 +13,8 @@ namespace Sharapov\FFMpegExtensions\Input;
  * Interface FileInterface
  * @package Sharapov\FFMpegExtensions\Stream
  */
-interface FileInterface
-{
-  public function setPath($file);
+interface FileInterface {
+  public function setPath( $file );
+
   public function getPath();
 }
