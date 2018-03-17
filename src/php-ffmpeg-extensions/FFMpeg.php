@@ -79,6 +79,7 @@ class FFMpeg {
    * @return Audio|Video
    *
    * @throws InvalidArgumentException
+   * @throws RuntimeException
    */
   public function open( $file ) {
     if ( ! $file instanceof FileInterface ) {
