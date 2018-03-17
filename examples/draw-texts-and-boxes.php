@@ -18,8 +18,12 @@ $params = [
   'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
 ];
 
+$logger = new \Monolog\Logger('debug');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler('render.log', \Monolog\Logger::ERROR));
+$logger->pushHandler(new \Monolog\Handler\StreamHandler('info.log', \Monolog\Logger::INFO));
+
 // Init ffmpeg library
-$ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create($params);
+$ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create($params, $logger);
 
 // Open source video
 $video = $ffmpeg->open(new \Sharapov\FFMpegExtensions\Input\File(dirname(__FILE__) . '/source/demo_video_720p_HD.mp4'));
@@ -42,7 +46,7 @@ $text1
     // Set font size in pixels
     ->setFontSize(33)
     // Set text string
-    ->setText('php-ffmpeg-extensions\\nlibrary')
+    ->setText('php-ffmpeg-extensions>library')
     // Coordinates where the text should be rendered. Accepts positive integer or
     // constants "(w-tw)/2", "(h-th)/2" to handle auto-horizontal, auto-vertical values
     ->setCoordinates(new \Sharapov\FFMpegExtensions\Coordinate\Point(\Sharapov\FFMpegExtensions\Coordinate\Point::AUTO_HORIZONTAL, 50))
