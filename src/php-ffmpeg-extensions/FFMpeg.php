@@ -17,6 +17,7 @@ use FFMpeg\Driver\FFMpegDriver;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Audio;
 use Sharapov\FFMpegExtensions\Media\Video;
+use Sharapov\FFMpegExtensions\Media\VideoCollection;
 
 class FFMpeg {
   /** @var FFMpegDriver */
@@ -97,6 +98,23 @@ class FFMpeg {
     }
 
     throw new InvalidArgumentException( 'Unable to detect file format, only audio and video supported' );
+  }
+
+  /**
+   * Opens a collection to be processed.
+   *
+   * @param $file
+   * @return Audio|Video
+   *
+   * @throws InvalidArgumentException
+   * @throws RuntimeException
+   */
+  public function concatenate(\IteratorAggregate $collection) {
+
+
+    print_r($collection);
+
+    return 'done';
   }
 
   /**
