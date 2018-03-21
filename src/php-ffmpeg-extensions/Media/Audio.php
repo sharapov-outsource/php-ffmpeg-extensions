@@ -51,13 +51,13 @@ class Audio extends \FFMpeg\Media\Audio {
    * Exports the audio in the desired format, applies registered filters.
    *
    * @param FormatInterface $format
-   * @param string          $outputPathfile
+   * @param string          $outputPathFile
    *
    * @return Audio
    *
    * @throws RuntimeException
    */
-  public function save( FormatInterface $format, $outputPathfile ) {
+  public function save( FormatInterface $format, $outputPathFile ) {
     $commands = [ '-y', '-i', $this->pathfile ];
 
     $filters      = clone $this->filters;
@@ -100,7 +100,7 @@ class Audio extends \FFMpeg\Media\Audio {
       $commands[] = '-ac';
       $commands[] = $format->getAudioChannels();
     }
-    $commands[] = $outputPathfile;
+    $commands[] = $outputPathFile;
 
     try {
       $listeners = null;
@@ -111,7 +111,7 @@ class Audio extends \FFMpeg\Media\Audio {
 
       $this->driver->command( $commands, false, $listeners );
     } catch ( ExecutionFailureException $e ) {
-      $this->cleanupTemporaryFile( $outputPathfile );
+      $this->cleanupTemporaryFile( $outputPathFile );
       throw new RuntimeException( 'Encoding failed', $e->getCode(), $e );
     }
 

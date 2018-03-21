@@ -11,9 +11,9 @@ namespace Sharapov\FFMpegExtensions\Media;
 
 /**
  * Video collection
- * @package Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions
+ * @package Sharapov\FFMpegExtensions\Media
  */
-class VideoCollection implements \Countable, \IteratorAggregate {
+class VideoCollection implements CollectionInterface, \Countable, \IteratorAggregate {
   private $_streams;
 
   public function __construct( array $options = [] ) {
