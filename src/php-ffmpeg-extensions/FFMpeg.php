@@ -128,7 +128,7 @@ class FFMpeg {
     $fileStream = @fopen( $sourcesFile, 'w' );
 
     if ( $fileStream === false ) {
-      throw new ExecutionFailureException( 'Cannot open the temporary file.' );
+      throw new ExecutionFailureException( 'Cannot open a temporary file.' );
     }
 
     $sources = [];
