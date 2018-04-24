@@ -9,6 +9,7 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
+use Sharapov\FFMpegExtensions\Coordinate\Duration;
 use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamInterface;
 use Sharapov\FFMpegExtensions\Filters\ExtraInputStreamTrait;
 
@@ -24,6 +25,8 @@ class OptionAlphakey
   use ExtraInputStreamTrait;
   use ZindexTrait;
 
+  protected $_duration;
+
   /**
    * Returns command string.
    *
@@ -31,6 +34,27 @@ class OptionAlphakey
    */
   public function getCommand() {
     return sprintf( "[%s]scale=%s[abg],[%s][abg]overlay[%s]", ':s1', (string) $this->getDimensions(), ':s2', ':s3' );
+  }
+
+  /**
+   * Returns duration object
+   * @return mixed
+   */
+  public function getDuration() {
+    return $this->_duration;
+  }
+
+  /**
+   * Set duration object.
+   *
+   * @param Duration $duration
+   *
+   * @return $this
+   */
+  public function setDuration( Duration $duration ) {
+    $this->_duration = $duration;
+
+    return $this;
   }
 
   /**

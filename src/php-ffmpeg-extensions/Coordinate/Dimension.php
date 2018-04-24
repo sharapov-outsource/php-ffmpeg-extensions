@@ -14,8 +14,7 @@ use FFMpeg\Exception\InvalidArgumentException;
 /**
  * Dimension object, used for manipulating width and height couples
  */
-class Dimension
-{
+class Dimension {
   const WIDTH_MAX = 'iw';
   const HEIGHT_MAX = 'ih';
 
@@ -28,13 +27,12 @@ class Dimension
    *
    * @throws InvalidArgumentException when one of the parameteres is invalid
    */
-  public function __construct($width, $height)
-  {
-    if ((!is_int($width) and $width != self::WIDTH_MAX) || (!is_int($height) and $width != self::HEIGHT_MAX)) {
-      throw new InvalidArgumentException('Width and height should be positive integer or "' . self::WIDTH_MAX . '", "' . self::HEIGHT_MAX . '". ' . $width . ', ' . $height . ' given.');
+  public function __construct( $width, $height ) {
+    if ( ( ! is_int( $width ) and $width != self::WIDTH_MAX ) || ( ! is_int( $height ) and $width != self::HEIGHT_MAX ) ) {
+      throw new InvalidArgumentException( 'Width and height should be positive integer or "' . self::WIDTH_MAX . '", "' . self::HEIGHT_MAX . '". ' . $width . ', ' . $height . ' given.' );
     }
 
-    $this->width = $width;
+    $this->width  = $width;
     $this->height = $height;
   }
 
@@ -43,8 +41,7 @@ class Dimension
    *
    * @return integer
    */
-  public function getWidth()
-  {
+  public function getWidth() {
     return $this->width;
   }
 
@@ -53,16 +50,14 @@ class Dimension
    *
    * @return integer
    */
-  public function getHeight()
-  {
+  public function getHeight() {
     return $this->height;
   }
 
   /**
    * @return string
    */
-  public function __toString()
-  {
-    return sprintf("%s:%s", $this->getWidth(), $this->getHeight());
+  public function __toString() {
+    return sprintf( "%s:%s", $this->getWidth(), $this->getHeight() );
   }
 }

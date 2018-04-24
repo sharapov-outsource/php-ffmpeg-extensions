@@ -11,8 +11,7 @@ namespace Sharapov\FFMpegExtensions\Coordinate;
 
 use FFMpeg\Exception\InvalidArgumentException;
 
-class TimeLine
-{
+class TimeLine {
   protected $start;
   protected $end;
 
@@ -22,42 +21,37 @@ class TimeLine
    *
    * @throws InvalidArgumentException when one of the parameters is invalid
    */
-  public function __construct($start, $end)
-  {
-    if (!is_numeric($start) || !is_numeric($end) || $start < 0 || $end < 0) {
-      throw new InvalidArgumentException('Start and end time should be positive integer or float value. ' . $start . ', ' . $end . ' given.');
+  public function __construct( $start, $end ) {
+    if ( ! is_numeric( $start ) || ! is_numeric( $end ) || $start < 0 || $end < 0 ) {
+      throw new InvalidArgumentException( 'Start and end time should be positive integer or float value. ' . $start . ', ' . $end . ' given.' );
     }
 
-    $this->start = preg_replace('/,/', '.', $start);
-    $this->end = preg_replace('/,/', '.', $end);
+    $this->start = preg_replace( '/,/', '.', $start );
+    $this->end   = preg_replace( '/,/', '.', $end );
   }
 
   /**
    * @return integer
    */
-  public function getStartTime()
-  {
+  public function getStartTime() {
     return $this->start;
   }
 
   /**
    * @return integer
    */
-  public function getEndTime()
-  {
+  public function getEndTime() {
     return $this->end;
   }
 
-  public function getCommand()
-  {
-    return sprintf("enable='between(%s)'", implode(",", ['t', $this->getStartTime(), $this->getEndTime()]));
+  public function getCommand() {
+    return sprintf( "enable='between(%s)'", implode( ",", [ 't', $this->getStartTime(), $this->getEndTime() ] ) );
   }
 
   /**
    * @return string
    */
-  public function __toString()
-  {
+  public function __toString() {
     return $this->getCommand();
   }
 }
