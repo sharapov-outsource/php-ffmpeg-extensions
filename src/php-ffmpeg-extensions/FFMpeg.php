@@ -10,12 +10,15 @@
 namespace Sharapov\FFMpegExtensions;
 
 use Alchemy\BinaryDriver\ConfigurationInterface;
+use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Exception\RuntimeException;
-use Psr\Log\LoggerInterface;
 use FFMpeg\Driver\FFMpegDriver;
+use FFMpeg\Format\FormatInterface;
+use Psr\Log\LoggerInterface;
 use Sharapov\FFMpegExtensions\Input\FileInterface;
 use Sharapov\FFMpegExtensions\Media\Audio;
+use Sharapov\FFMpegExtensions\Media\CollectionInterface;
 use Sharapov\FFMpegExtensions\Media\Video;
 
 class FFMpeg {
@@ -23,10 +26,13 @@ class FFMpeg {
   private $driver;
   /** @var FFProbe */
   private $ffprobe;
+  /** @var string */
+  private $tmpDir;
 
   public function __construct( FFMpegDriver $ffmpeg, FFProbe $ffprobe ) {
     $this->driver  = $ffmpeg;
     $this->ffprobe = $ffprobe;
+    $this->tmpDir  = getcwd() . '/data/tmp/';
   }
 
   /**
@@ -97,6 +103,87 @@ class FFMpeg {
     }
 
     throw new InvalidArgumentException( 'Unable to detect file format, only audio and video supported' );
+  }
+
+  /**
+   * Concatenate two or more streams
+   *
+   * @param \Sharapov\FFMpegExtensions\Media\CollectionInterface $collection
+   * @param string                                               $outputPathFile
+   * @param FormatInterface                                      $format
+   *
+   * @return string
+   */
+  public function concatenate( FormatInterface $format, CollectionInterface $collection, $outputPathFile ) {
+    if ( $collection->count() == 0 ) {
+      throw new InvalidArgumentException( 'Collection is empty' );
+    }
+
+    /**
+     * @see https://ffmpeg.org/ffmpeg-formats.html#concat
+     * @see https://trac.ffmpeg.org/wiki/Concatenate
+     */
+    $sourcesFile = $this->tmpDir . uniqid( 'ffmpeg-concat-' );
+    // Set the content of this file
+    $fileStream = @fopen( $sourcesFile, 'w' );
+
+    if ( $fileStream === false ) {
+      throw new ExecutionFailureException( 'Cannot open a temporary file.' );
+    }
+
+    $sources = [];
+    // Pre-encode each clip in collection
+    foreach ( $collection as $i => $item ) {
+      if ( $item instanceof Video ) {
+        $tmpFile = 'ffmpeg-' . uniqid( md5( time() ) . '-' ) . '.mp4';
+        $item
+          ->save( $format, $this->tmpDir . $tmpFile );
+        $sources[] = $this->tmpDir . $tmpFile;
+        fwrite( $fileStream, "file " . $tmpFile . "\n" );
+      }
+    }
+
+    fclose( $fileStream );
+
+    // Execute the command
+    try {
+      $this->driver->command( [
+                                '-y',
+                                '-f',
+                                'concat',
+                                '-safe',
+                                '0',
+                                '-i',
+                                $sourcesFile,
+                                '-c',
+                                'copy',
+                                $outputPathFile
+                              ] );
+    } catch ( ExecutionFailureException $e ) {
+      $this->_cleanupTemporaryFile( $outputPathFile );
+      $this->_cleanupTemporaryFile( $sourcesFile );
+      $this->_cleanupTemporaryFile( $sources );
+      throw new RuntimeException( 'Unable to save concatenated video', $e->getCode(), $e );
+    }
+
+    $this->_cleanupTemporaryFile( $sources );
+    $this->_cleanupTemporaryFile( $sourcesFile );
+
+    return $outputPathFile;
+  }
+
+  private function _cleanupTemporaryFile( $filename ) {
+    if ( is_array( $filename ) ) {
+      foreach ( $filename as $file ) {
+        $this->_cleanupTemporaryFile( $file );
+      }
+    } else {
+      if ( file_exists( $filename ) && is_writable( $filename ) ) {
+        unlink( $filename );
+      }
+    }
+
+    return $this;
   }
 
   /**

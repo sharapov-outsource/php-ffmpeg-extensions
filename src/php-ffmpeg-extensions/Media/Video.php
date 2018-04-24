@@ -36,13 +36,13 @@ class Video extends \FFMpeg\Media\Video {
    * Exports the video in the desired format, applies registered filters.
    *
    * @param FormatInterface $format
-   * @param string          $outputPathfile
+   * @param string          $outputPathFile
    *
    * @return Video
    *
    * @throws RuntimeException
    */
-  public function save( FormatInterface $format, $outputPathfile ) {
+  public function save( FormatInterface $format, $outputPathFile ) {
     $commands = [ '-y', '-i', $this->pathfile ];
 
     $filters      = clone $this->filters;
@@ -140,7 +140,7 @@ class Video extends \FFMpeg\Media\Video {
         $pass[] = $passPrefix;
       }
 
-      $pass[] = $outputPathfile;
+      $pass[] = $outputPathFile;
 
       $passes[] = $pass;
     }
