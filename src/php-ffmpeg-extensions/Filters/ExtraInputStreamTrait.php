@@ -38,7 +38,7 @@ trait ExtraInputStreamTrait {
    */
   public function getExtraInputStream() {
     if ( ! $this->_extraInputStream instanceof FileInterface ) {
-      throw new InvalidArgumentException( 'Extra input stream for ' . __CLASS__ . ' is undefined.' );
+      throw new InvalidArgumentException( sprintf( 'Extra input stream for %s is not defined.', __CLASS__ ) );
     }
 
     return $this->_extraInputStream;
