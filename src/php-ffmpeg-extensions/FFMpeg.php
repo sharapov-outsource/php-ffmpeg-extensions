@@ -23,47 +23,73 @@ use Sharapov\FFMpegExtensions\Media\Video;
 
 class FFMpeg {
   /** @var FFMpegDriver */
-  private $driver;
+  private $_driver;
   /** @var FFProbe */
-  private $ffprobe;
+  private $_ffprobe;
   /** @var string */
-  private $tmpDir;
+  private $_tmpDir;
+  /** @var array */
+  private static $_mimes = [
+    'video/quicktime',
+    'video/mpeg',
+    'video/mp4',
+    'audio/mpeg3',
+    'audio/x-mpeg-3',
+    'audio/mpeg',
+    'audio/wav',
+    'audio/x-wav',
+    'image/gif',
+    'image/png',
+    'image/bmp',
+    'image/x-windows-bmp',
+    'image/jpeg',
+    'image/pjpeg',
+    'application/x-font-ttf'
+  ];
 
+  /**
+   * FFMpeg constructor
+   *
+   * @param FFMpegDriver $ffmpeg
+   * @param FFProbe      $ffprobe
+   */
   public function __construct( FFMpegDriver $ffmpeg, FFProbe $ffprobe ) {
-    $this->driver  = $ffmpeg;
-    $this->ffprobe = $ffprobe;
-    $this->tmpDir  = getcwd() . '/data/tmp/';
+    $this->_driver  = $ffmpeg;
+    $this->_ffprobe = $ffprobe;
+    $this->_tmpDir  = getcwd() . '/data/tmp/';
   }
 
   /**
-   * Sets FFProbe.
+   * Sets FFProbe
    *
-   * @param FFProbe
+   * @param FFProbe $ffprobe
    *
    * @return FFMpeg
    */
   public function setFFProbe( FFProbe $ffprobe ) {
-    $this->ffprobe = $ffprobe;
+    $this->_ffprobe = $ffprobe;
 
     return $this;
   }
 
   /**
-   * Gets FFProbe.
+   * Gets FFProbe
    *
    * @return FFProbe
    */
   public function getFFProbe() {
-    return $this->ffprobe;
+    return $this->_ffprobe;
   }
 
   /**
-   * Sets the ffmpeg driver.
+   * Sets FFMpeg driver
    *
-   * @return FFMpeg
+   * @param FFMpegDriver $ffmpeg
+   *
+   * @return $this
    */
   public function setFFMpegDriver( FFMpegDriver $ffmpeg ) {
-    $this->driver = $ffmpeg;
+    $this->_driver = $ffmpeg;
 
     return $this;
   }
@@ -74,7 +100,7 @@ class FFMpeg {
    * @return FFMpegDriver
    */
   public function getFFMpegDriver() {
-    return $this->driver;
+    return $this->_driver;
   }
 
   /**
@@ -123,7 +149,7 @@ class FFMpeg {
      * @see https://ffmpeg.org/ffmpeg-formats.html#concat
      * @see https://trac.ffmpeg.org/wiki/Concatenate
      */
-    $sourcesFile = $this->tmpDir . uniqid( 'ffmpeg-concat-' );
+    $sourcesFile = $this->_tmpDir . uniqid( 'ffmpeg-concat-' );
     // Set the content of this file
     $fileStream = @fopen( $sourcesFile, 'w' );
 
@@ -137,28 +163,27 @@ class FFMpeg {
       if ( $item instanceof Video ) {
         $tmpFile = 'ffmpeg-' . uniqid( md5( time() ) . '-' ) . '.mp4';
         $item
-          ->save( $format, $this->tmpDir . $tmpFile );
-        $sources[] = $this->tmpDir . $tmpFile;
+          ->save( $format, $this->_tmpDir . $tmpFile );
+        $sources[] = $this->_tmpDir . $tmpFile;
         fwrite( $fileStream, "file " . $tmpFile . "\n" );
       }
     }
-
     fclose( $fileStream );
 
     // Execute the command
     try {
-      $this->driver->command( [
-                                '-y',
-                                '-f',
-                                'concat',
-                                '-safe',
-                                '0',
-                                '-i',
-                                $sourcesFile,
-                                '-c',
-                                'copy',
-                                $outputPathFile
-                              ] );
+      $this->_driver->command( [
+                                 '-y',
+                                 '-f',
+                                 'concat',
+                                 '-safe',
+                                 '0',
+                                 '-i',
+                                 $sourcesFile,
+                                 '-c',
+                                 'copy',
+                                 $outputPathFile
+                               ] );
     } catch ( ExecutionFailureException $e ) {
       $this->_cleanupTemporaryFile( $outputPathFile );
       $this->_cleanupTemporaryFile( $sourcesFile );
@@ -172,6 +197,13 @@ class FFMpeg {
     return $outputPathFile;
   }
 
+  /**
+   * Cleanup temporary files
+   *
+   * @param $filename
+   *
+   * @return $this
+   */
   private function _cleanupTemporaryFile( $filename ) {
     if ( is_array( $filename ) ) {
       foreach ( $filename as $file ) {
@@ -187,7 +219,7 @@ class FFMpeg {
   }
 
   /**
-   * Creates a new FFMpeg instance.
+   * Creates a new FFMpeg instance
    *
    * @param array|ConfigurationInterface $configuration
    * @param LoggerInterface              $logger
@@ -197,9 +229,18 @@ class FFMpeg {
    */
   public static function create( $configuration = [], LoggerInterface $logger = null, FFProbe $probe = null ) {
     if ( null === $probe ) {
-      $probe = \Sharapov\FFMpegExtensions\FFProbe::create( $configuration, $logger, null );
+      $probe = FFProbe::create( $configuration, $logger, null );
     }
 
     return new static( FFMpegDriver::create( $logger, $configuration ), $probe );
+  }
+
+  /**
+   * Returns the list of supported mime types
+   *
+   * @return array
+   */
+  public static function getSupportedMimes() {
+    return self::$_mimes;
   }
 }

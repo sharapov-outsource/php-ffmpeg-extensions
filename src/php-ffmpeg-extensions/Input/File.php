@@ -10,6 +10,7 @@
 namespace Sharapov\FFMpegExtensions\Input;
 
 use FFMpeg\Exception\InvalidArgumentException;
+use Sharapov\FFMpegExtensions\FFMpeg;
 
 /**
  * Class File
@@ -17,31 +18,35 @@ use FFMpeg\Exception\InvalidArgumentException;
  */
 class File implements FileInterface {
   protected $_filePath;
-  protected $_mimes = [
-    'video/quicktime',
-    'video/mpeg',
-    'audio/mpeg3',
-    'audio/x-mpeg-3',
-    'audio/mpeg',
-    'audio/wav',
-    'audio/x-wav',
-    'image/gif',
-    'image/png',
-    'image/bmp',
-    'image/x-windows-bmp',
-    'image/jpeg',
-    'image/pjpeg',
-  ];
+  protected $_mimes;
 
+  /**
+   * File constructor.
+   *
+   * @param null $file
+   */
   public function __construct( $file = null ) {
+    $this->_mimes = FFMpeg::getSupportedMimes();
     if ( ! is_null( $file ) ) {
       $this->setPath( $file );
     }
   }
 
+  /**
+   * Sets a file
+   *
+   * @param $file
+   *
+   * @return $this
+   * @throws InvalidArgumentException
+   */
   public function setPath( $file ) {
     if ( ! file_exists( $file ) or ! is_file( $file ) ) {
-      throw new InvalidArgumentException( 'Incorrect file specified.' . $file . ' given.' );
+      throw new InvalidArgumentException( sprintf( 'Incorrect file specified. %s given.', $file ) );
+    }
+
+    if ( ! $mime = mime_content_type( $file ) or ! in_array( $mime, $this->_mimes ) ) {
+      throw new InvalidArgumentException( sprintf( 'File type is not supported. %s given. Run FFMpeg::getSupportedMimes() to find the list of supported mimes.', $mime ) );
     }
 
     $this->_filePath = $file;
@@ -49,9 +54,12 @@ class File implements FileInterface {
     return $this;
   }
 
+  /**
+   * Gets a file path
+   *
+   * @return mixed
+   */
   public function getPath() {
     return $this->_filePath;
   }
-
-
 }
