@@ -41,7 +41,7 @@ class File implements FileInterface {
 
   public function setPath( $file ) {
     if ( ! file_exists( $file ) or ! is_file( $file ) ) {
-      throw new InvalidArgumentException( 'Incorrect file specified' );
+      throw new InvalidArgumentException( 'Incorrect file specified.' . $file . ' given.' );
     }
 
     $this->_filePath = $file;
