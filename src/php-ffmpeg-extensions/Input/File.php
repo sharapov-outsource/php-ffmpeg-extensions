@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Input;
@@ -25,10 +23,10 @@ class File implements FileInterface {
    *
    * @param null $file
    */
-  public function __construct( $file = null ) {
+  public function __construct($file = null) {
     $this->_mimes = FFMpeg::getSupportedMimes();
-    if ( ! is_null( $file ) ) {
-      $this->setPath( $file );
+    if(!is_null($file)) {
+      $this->setPath($file);
     }
   }
 
@@ -40,13 +38,13 @@ class File implements FileInterface {
    * @return $this
    * @throws InvalidArgumentException
    */
-  public function setPath( $file ) {
-    if ( ! file_exists( $file ) or ! is_file( $file ) ) {
-      throw new InvalidArgumentException( sprintf( 'Incorrect file specified. %s given.', $file ) );
+  public function setPath($file) {
+    if(!file_exists($file) or !is_file($file)) {
+      throw new InvalidArgumentException(sprintf('Incorrect file specified. %s given.', $file));
     }
 
-    if ( ! $mime = mime_content_type( $file ) or ! in_array( $mime, $this->_mimes ) ) {
-      throw new InvalidArgumentException( sprintf( 'File type is not supported. %s given. Run FFMpeg::getSupportedMimes() to find the list of supported mimes.', $mime ) );
+    if(!$mime = mime_content_type($file) or !in_array($mime, $this->_mimes)) {
+      throw new InvalidArgumentException(sprintf('File type is not supported. %s given. Run FFMpeg::getSupportedMimes() to find the list of supported mimes.', $mime));
     }
 
     $this->_filePath = $file;
@@ -56,7 +54,6 @@ class File implements FileInterface {
 
   /**
    * Gets a file path
-   *
    * @return mixed
    */
   public function getPath() {

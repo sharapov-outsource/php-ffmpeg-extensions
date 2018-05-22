@@ -1,16 +1,15 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
 
 use FFMpeg\Exception\InvalidArgumentException;
 use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
+use Sharapov\FFMpegExtensions\Media\Video;
 
 /**
  * DrawText filter option
@@ -18,7 +17,6 @@ use Sharapov\FFMpegExtensions\Coordinate\TimeLine;
  */
 class OptionDrawBox implements OptionInterface {
   use TimeLineTrait;
-  use FadeInOutTrait;
   use CoordinatesTrait;
   use DimensionsTrait;
   use ZindexTrait;
@@ -26,43 +24,67 @@ class OptionDrawBox implements OptionInterface {
   protected $_color = '000000@0.4:t=max';
 
   /**
+   * @var Video
+   */
+  protected $_video;
+
+  /**
    * Constructor. Set box color.
    *
    * @param        $color
-   * @param float  $transparency
+   * @param float $transparency
    * @param string $thickness
    */
-  public function __construct( $color = '000000', $transparency = 0.4, $thickness = 'max' ) {
-    $this->setColor( $color, $transparency, $thickness );
+  public function __construct($color = '000000', $transparency = 0.4, $thickness = 'max') {
+    $this->setColor($color, $transparency, $thickness);
   }
 
   /**
-   * Set box color.
+   * Set video stream
    *
-   * @param        $color
-   * @param float  $transparency
-   * @param string $thickness
+   * @param Video $video
    *
    * @return $this
    */
-  public function setColor( $color, $transparency = 0.4, $thickness = 'max' ) {
-    if ( ! is_numeric( $transparency ) || $transparency < 0 || $transparency > 1 ) {
-      throw new InvalidArgumentException( 'Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.' );
-    }
-
-    if ( $thickness != 'max' and ! is_int( $thickness ) ) {
-      throw new InvalidArgumentException( 'Thickness should be positive integer or "max". ' . $thickness . ' given.' );
-    }
-
-    $color = ltrim( $color, '#' );
-    $color = str_pad( $color, 6, 0, STR_PAD_RIGHT );
-    if ( ! preg_match( '/^[a-f0-9]{6}$/i', $color ) ) {
-      throw new InvalidArgumentException( 'Color should be HEX string. ' . $color . ' given.' );
-    }
-
-    $this->_color = $color . '@' . $transparency . ":t=" . $thickness;
+  public function setVideoStream(Video $video) {
+    $this->_video = $video;
 
     return $this;
+  }
+
+  /**
+   * Returns a command string.
+   * @return string
+   */
+  public function __toString() {
+    return $this->getCommand();
+  }
+
+  /**
+   * Returns command string.
+   * @return string
+   */
+  public function getCommand() {
+    // If specific timeline is not provided for the drawtext, we must apply drawtext for the whole video
+    if(!$this->_timeLine instanceof TimeLine) {
+      $this->setTimeLine(new TimeLine(0, $this->getVideoStream()->getStreamDuration()));
+    }
+
+    return sprintf("[%s]drawbox=%s[%s]", ':s1', implode(":", [
+        "x=" . $this->getCoordinates()->getX(),
+        "y=" . $this->getCoordinates()->getY(),
+        "w=" . $this->getDimensions()->getWidth(),
+        "h=" . $this->getDimensions()->getHeight(),
+        "color='" . $this->getColor() . "'",
+        $this->getTimeLine()->getCommand()
+    ]), ':s2');
+  }
+
+  /**
+   * @return Video
+   */
+  public function getVideoStream() {
+    return $this->_video;
   }
 
   /**
@@ -74,50 +96,31 @@ class OptionDrawBox implements OptionInterface {
   }
 
   /**
-   * Returns command string.
-   * @return string
-   */
-  public function getCommand() {
-    $options = [
-      "x=" . $this->getCoordinates()->getX(),
-      "y=" . $this->getCoordinates()->getY(),
-      "w=" . $this->getDimensions()->getWidth(),
-      "h=" . $this->getDimensions()->getHeight(),
-      "color='" . $this->getColor() . "'"
-    ];
-
-    if ( $this->_timeLine instanceof TimeLine ) {
-      $options[] = $this->_timeLine->getCommand();
-    }
-
-    if ( $this->_fadeInSeconds or $this->_fadeOutSeconds ) {
-      $fadeTime = [];
-      if ( $this->_fadeInSeconds ) {
-        $fadeTime[] = sprintf( "fade=t=in:st=0:d=%s", $this->_fadeInSeconds );
-      }
-      if ( $this->_fadeOutSeconds ) {
-        if ( $this->getTimeLine() instanceof TimeLine ) {
-          // We have to calculate the starting point of fade out if we have the TimeLine object
-          $fadeTime[] = sprintf( "fade=t=out:st=%s:d=%s", ( $this->getTimeLine()->getEndTime() - $this->_fadeOutSeconds ), $this->_fadeOutSeconds );
-        } else {
-          // Otherwise we add {VIDEO_LENGTH} tag to calculate the starting point on the next step
-          $fadeTime[] = sprintf( "fade=t=out:st={VIDEO_LENGTH}:d=%s", $this->_fadeOutSeconds );
-        }
-      }
-      $fadeTime = sprintf( ",%s", implode( ",", $fadeTime ) );
-    } else {
-      $fadeTime = '';
-    }
-
-    return sprintf( "[%s]drawbox=%s%s[%s]", ':s1', implode( ":", $options ), $fadeTime, ':s2' );
-  }
-
-  /**
-   * Returns a command string.
+   * Set box color.
    *
-   * @return string
+   * @param        $color
+   * @param float $transparency
+   * @param string $thickness
+   *
+   * @return $this
    */
-  public function __toString() {
-    return $this->getCommand();
+  public function setColor($color, $transparency = 0.4, $thickness = 'max') {
+    if(!is_numeric($transparency) || $transparency < 0 || $transparency > 1) {
+      throw new InvalidArgumentException('Transparency should be integer or float value from 0 to 1. ' . $transparency . ' given.');
+    }
+
+    if($thickness != 'max' and !is_int($thickness)) {
+      throw new InvalidArgumentException('Thickness should be positive integer or "max". ' . $thickness . ' given.');
+    }
+
+    $color = ltrim($color, '#');
+    $color = str_pad($color, 6, 0, STR_PAD_RIGHT);
+    if(!preg_match('/^[a-f0-9]{6}$/i', $color)) {
+      throw new InvalidArgumentException('Color should be HEX string. ' . $color . ' given.');
+    }
+
+    $this->_color = $color . '@' . $transparency . ":t=" . $thickness;
+
+    return $this;
   }
 }

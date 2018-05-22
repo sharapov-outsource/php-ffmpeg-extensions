@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
@@ -32,12 +30,12 @@ trait FadeInOutTrait {
    *
    * @return $this
    */
-  public function setFadeIn( $seconds ) {
-    if ( ! is_numeric( $seconds ) || $seconds < 0 ) {
-      throw new InvalidArgumentException( 'Fade-in time should be positive integer or float value. ' . $seconds . ' given.' );
+  public function setFadeIn($seconds) {
+    if(!is_numeric($seconds) || $seconds < 0) {
+      throw new InvalidArgumentException('Fade-in time should be positive integer or float value. ' . $seconds . ' given.');
     }
 
-    $this->_fadeInSeconds = preg_replace( '/,/', '.', $seconds );
+    $this->_fadeInSeconds = preg_replace('/,/', '.', $seconds);
 
     return $this;
   }
@@ -58,12 +56,12 @@ trait FadeInOutTrait {
    * @return $this
    * @throws InvalidArgumentException
    */
-  public function setFadeOut( $seconds ) {
-    if ( ! is_numeric( $seconds ) || $seconds < 0 ) {
-      throw new InvalidArgumentException( 'Fade-out time should be positive integer or float value. ' . $seconds . ' given.' );
+  public function setFadeOut($seconds) {
+    if(!is_numeric($seconds) || $seconds < 0) {
+      throw new InvalidArgumentException('Fade-out time should be positive integer or float value. ' . $seconds . ' given.');
     }
 
-    $this->_fadeOutSeconds = preg_replace( '/,/', '.', $seconds );
+    $this->_fadeOutSeconds = preg_replace('/,/', '.', $seconds);
 
     return $this;
   }

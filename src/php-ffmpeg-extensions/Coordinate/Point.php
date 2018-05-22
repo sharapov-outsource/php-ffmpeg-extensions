@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Coordinate;
@@ -24,16 +22,23 @@ class Point {
    * @param mixed $x
    * @param mixed $y
    */
-  public function __construct( $x = self::AUTO_HORIZONTAL, $y = self::AUTO_VERTICAL ) {
-    if ( $x != self::AUTO_HORIZONTAL and ! is_int( $x ) ) {
-      throw new InvalidArgumentException( 'X should be positive integer or "' . self::AUTO_HORIZONTAL . '". ' . $x . ' given.' );
+  public function __construct($x = self::AUTO_HORIZONTAL, $y = self::AUTO_VERTICAL) {
+    if($x != self::AUTO_HORIZONTAL and !is_int($x)) {
+      throw new InvalidArgumentException('X should be positive integer or "' . self::AUTO_HORIZONTAL . '". ' . $x . ' given.');
     }
-    if ( $y != self::AUTO_VERTICAL and ! is_int( $y ) ) {
-      throw new InvalidArgumentException( 'Y should be positive integer or "' . self::AUTO_VERTICAL . '". ' . $y . ' given.' );
+    if($y != self::AUTO_VERTICAL and !is_int($y)) {
+      throw new InvalidArgumentException('Y should be positive integer or "' . self::AUTO_VERTICAL . '". ' . $y . ' given.');
     }
 
     $this->x = $x;
     $this->y = $y;
+  }
+
+  /**
+   * @return string
+   */
+  public function __toString() {
+    return sprintf("%s:%s", $this->getX(), $this->getY());
   }
 
   /**
@@ -48,12 +53,5 @@ class Point {
    */
   public function getY() {
     return $this->y;
-  }
-
-  /**
-   * @return string
-   */
-  public function __toString() {
-    return sprintf( "%s:%s", $this->getX(), $this->getY() );
   }
 }

@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions;
@@ -17,7 +15,7 @@ trait TimeLineTrait {
 
   /**
    * Returns timeline object
-   * @return mixed
+   * @return null|TimeLine
    */
   public function getTimeLine() {
     return $this->_timeLine;
@@ -30,7 +28,7 @@ trait TimeLineTrait {
    *
    * @return $this
    */
-  public function setTimeLine( TimeLine $timeLine ) {
+  public function setTimeLine(TimeLine $timeLine) {
     $this->_timeLine = $timeLine;
 
     return $this;

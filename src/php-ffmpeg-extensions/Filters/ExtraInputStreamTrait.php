@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Filters;
@@ -22,26 +20,11 @@ trait ExtraInputStreamTrait {
   protected $_extraInputStream;
 
   /**
-   * @param FileInterface $file
-   *
-   * @return $this
+   * Get probe data of extra input stream.
+   * @return StreamCollection
    */
-  public function setExtraInputStream( FileInterface $file ) {
-    $this->_extraInputStream = $file;
-
-    return $this;
-  }
-
-  /**
-   * @return FileInterface
-   * @throws InvalidArgumentException
-   */
-  public function getExtraInputStream() {
-    if ( ! $this->_extraInputStream instanceof FileInterface ) {
-      throw new InvalidArgumentException( sprintf( 'Extra input stream for %s is not defined.', __CLASS__ ) );
-    }
-
-    return $this->_extraInputStream;
+  public function getProbeData() {
+    return $this->getProbe()->streams($this->getExtraInputStream()->getPath());
   }
 
   /**
@@ -52,11 +35,25 @@ trait ExtraInputStreamTrait {
   }
 
   /**
-   * Get probe data of extra input stream.
-   *
-   * @return StreamCollection
+   * @return FileInterface
+   * @throws InvalidArgumentException
    */
-  public function getProbeData() {
-    return $this->getProbe()->streams( $this->getExtraInputStream()->getPath() );
+  public function getExtraInputStream() {
+    if(!$this->_extraInputStream instanceof FileInterface) {
+      throw new InvalidArgumentException(sprintf('Extra input stream for %s is not defined.', __CLASS__));
+    }
+
+    return $this->_extraInputStream;
+  }
+
+  /**
+   * @param FileInterface $file
+   *
+   * @return $this
+   */
+  public function setExtraInputStream(FileInterface $file) {
+    $this->_extraInputStream = $file;
+
+    return $this;
   }
 }

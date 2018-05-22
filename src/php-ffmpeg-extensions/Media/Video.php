@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Media;
@@ -25,66 +23,64 @@ class Video extends \FFMpeg\Media\Video {
 
   /**
    * {@inheritdoc}
-   *
    * @return VideoFilters
    */
   public function filters() {
-    return new VideoFilters( $this );
+    return new VideoFilters($this);
   }
 
   /**
    * Exports the video in the desired format, applies registered filters.
    *
    * @param FormatInterface $format
-   * @param string          $outputPathFile
+   * @param string $outputPathFile
    *
    * @return Video
-   *
    * @throws RuntimeException
    */
-  public function save( FormatInterface $format, $outputPathFile ) {
-    $commands = [ '-y', '-i', $this->pathfile ];
+  public function save(FormatInterface $format, $outputPathFile) {
+    $commands = ['-y', '-i', $this->pathfile];
 
-    $filters      = clone $this->filters;
+    $filters = clone $this->filters;
     $extraFilters = [];
 
-    foreach ( $filters as $filter ) {
+    foreach($filters as $filter) {
       // Video filter options must be attached after all the extra input streams
-      if ( $filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface ) {
+      if($filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface) {
         /** @var VideoInterface $format */
-        $extraFilters = array_merge( $extraFilters, $filter->apply( $this, $format ) );
+        $extraFilters = array_merge($extraFilters, $filter->apply($this, $format));
       }
       // If filter has extra input streams, we need to attach them into the command
-      if ( count( $filter->getExtraInputs() ) > 0 ) {
-        $commands = array_merge( $commands, $filter->getExtraInputs() );
+      if(count($filter->getExtraInputs()) > 0) {
+        $commands = array_merge($commands, $filter->getExtraInputs());
       }
     }
 
-    $commands = array_merge( $commands, $extraFilters );
+    $commands = array_merge($commands, $extraFilters);
 
-    $filters->add( new SimpleFilter( $format->getExtraParams(), 10 ) );
+    $filters->add(new SimpleFilter($format->getExtraParams(), 10));
 
-    if ( $this->driver->getConfiguration()->has( 'ffmpeg.threads' ) ) {
-      $filters->add( new SimpleFilter( [ '-threads', $this->driver->getConfiguration()->get( 'ffmpeg.threads' ) ] ) );
+    if($this->driver->getConfiguration()->has('ffmpeg.threads')) {
+      $filters->add(new SimpleFilter(['-threads', $this->driver->getConfiguration()->get('ffmpeg.threads')]));
     }
-    if ( $format instanceof VideoInterface ) {
-      if ( null !== $format->getVideoCodec() ) {
-        $filters->add( new SimpleFilter( [ '-vcodec', $format->getVideoCodec() ] ) );
+    if($format instanceof VideoInterface) {
+      if(null !== $format->getVideoCodec()) {
+        $filters->add(new SimpleFilter(['-vcodec', $format->getVideoCodec()]));
       }
     }
-    if ( $format instanceof AudioInterface ) {
-      if ( null !== $format->getAudioCodec() ) {
-        $filters->add( new SimpleFilter( [ '-acodec', $format->getAudioCodec() ] ) );
-      }
-    }
-
-    foreach ( $filters as $filter ) {
-      if ( ! $filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface ) {
-        $commands = array_merge( $commands, $filter->apply( $this, $format ) );
+    if($format instanceof AudioInterface) {
+      if(null !== $format->getAudioCodec()) {
+        $filters->add(new SimpleFilter(['-acodec', $format->getAudioCodec()]));
       }
     }
 
-    if ( $format instanceof VideoInterface ) {
+    foreach($filters as $filter) {
+      if(!$filter instanceof \Sharapov\FFMpegExtensions\Filters\Video\VideoFilterInterface) {
+        $commands = array_merge($commands, $filter->apply($this, $format));
+      }
+    }
+
+    if($format instanceof VideoInterface) {
       $commands[] = '-b:v';
       $commands[] = $format->getKiloBitrate() . 'k';
       $commands[] = '-refs';
@@ -109,31 +105,31 @@ class Video extends \FFMpeg\Media\Video {
       $commands[] = '1';
     }
 
-    if ( $format instanceof AudioInterface ) {
-      if ( null !== $format->getAudioKiloBitrate() ) {
+    if($format instanceof AudioInterface) {
+      if(null !== $format->getAudioKiloBitrate()) {
         $commands[] = '-b:a';
         $commands[] = $format->getAudioKiloBitrate() . 'k';
       }
-      if ( null !== $format->getAudioChannels() ) {
+      if(null !== $format->getAudioChannels()) {
         $commands[] = '-ac';
         $commands[] = $format->getAudioChannels();
       }
     }
 
-    $fs          = FsManager::create();
-    $fsId        = uniqid( 'ffmpeg-passes' );
-    $passPrefix  = $fs->createTemporaryDirectory( 0777, 50, $fsId ) . '/' . uniqid( 'pass-' );
-    $passes      = [];
+    $fs = FsManager::create();
+    $fsId = uniqid('ffmpeg-passes');
+    $passPrefix = $fs->createTemporaryDirectory(0777, 50, $fsId) . '/' . uniqid('pass-');
+    $passes = [];
     $totalPasses = $format->getPasses();
 
-    if ( 1 > $totalPasses ) {
-      throw new InvalidArgumentException( 'Pass number should be a positive value.' );
+    if(1 > $totalPasses) {
+      throw new InvalidArgumentException('Pass number should be a positive value.');
     }
 
-    for ( $i = 1; $i <= $totalPasses; $i ++ ) {
+    for($i = 1; $i <= $totalPasses; $i++) {
       $pass = $commands;
 
-      if ( $totalPasses > 1 ) {
+      if($totalPasses > 1) {
         $pass[] = '-pass';
         $pass[] = $i;
         $pass[] = '-passlogfile';
@@ -147,26 +143,26 @@ class Video extends \FFMpeg\Media\Video {
 
     $failure = null;
 
-    foreach ( $passes as $pass => $passCommands ) {
+    foreach($passes as $pass => $passCommands) {
       try {
         /** add listeners here */
         $listeners = null;
 
-        if ( $format instanceof ProgressableInterface ) {
-          $listeners = $format->createProgressListener( $this, $this->ffprobe, $pass + 1, $totalPasses );
+        if($format instanceof ProgressableInterface) {
+          $listeners = $format->createProgressListener($this, $this->ffprobe, $pass + 1, $totalPasses);
         }
 
-        $this->driver->command( $passCommands, false, $listeners );
-      } catch ( ExecutionFailureException $e ) {
+        $this->driver->command($passCommands, false, $listeners);
+      } catch (ExecutionFailureException $e) {
         $failure = $e;
         break;
       }
     }
 
-    $fs->clean( $fsId );
+    $fs->clean($fsId);
 
-    if ( null !== $failure ) {
-      throw new RuntimeException( 'Encoding failed', $failure->getCode(), $failure );
+    if(null !== $failure) {
+      throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
     }
 
     return $this;
@@ -176,6 +172,6 @@ class Video extends \FFMpeg\Media\Video {
    * @return mixed
    */
   public function getStreamDuration() {
-    return $this->getStreams()->videos()->first()->get( 'duration' );
+    return $this->getStreams()->videos()->first()->get('duration');
   }
 }

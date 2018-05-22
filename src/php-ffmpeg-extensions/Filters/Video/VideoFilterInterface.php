@@ -1,10 +1,8 @@
 <?php
 /**
  * This file is part of PHP-FFmpeg-Extensions library.
- *
  * (c) Alexander Sharapov <alexander@sharapov.biz>
  * http://sharapov.biz/
- *
  */
 
 namespace Sharapov\FFMpegExtensions\Filters\Video;
@@ -17,7 +15,7 @@ use Sharapov\FFMpegExtensions\Media\Video;
 interface VideoFilterInterface extends FilterInterface {
   public function getExtraInputs();
 
-  public function setExtraInput( FileInterface $input );
+  public function setExtraInput(FileInterface $input);
 
-  public function apply( Video $video, VideoInterface $format );
+  public function apply(Video $video, VideoInterface $format);
 }
