@@ -1,1 +1,2 @@
 examples/source/alpha-intro.mov filter=lfs diff=lfs merge=lfs -text
+examples/source/spokesperson-alpha.mov filter=lfs diff=lfs merge=lfs -text
