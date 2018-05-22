@@ -1,7 +1,7 @@
 .idea
 vendor
 composer.lock
-examples/source
+#examples/source
 examples/output
 data/tmp/*
 !data/tmp/.gitkeep
