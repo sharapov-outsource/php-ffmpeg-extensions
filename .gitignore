@@ -1,7 +1,11 @@
 .idea
 vendor
 composer.lock
-#examples/source
+examples/source
 examples/output
+!examples/output/.gitkeep
+examples/ffmpeg-20170915-6743351-win64-static
 data/tmp/*
 !data/tmp/.gitkeep
+data/logs/*
+!data/logs/.gitkeep
