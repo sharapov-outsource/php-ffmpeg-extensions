@@ -15,14 +15,13 @@ trait CoordinatesTrait {
 
   /**
    * Returns coordinates object.
-   * @return mixed
+   *
+   * @param bool $returnDefault
+   *
+   * @return \Sharapov\FFMpegExtensions\Coordinate\Point|string
    */
-  public function getCoordinates() {
-    if(!$this->_coordinates instanceof Point) {
-      throw new InvalidArgumentException('Coordinates are empty.');
-    }
-
-    return $this->_coordinates;
+  public function getCoordinates($returnDefault = false) {
+    return ($this->_coordinates instanceof Point) ? $this->_coordinates : (($returnDefault) ? : $this->getDefaultCoordinates());
   }
 
   /**
@@ -36,5 +35,13 @@ trait CoordinatesTrait {
     $this->_coordinates = $point;
 
     return $this;
+  }
+
+  /**
+   * Gets default coordinates
+   * @return string
+   */
+  public function getDefaultCoordinates() {
+    return '0:0';
   }
 }

@@ -132,10 +132,16 @@ class ComplexFilter implements VideoFilterInterface {
           // We need to save last stream id to apply next options in the correct order
           $lastStreamId = 's' . $stm;
           // For image overlay we have to add -loop 1 before input
-          if($option->isImage()) {
+          if($option->isStaticImage()) {
             $this->_extraInputs[] = '-loop';
             $this->_extraInputs[] = '1';
           }
+
+          if($option->isAnimatedGif() or $option->isAnimatedPng()) {
+            $this->_extraInputs[] = '-ignore_loop';
+            $this->_extraInputs[] = '0';
+          }
+
           // Pass input paths to the separate array
           $this->setExtraInput($option->getExtraInputStream());
           $imn++;

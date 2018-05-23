@@ -16,14 +16,13 @@ trait DimensionsTrait {
 
   /**
    * Returns dimensions object.
-   * @return mixed
+   *
+   * @param bool $returnDefault
+   *
+   * @return \Sharapov\FFMpegExtensions\Coordinate\Dimension|string
    */
-  public function getDimensions() {
-    if(!$this->_dimensions instanceof Dimension) {
-      throw new InvalidArgumentException('Dimensions are empty.');
-    }
-
-    return $this->_dimensions;
+  public function getDimensions($returnDefault = false) {
+    return ($this->_dimensions instanceof Dimension) ? $this->_dimensions : (($returnDefault) ? : $this->getDefaultDimensions());
   }
 
   /**
@@ -37,5 +36,22 @@ trait DimensionsTrait {
     $this->_dimensions = $dimension;
 
     return $this;
+  }
+
+  /**
+   * Gets default dimensions
+   * @return string
+   */
+  public function getDefaultDimensions() {
+    if($this->isImage()) {
+      $dimensions = @getimagesize($this->getExtraInputStream()->getPath());
+      if($dimensions) {
+        return sprintf('%s:%s', $dimensions[0], $dimensions[1]);
+      }
+    } else {
+      throw new InvalidArgumentException('Due to performance issues we cannot automatically detect non-image overlay dimensions. Please set them before encoding.');
+    }
+
+    return '0:0';
   }
 }
