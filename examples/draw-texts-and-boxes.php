@@ -14,7 +14,7 @@ use \Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 require_once 'init.php';
 
 // Open source video
-$video = $ffmpeg->open(new InputFile('source/Coast - 1270.mp4'));
+$video = $ffmpeg->open(new InputFile('source/demo_video_720p_HD.mp4'));
 
 // Apply filter options to video
 $video

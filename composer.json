@@ -29,8 +29,11 @@
     }
   ],
   "require": {
-    "php": ">=5.4",
-    "php-ffmpeg/php-ffmpeg": "0.9.5"
+    "php": ">=5.4 || ^7.0",
+    "php-ffmpeg/php-ffmpeg": "^0.15"
+  },
+  "require-dev": {
+    "monolog/monolog": "^2.0"
   },
   "suggest": {
     "php-ffmpeg/extras": "A compilation of common audio & video drivers for PHP-FFMpeg"

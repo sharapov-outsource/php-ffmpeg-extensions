@@ -25,8 +25,8 @@ try {
 }
 
 $config = [
-    'ffmpeg.binaries'  => 'ffmpeg-20170915-6743351-win64-static/bin/ffmpeg.exe',
-    'ffprobe.binaries' => 'ffmpeg-20170915-6743351-win64-static/bin/ffprobe.exe',
+    'ffmpeg.binaries'  => './ffmpeg33',
+    'ffprobe.binaries' => './ffprobe',
     'timeout'          => 3600, // The timeout for the underlying process
     'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
 ];

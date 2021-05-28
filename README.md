@@ -107,7 +107,7 @@ try {
 }
 ```
 
-You will find other examples in "/examples" folder. 
+You will find other examples in "/examples" folder.
 
 Changelog
 =========

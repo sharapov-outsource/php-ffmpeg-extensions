@@ -36,7 +36,8 @@ class FFMpeg {
       'image/x-windows-bmp',
       'image/jpeg',
       'image/pjpeg',
-      'application/x-font-ttf'
+      'application/x-font-ttf',
+      'application/font-sfnt'
   ];
   /** @var FFMpegDriver */
   private $_driver;
