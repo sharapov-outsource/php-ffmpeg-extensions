@@ -18,6 +18,12 @@ to your composer.json file and update your dependencies. Or you can run:
 $ composer require sharapov/php-ffmpeg-extensions
 ```
 
+Notes:
+======
+
+Tested with ffmpeg 3+, not tested with ffmpeg 4+
+
+
 Usage:
 ======
 
