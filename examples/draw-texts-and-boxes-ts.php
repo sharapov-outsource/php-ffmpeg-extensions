@@ -74,6 +74,8 @@ $video
                                             ->setTimeLine(new Coordinate\TimeLine(3, 20)))
                                     ]));
 
+$video->setPreset('fast');
+
 // Run render
 $format = new \FFMpeg\Format\Video\X264('libmp3lame');
 $format->on('progress', function($video, $format, $percentage) {

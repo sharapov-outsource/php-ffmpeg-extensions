@@ -7,19 +7,35 @@
 
 namespace Sharapov\FFMpegExtensions\Media;
 
-use Sharapov\FFMpegExtensions\Filters\Video\VideoFilters;
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use FFMpeg\Filters\Audio\SimpleFilter;
 use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Exception\RuntimeException;
+use FFMpeg\Filters\Audio\SimpleFilter;
+use FFMpeg\Format\AudioInterface;
 use FFMpeg\Format\FormatInterface;
 use FFMpeg\Format\ProgressableInterface;
-use FFMpeg\Format\AudioInterface;
 use FFMpeg\Format\VideoInterface;
 use Neutron\TemporaryFilesystem\Manager as FsManager;
+use Sharapov\FFMpegExtensions\Filters\Video\VideoFilters;
 
 class Video extends \FFMpeg\Media\Video {
   use MediaTypeTrait;
+
+  /** @var string */
+  private $preset;
+
+  /** @var array */
+  private $supportedPresets = [
+    'ultrafast',
+    'superfast',
+    'veryfast',
+    'faster',
+    'fast',
+    'medium',
+    'slow',
+    'slower',
+    'veryslow'
+  ];
 
   /**
    * {@inheritdoc}
@@ -103,6 +119,11 @@ class Video extends \FFMpeg\Media\Video {
       $commands[] = '4';
       $commands[] = '-trellis';
       $commands[] = '1';
+
+      if($this->getPreset()) {
+        $commands[] = '-preset';
+        $commands[] = $this->getPreset();
+      }
     }
 
     if($format instanceof AudioInterface) {
@@ -173,5 +194,22 @@ class Video extends \FFMpeg\Media\Video {
    */
   public function getStreamDuration() {
     return $this->getStreams()->videos()->first()->get('duration');
+  }
+
+  /**
+   * @param $preset
+   */
+  public function setPreset($preset) {
+    $this->preset = $preset;
+    if(!in_array($preset, $this->supportedPresets)) {
+      throw new InvalidArgumentException('Preset type doesn\'t supported. Supported types: ' . implode(', ', $this->supportedPresets) . '.');
+    }
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getPreset() {
+    return $this->preset;
   }
 }
