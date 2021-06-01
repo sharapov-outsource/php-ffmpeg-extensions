@@ -33,3 +33,4 @@ $config = [
 
 // Init ffmpeg library
 $ffmpeg = \Sharapov\FFMpegExtensions\FFMpeg::create($config, $logger);
+

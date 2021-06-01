@@ -38,6 +38,7 @@ class FFMpeg {
       'image/pjpeg',
       'application/x-font-ttf',
       'application/font-sfnt',
+      'application/octet-stream',
       'font/sfnt'
   ];
   /** @var FFMpegDriver */
@@ -91,6 +92,15 @@ class FFMpeg {
     }
 
     return new static(FFMpegDriver::create($logger, $configuration), $probe);
+  }
+
+  /**
+   * Set extra mime type
+   *
+   * @param $mime
+   */
+  public static function setMime($mime) {
+    self::$_mimes[] = $mime;
   }
 
   /**
