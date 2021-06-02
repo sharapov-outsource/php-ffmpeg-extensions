@@ -14,7 +14,7 @@ use FFMpeg\Filters\Audio\SimpleFilter;
 use FFMpeg\Format\AudioInterface;
 use FFMpeg\Format\FormatInterface;
 use FFMpeg\Format\ProgressableInterface;
-use FFMpeg\Format\VideoInterface;
+use Sharapov\FFMpegExtensions\Format\VideoInterface;
 use Neutron\TemporaryFilesystem\Manager as FsManager;
 use Sharapov\FFMpegExtensions\Filters\Video\VideoFilters;
 
@@ -22,7 +22,10 @@ class Video extends \FFMpeg\Media\Video {
   use MediaTypeTrait;
 
   /** @var array */
-  private $options = [];
+  private $options = [
+    'preset' => null,
+    'muxdelay' => null
+  ];
 
   /** @var array */
   private $supportedPresets = [
@@ -97,7 +100,7 @@ class Video extends \FFMpeg\Media\Video {
     }
 
     if($format instanceof VideoInterface) {
-      if($this->getPreset()) {
+      if($this->getPreset() !== null) {
         $commands[] = '-preset';
         $commands[] = $this->getPreset();
       } else {
@@ -128,6 +131,11 @@ class Video extends \FFMpeg\Media\Video {
       if($this->getMuxdelay() !== null) {
         $commands[] = '-muxdelay';
         $commands[] = $this->getMuxdelay();
+      }
+
+      if($format->getConstantRateFactor() !== null) {
+        $commands[] = '-crf';
+        $commands[] = $format->getConstantRateFactor();
       }
     }
 

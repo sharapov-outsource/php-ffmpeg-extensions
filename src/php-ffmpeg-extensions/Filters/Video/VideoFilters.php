@@ -7,7 +7,6 @@
 
 namespace Sharapov\FFMpegExtensions\Filters\Video;
 
-use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\FilterComplexOptionsRegistry;
 use Sharapov\FFMpegExtensions\Filters\Video\FilterComplexOptions\OptionsCollection;
 use Sharapov\FFMpegExtensions\Media\Video;
 

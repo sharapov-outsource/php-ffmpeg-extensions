@@ -68,7 +68,7 @@ $video
     ->complex($options);
 
 // Run render
-$format = new \FFMpeg\Format\Video\X264('libmp3lame');
+$format = new Sharapov\FFMpegExtensions\Format\Video\X264('libmp3lame');
 $format->on('progress', function($video, $format, $percentage) {
   echo "$percentage% transcoded\n";
 });

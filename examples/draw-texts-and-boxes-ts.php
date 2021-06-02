@@ -80,7 +80,7 @@ $video->setPreset('ultrafast');
 // Run render
 $format = new Sharapov\FFMpegExtensions\Format\Video\X264('copy');
 $format->setPasses(1);
-$format->setConstantBitrate(0);
+$format->setConstantRateFactor(22);
 $format->on('progress', function($video, $format, $percentage) {
   echo "$percentage% transcoded\n";
 });

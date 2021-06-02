@@ -7,16 +7,18 @@
 
 namespace Sharapov\FFMpegExtensions\Format\Video;
 
+use Sharapov\FFMpegExtensions\Format\VideoInterface;
+
 /**
  * The X264 video format
  * Uses aac audio codec by default. libfaac is is considered non-free
  * and most of unix systems doesn't provide ffmpeg with it.
  * Also that's a crappy encoder, there are better alternatives.
  */
-class X264 extends \FFMpeg\Format\Video\X264 {
+class X264 extends \FFMpeg\Format\Video\X264 implements VideoInterface {
 
   /** @var int */
-  private $cbr;
+  private $crf;
 
   public function __construct($audioCodec = 'aac', $videoCodec = 'libx264') {
     parent::__construct($audioCodec, $videoCodec);
@@ -27,8 +29,8 @@ class X264 extends \FFMpeg\Format\Video\X264 {
    *
    * @return $this
    */
-  public function setConstantBitrate($cbr) {
-    $this->cbr = $cbr;
+  public function setConstantRateFactor($crf) {
+    $this->crf = $crf;
 
     return $this;
   }
@@ -36,8 +38,8 @@ class X264 extends \FFMpeg\Format\Video\X264 {
   /**
    * {@inheritDoc}
    */
-  public function getConstantBitrate()
+  public function getConstantRateFactor()
   {
-    return $this->cbr;
+    return $this->crf;
   }
 }
