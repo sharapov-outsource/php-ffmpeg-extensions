@@ -21,8 +21,8 @@ use Sharapov\FFMpegExtensions\Filters\Video\VideoFilters;
 class Video extends \FFMpeg\Media\Video {
   use MediaTypeTrait;
 
-  /** @var string */
-  private $preset;
+  /** @var array */
+  private $options = [];
 
   /** @var array */
   private $supportedPresets = [
@@ -97,36 +97,41 @@ class Video extends \FFMpeg\Media\Video {
     }
 
     if($format instanceof VideoInterface) {
-      $commands[] = '-b:v';
-      $commands[] = $format->getKiloBitrate() . 'k';
-      $commands[] = '-refs';
-      $commands[] = '6';
-      $commands[] = '-coder';
-      $commands[] = '1';
-      $commands[] = '-sc_threshold';
-      $commands[] = '40';
-      $commands[] = '-flags';
-      $commands[] = '+loop';
-      $commands[] = '-me_range';
-      $commands[] = '16';
-      $commands[] = '-subq';
-      $commands[] = '7';
-      $commands[] = '-i_qfactor';
-      $commands[] = '0.71';
-      $commands[] = '-qcomp';
-      $commands[] = '0.6';
-      $commands[] = '-qdiff';
-      $commands[] = '4';
-      $commands[] = '-trellis';
-      $commands[] = '1';
-
       if($this->getPreset()) {
         $commands[] = '-preset';
         $commands[] = $this->getPreset();
+      } else {
+        $commands[] = '-b:v';
+        $commands[] = $format->getKiloBitrate() . 'k';
+        $commands[] = '-refs';
+        $commands[] = '6';
+        $commands[] = '-coder';
+        $commands[] = '1';
+        $commands[] = '-sc_threshold';
+        $commands[] = '40';
+        $commands[] = '-flags';
+        $commands[] = '+loop';
+        $commands[] = '-me_range';
+        $commands[] = '16';
+        $commands[] = '-subq';
+        $commands[] = '7';
+        $commands[] = '-i_qfactor';
+        $commands[] = '0.71';
+        $commands[] = '-qcomp';
+        $commands[] = '0.6';
+        $commands[] = '-qdiff';
+        $commands[] = '4';
+        $commands[] = '-trellis';
+        $commands[] = '1';
+      }
+
+      if($this->getMuxdelay() !== null) {
+        $commands[] = '-muxdelay';
+        $commands[] = $this->getMuxdelay();
       }
     }
 
-    if($format instanceof AudioInterface) {
+    if($format instanceof AudioInterface && $format->getAudioCodec() != 'copy') {
       if(null !== $format->getAudioKiloBitrate()) {
         $commands[] = '-b:a';
         $commands[] = $format->getAudioKiloBitrate() . 'k';
@@ -197,19 +202,42 @@ class Video extends \FFMpeg\Media\Video {
   }
 
   /**
+   * TODO: need refactor and moving to separate options class
    * @param $preset
    */
   public function setPreset($preset) {
-    $this->preset = $preset;
     if(!in_array($preset, $this->supportedPresets)) {
       throw new InvalidArgumentException('Preset type doesn\'t supported. Supported types: ' . implode(', ', $this->supportedPresets) . '.');
     }
+
+    $this->options['preset'] = $preset;
   }
 
   /**
+   * TODO: need refactor and moving to separate options class
    * @return mixed
    */
   public function getPreset() {
-    return $this->preset;
+    return ($this->options['preset'] !== null) ? $this->options['preset'] : null;
+  }
+
+  /**
+   * TODO: need refactor and moving to separate options class
+   * @param $delay
+   */
+  public function setMuxdelay($delay) {
+    if(!is_numeric($delay) || $delay < 0) {
+      throw new InvalidArgumentException('Muxdelay should be integer or float value. ' . $delay . ' given.');
+    }
+
+    $this->options['muxdelay'] = $delay;
+  }
+
+  /**
+   * TODO: need refactor and moving to separate options class
+   * @return mixed
+   */
+  public function getMuxdelay() {
+    return ($this->options['muxdelay'] !== null) ? $this->options['muxdelay'] : null;
   }
 }

@@ -14,7 +14,30 @@ namespace Sharapov\FFMpegExtensions\Format\Video;
  * Also that's a crappy encoder, there are better alternatives.
  */
 class X264 extends \FFMpeg\Format\Video\X264 {
+
+  /** @var int */
+  private $cbr;
+
   public function __construct($audioCodec = 'aac', $videoCodec = 'libx264') {
     parent::__construct($audioCodec, $videoCodec);
+  }
+
+  /**
+   * @param $cbr
+   *
+   * @return $this
+   */
+  public function setConstantBitrate($cbr) {
+    $this->cbr = $cbr;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getConstantBitrate()
+  {
+    return $this->cbr;
   }
 }

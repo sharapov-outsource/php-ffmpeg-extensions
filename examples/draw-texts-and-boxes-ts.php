@@ -74,17 +74,20 @@ $video
                                             ->setTimeLine(new Coordinate\TimeLine(3, 20)))
                                     ]));
 
-$video->setPreset('fast');
+$video->setMuxdelay(0);
+$video->setPreset('ultrafast');
 
 // Run render
-$format = new \FFMpeg\Format\Video\X264('libmp3lame');
+$format = new Sharapov\FFMpegExtensions\Format\Video\X264('copy');
+$format->setPasses(1);
+$format->setConstantBitrate(0);
 $format->on('progress', function($video, $format, $percentage) {
   echo "$percentage% transcoded\n";
 });
 
 try {
   $video
-      ->save($format, 'output/output-ts.mp4');
+      ->save($format, 'output/output-ts1.mp4');
   print 'Done!';
 } catch (ExecutionFailureException $e) {
   print $e->getMessage();
